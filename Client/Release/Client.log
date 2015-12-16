@@ -1,0 +1,52 @@
+﻿Build started 5/26/2014 11:41:23 AM.
+Project "C:\Documents and Settings\Developer\Desktop\gNet\Client\Client.vcxproj" on node 2 (build target(s)).
+InitializeBuildStatus:
+  Creating "Release\Client.unsuccessfulbuild" because "AlwaysCreate" was specified.
+GenerateTargetFrameworkMonikerAttribute:
+Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /AI"C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /EHa /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yc"StdAfx.h" /Fp"Release\Client.pch" /Fo"Release\\" /Fd"Release\vc100.pdb" /TP /analyze- /errorReport:prompt stdafx.cpp /clr:nostdlib 
+  stdafx.cpp
+  C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /AI"C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /EHa /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Release\Client.pch" /Fo"Release\\" /Fd"Release\vc100.pdb" /TP /analyze- /errorReport:prompt Client.cpp Globals.cpp CLI.cpp OutboundSocket.cpp InboundSocket.cpp SocketToObjectContainer.cpp gNetSocket.cpp ServerSocket.cpp SettingsReader.cpp TagGenerator.cpp ToServerSocket.cpp /clr:nostdlib 
+  Client.cpp
+Client.cpp(105): warning C4101: 'e' : unreferenced local variable
+  Globals.cpp
+  CLI.cpp
+  OutboundSocket.cpp
+  InboundSocket.cpp
+  SocketToObjectContainer.cpp
+  gNetSocket.cpp
+  ServerSocket.cpp
+  SettingsReader.cpp
+  TagGenerator.cpp
+  ToServerSocket.cpp
+  Generating Code...
+c:\documents and settings\developer\desktop\gnet\client\gnetsocket.cpp(179): warning C4715: 'gNetSocket::Send' : not all control paths return a value
+  C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /clr /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /EHa /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /TP /analyze- /errorReport:prompt "C:\Documents and Settings\Developer\Local Settings\Temp\.NETFramework,Version=v4.0.AssemblyAttributes.cpp"
+  .NETFramework,Version=v4.0.AssemblyAttributes.cpp
+Link:
+  C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Documents and Settings\Developer\Desktop\gNet\Release\Client.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\Client.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Documents and Settings\Developer\Desktop\gNet\Release\Client.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Release\Client.obj
+  Release\Globals.obj
+  Release\CLI.obj
+  Release\OutboundSocket.obj
+  Release\InboundSocket.obj
+  Release\SocketToObjectContainer.obj
+  Release\gNetSocket.obj
+  Release\ServerSocket.obj
+  Release\SettingsReader.obj
+  Release\stdafx.obj
+  Release\TagGenerator.obj
+  Release\ToServerSocket.obj
+  "Release\.NETFramework,Version=v4.0.AssemblyAttributes.obj"
+  LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
+  Client.vcxproj -> C:\Documents and Settings\Developer\Desktop\gNet\Release\Client.exe
+Manifest:
+  C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Documents and Settings\Developer\Desktop\gNet\Release\Client.exe;#1" /manifest Release\Client.exe.intermediate.manifest
+FinalizeBuildStatus:
+  Deleting file "Release\Client.unsuccessfulbuild".
+  Touching "Release\Client.lastbuildstate".
+Done Building Project "C:\Documents and Settings\Developer\Desktop\gNet\Client\Client.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:17.53
