@@ -65,5 +65,7 @@ ref class gNetSocket
 		virtual void Recive(SocketToObjectContainer^ container){};
 		
 		virtual void SetRead(bool state);
+		// Grazina varda
+		virtual char* GetName();
 };
 

@@ -1,5 +1,4 @@
 #pragma once
-#include <hash_map>
 #include <unordered_map>
 #include <map>
 // Reikalinga System::String i std::string
@@ -8,8 +7,8 @@
 #using <mscorlib.dll>
 
 using namespace System;
+using namespace System::Security::Permissions;
 using namespace Microsoft::Win32;
-using namespace std;
 using namespace stdext;
 // Reikalinga System::String o std::string
 using namespace msclr::interop;
@@ -19,8 +18,7 @@ using namespace msclr::interop;
 #define _DEFINE_DEPRECATED_HASH_CLASSES 0
 */
 
-class SettingsReader
-{
+class SettingsReader {
 private:
 	map<string, string> settings;
 	int ReadRegistry();

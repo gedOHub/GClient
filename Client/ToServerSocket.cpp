@@ -391,4 +391,6 @@ void ToServerSocket::CommandClear(){
 	System::Console::Clear();
 	this->CommandHelp();
 }
-
+int ToServerSocket::GenerateTag(){
+	return this->tag->GetTag();
+}

@@ -11,7 +11,6 @@
 #include <tchar.h>
 #include <iostream>
 
-
 // TODO: reference additional headers your program requires here
 // Pridedamos bibliotekos
 // TODO: Interpti mscorlib 
@@ -48,6 +47,8 @@
 #include "TagGenerator.h"
 #include "ToServerSocket.h"
 #include "CLI.h"
+#include "JSONapiServer.h"
+#include "JSONapiClient.h"
 
 
 /* KONSTANTOS */

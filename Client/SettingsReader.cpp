@@ -7,7 +7,15 @@ std::string SettingsReader::getSetting(std::string settingName){
 	// NULL - jei nerado tokio nustatymo
 	// REIKSME - jie rado
 	try{
-		return this->settings[settingName];
+		// Ieskau norimos reiksmes
+		map<string, string>::const_iterator got = this->settings.find(settingName);
+		// Tikrinu ka radau
+		if (got == this->settings.end())
+			// Neradau reiksmes
+			return nullptr;
+		else
+			cout << settingName << " <->" << got->second << endl;
+			return got->second;
 	}catch(System::Exception^){
 		return nullptr;
 	}
@@ -27,12 +35,13 @@ int SettingsReader::ReadRegistry(){
 		RKey = RKey->OpenSubKey("Software");
 		RKey = RKey->OpenSubKey("gNet");
 		RKey = RKey->OpenSubKey("Client");
-		array<String^>^ subKeys = RKey->GetValueNames();
+		// Info: https://msdn.microsoft.com/en-us/library/microsoft.win32.registrykey.getvaluenames(v=vs.110).aspx
+		array<String^> ^ subKeys = RKey->GetValueNames();
 		string tempKey;
 		string tempValue;
-		for(int i = 0; i < subKeys->Length; i++){
-			// System::String verciam i STD ir talinam i hash_map
-			this->SystemStringToStdString(subKeys[i],tempKey);
+		for (int i = 0; i < subKeys->Length; i++){
+			// System::String verciam i STD ir talpinam i hash_map
+			this->SystemStringToStdString(subKeys[i], tempKey);
 			this->SystemStringToStdString((RKey->GetValue(subKeys[i]))->ToString(), tempValue);
 			//this->settings.insert(std::make_pair(tempKey, tempValue));
 			this->settings[tempKey] = tempValue;

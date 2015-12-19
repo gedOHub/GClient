@@ -46,5 +46,3 @@ void InboundSocket::Recive(SocketToObjectContainer^ container){
 		}
 	}
 }
-
-void InboundSocket::CreateSocket(){}
