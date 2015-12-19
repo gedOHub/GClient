@@ -1,53 +1,30 @@
-﻿Build started 5/20/2014 1:55:08 PM.
-Project "C:\Documents and Settings\Developer\Desktop\gNet\Client\Client.vcxproj" on node 2 (rebuild target(s)).
-_PrepareForClean:
-  Deleting file "Debug\Client.lastbuildstate".
-InitializeBuildStatus:
-  Creating "Debug\Client.unsuccessfulbuild" because "AlwaysCreate" was specified.
-GenerateTargetFrameworkMonikerAttribute:
-Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
-ClCompile:
-  C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /AI"C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yc"StdAfx.h" /Fp"Debug\Client.pch" /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /analyze- /errorReport:prompt stdafx.cpp /clr:nostdlib 
-  stdafx.cpp
-  C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /AI"C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Debug\Client.pch" /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /analyze- /errorReport:prompt Client.cpp Globals.cpp CLI.cpp OutboundSocket.cpp InboundSocket.cpp SocketToObjectContainer.cpp gNetSocket.cpp ServerSocket.cpp SettingsReader.cpp TagGenerator.cpp ToServerSocket.cpp /clr:nostdlib 
-  Client.cpp
-Client.cpp(97): warning C4101: 'e' : unreferenced local variable
-  Globals.cpp
-  CLI.cpp
-  OutboundSocket.cpp
-  InboundSocket.cpp
-  SocketToObjectContainer.cpp
-  gNetSocket.cpp
-  ServerSocket.cpp
-  SettingsReader.cpp
-  TagGenerator.cpp
-  ToServerSocket.cpp
-  Generating Code...
-c:\documents and settings\developer\desktop\gnet\client\gnetsocket.cpp(179): warning C4715: 'gNetSocket::Send' : not all control paths return a value
-  C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /clr /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /analyze- /errorReport:prompt "C:\Documents and Settings\Developer\Local Settings\Temp\.NETFramework,Version=v4.0.AssemblyAttributes.cpp"
-  .NETFramework,Version=v4.0.AssemblyAttributes.cpp
-Link:
-  C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Documents and Settings\Developer\Desktop\gNet\Debug\Client.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Client.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Documents and Settings\Developer\Desktop\gNet\Debug\Client.pdb" /ASSEMBLYDEBUG /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Debug\Client.obj
-  Debug\Globals.obj
-  Debug\CLI.obj
-  Debug\OutboundSocket.obj
-  Debug\InboundSocket.obj
-  Debug\SocketToObjectContainer.obj
-  Debug\gNetSocket.obj
-  Debug\ServerSocket.obj
-  Debug\SettingsReader.obj
-  Debug\stdafx.obj
-  Debug\TagGenerator.obj
-  Debug\ToServerSocket.obj
-  "Debug\.NETFramework,Version=v4.0.AssemblyAttributes.obj"
-  Client.vcxproj -> C:\Documents and Settings\Developer\Desktop\gNet\Debug\Client.exe
-Manifest:
-  C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Documents and Settings\Developer\Desktop\gNet\Debug\Client.exe;#1" /manifest Debug\Client.exe.intermediate.manifest
-FinalizeBuildStatus:
-  Deleting file "Debug\Client.unsuccessfulbuild".
-  Touching "Debug\Client.lastbuildstate".
-Done Building Project "C:\Documents and Settings\Developer\Desktop\gNet\Client\Client.vcxproj" (rebuild target(s)).
+﻿Build started 2015-12-19 14:54:36.
+     1>Project "D:\git\GClient\Client\Client.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /AI"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral" /Zi /clr /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\Client.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\mscorlib.dll" /analyze- /errorReport:prompt /clr:nostdlib Client.cpp
+         Client.cpp
+     1>Client.cpp(113): warning C4101: 'e' : unreferenced local variable
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\git\GClient\Debug\Client.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\git\GClient\Debug\Client.pdb" /ASSEMBLYDEBUG /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Debug\CLI.obj
+         Debug\Client.obj
+         Debug\Globals.obj
+         Debug\gNetSocket.obj
+         Debug\InboundSocket.obj
+         Debug\JSONapiClient.obj
+         Debug\JSONapiServer.obj
+         Debug\JSON_API.obj
+         Debug\OutboundSocket.obj
+         Debug\ServerSocket.obj
+         Debug\SettingsReader.obj
+         Debug\SocketToObjectContainer.obj
+         Debug\SocketToSocketContainer.obj
+         Debug\stdafx.obj
+         Debug\TagGenerator.obj
+         Debug\ToServerSocket.obj
+         "Debug\.NETFramework,Version=v4.0.AssemblyAttributes.obj"
+         Client.vcxproj -> D:\git\GClient\Debug\Client.exe
+     1>Done Building Project "D:\git\GClient\Client\Client.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:13.09
+Time Elapsed 00:00:01.25

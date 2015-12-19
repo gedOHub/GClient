@@ -32,6 +32,11 @@ struct header{
 	ULONG lenght;	// dydis: 4
 };
 
+struct APIHeader: header{
+	USHORT apiNumber;	// dydis: 2
+	USHORT returnTag;	// dydis: 2
+};
+
 // Kliento duomenu struktura
 struct ClientInfo{
 	char domainName[MAX_COMPUTERNAME_LENGTH+1];

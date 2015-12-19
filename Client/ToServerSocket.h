@@ -24,4 +24,6 @@ public:
 	void CommandBeginRead(SocketToObjectContainer^ container);
 	void CommandClientConnectAck(SocketToObjectContainer^ container);
 	void CommandInitConnectAck();
+	// Grazina sugeneruota zyme
+	int GenerateTag();
 };

@@ -181,3 +181,7 @@ int gNetSocket::Send(char* data, int lenght){
 void gNetSocket::SetRead(bool state){
 	this->read = state;
 }
+
+char* gNetSocket::GetName(){
+	return this->name;
+}

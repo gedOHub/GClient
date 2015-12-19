@@ -7,36 +7,21 @@
     </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Header Files\Sujungimai">
-      <UniqueIdentifier>{2606c5d6-26f9-43c8-aca3-3e93638f0aa5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Sujungimai\Paprastas">
-      <UniqueIdentifier>{c48e982b-1606-46ff-8506-d9cdc6ce674e}</UniqueIdentifier>
+      <UniqueIdentifier>{c122cb55-b536-4885-af11-7f6e99d36f64}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Sujungimai">
-      <UniqueIdentifier>{c51219f2-629d-4437-84b1-a11a2fe8aa77}</UniqueIdentifier>
+      <UniqueIdentifier>{eecbb4cd-bd7e-426f-bd97-71a1d5c78fef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Sujungimai\Paprastas">
-      <UniqueIdentifier>{9640543b-0987-403e-a87a-fbce678dcf2d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Komutavimas">
-      <UniqueIdentifier>{f142797f-1e5b-4148-998a-2b0a2e76d58c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Komutavimas\Duomenu Saugykla">
-      <UniqueIdentifier>{1225864a-3793-4831-bab8-1ce20db6361a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Komutavimas">
-      <UniqueIdentifier>{fae334a0-3ef7-44f2-a92d-4fc9205e81b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Komutavimas\Duomenu Saugykla">
-      <UniqueIdentifier>{1d7e7da8-2a59-4209-9742-255f95e70921}</UniqueIdentifier>
-    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -45,38 +30,50 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CLI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JSON_API.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="SettingsReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gNetSocket.h">
-      <Filter>Header Files\Sujungimai</Filter>
-    </ClInclude>
     <ClInclude Include="SocketToObjectContainer.h">
-      <Filter>Header Files\Komutavimas\Duomenu Saugykla</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ServerSocket.h">
-      <Filter>Header Files\Sujungimai\Paprastas</Filter>
-    </ClInclude>
-    <ClInclude Include="InboundSocket.h">
-      <Filter>Header Files\Sujungimai\Paprastas</Filter>
-    </ClInclude>
-    <ClInclude Include="OutboundSocket.h">
-      <Filter>Header Files\Sujungimai\Paprastas</Filter>
-    </ClInclude>
-    <ClInclude Include="ToServerSocket.h">
-      <Filter>Header Files\Sujungimai\Paprastas</Filter>
-    </ClInclude>
-    <ClInclude Include="Globals.h">
+    <ClInclude Include="SocketToSocketContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Structures.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CLI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TagGenerator.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gNetSocket.h">
+      <Filter>Header Files\Sujungimai</Filter>
+    </ClInclude>
+    <ClInclude Include="JSONapiClient.h">
+      <Filter>Header Files\Sujungimai</Filter>
+    </ClInclude>
+    <ClInclude Include="JSONapiServer.h">
+      <Filter>Header Files\Sujungimai</Filter>
+    </ClInclude>
+    <ClInclude Include="InboundSocket.h">
+      <Filter>Header Files\Sujungimai</Filter>
+    </ClInclude>
+    <ClInclude Include="OutboundSocket.h">
+      <Filter>Header Files\Sujungimai</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerSocket.h">
+      <Filter>Header Files\Sujungimai</Filter>
+    </ClInclude>
+    <ClInclude Include="ToServerSocket.h">
+      <Filter>Header Files\Sujungimai</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -86,35 +83,47 @@
     <ClCompile Include="Client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SettingsReader.cpp">
+    <ClCompile Include="CLI.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SocketToObjectContainer.cpp">
-      <Filter>Source Files\Komutavimas\Duomenu Saugykla</Filter>
-    </ClCompile>
-    <ClCompile Include="ServerSocket.cpp">
-      <Filter>Source Files\Sujungimai\Paprastas</Filter>
-    </ClCompile>
-    <ClCompile Include="OutboundSocket.cpp">
-      <Filter>Source Files\Sujungimai\Paprastas</Filter>
-    </ClCompile>
-    <ClCompile Include="InboundSocket.cpp">
-      <Filter>Source Files\Sujungimai\Paprastas</Filter>
-    </ClCompile>
-    <ClCompile Include="gNetSocket.cpp">
-      <Filter>Source Files\Sujungimai</Filter>
-    </ClCompile>
-    <ClCompile Include="ToServerSocket.cpp">
-      <Filter>Source Files\Sujungimai\Paprastas</Filter>
     </ClCompile>
     <ClCompile Include="Globals.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CLI.cpp">
+    <ClCompile Include="JSON_API.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketToObjectContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketToSocketContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TagGenerator.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gNetSocket.cpp">
+      <Filter>Source Files\Sujungimai</Filter>
+    </ClCompile>
+    <ClCompile Include="InboundSocket.cpp">
+      <Filter>Source Files\Sujungimai</Filter>
+    </ClCompile>
+    <ClCompile Include="JSONapiClient.cpp">
+      <Filter>Source Files\Sujungimai</Filter>
+    </ClCompile>
+    <ClCompile Include="JSONapiServer.cpp">
+      <Filter>Source Files\Sujungimai</Filter>
+    </ClCompile>
+    <ClCompile Include="OutboundSocket.cpp">
+      <Filter>Source Files\Sujungimai</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerSocket.cpp">
+      <Filter>Source Files\Sujungimai</Filter>
+    </ClCompile>
+    <ClCompile Include="ToServerSocket.cpp">
+      <Filter>Source Files\Sujungimai</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

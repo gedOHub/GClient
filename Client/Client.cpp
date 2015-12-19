@@ -39,30 +39,36 @@ int _tmain(int argc, _TCHAR* argv[])
 		printf("Nepavyko uzmegsti rysio iki centrini serveri\n");
 		return 1;
 	}
+	// Priskiriam pradinius rezius
+	Globals::maxD = ToServer->GetSocket();
+	// Sukurta sujungima dedame i sarasus
+	STOContainer->Add(ToServer);
 	
-	/*
-	ServerSocket^ listen = gcnew ServerSocket("localhost", "2000", 1, &skaitomiSocket, &rasomiSocket, &klaidingiSocket);
-	if(listen->GetSocket() == INVALID_SOCKET){
-		printf("Nepavyko klausytis ant prievado\n");
-		return 1;
-	}
-	*/
 	// Pradedu CLI gija valdymui
 	CLI ^console = gcnew CLI(ToServer, STOContainer);
 	Thread ^consoleThread = gcnew Thread(gcnew ThreadStart(console, &CLI::Start));
 	consoleThread->Start();
 
-	//ConsoleSocket^ console = gcnew ConsoleSocket(&skaitomiSocket, &rasomiSocket, &klaidingiSocket);
-
-	// Sukurta sujungima dedame i sarasus
-	STOContainer->Add(ToServer);
-
-	//STOContainer->Add(listen);
+	/*
+	// Sukuriu JSON API socket'a
+	JSONapiServer^ JSON = gcnew JSONapiServer(settings->getSetting("JSONapi_address"),
+		settings->getSetting("JSONapi_port"),  &skaitomiSocket, &rasomiSocket, &klaidingiSocket);
+	// Tikrinam ar klausytis nurodytu adresu ir portu
+	if (ToServer->GetSocket() == INVALID_SOCKET){
+		printf("Nepavyko klausytis %s:%s\n", settings->getSetting("JSONapi_address"), 
+			settings->getSetting("JSONapi_port"));
+		return 2;
+	}
 	
-	// Priskiriam pradinius rezius
-	Globals::maxD = ToServer->GetSocket();
-	//Globals::maxD = listen->GetSocket();
+	// Nustatom maksimalu deskriptoriu
+	// Tikrinu ar JSON socketas nera didensi nei ToServer :)
+	if (Globals::maxD < (int)JSON->GetSocket())
+		Globals::maxD = (int)JSON->GetSocket();
+	// Sukurta sujungima dedame i sarasus
+	STOContainer->Add(JSON);
 
+	*/
+	
 	fd_set tempRead, tempWrite, tempError;	// Laikinas dekriptoriu kintamasis
 	while(!Globals::quit){
 		// Siam ciklui skaitomi dekriptoriai
