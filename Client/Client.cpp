@@ -51,8 +51,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	/*
 	// Sukuriu JSON API socket'a
-	JSONapiServer^ JSON = gcnew JSONapiServer(settings->getSetting("JSONapi_address"),
-		settings->getSetting("JSONapi_port"),  &skaitomiSocket, &rasomiSocket, &klaidingiSocket);
+	JSONapiServer^ JSON = gcnew JSONapiServer(settings->getSetting("JSONapi_address"), settings->getSetting("JSONapi_port"),
+		&skaitomiSocket, &rasomiSocket, &klaidingiSocket);
 	// Tikrinam ar klausytis nurodytu adresu ir portu
 	if (ToServer->GetSocket() == INVALID_SOCKET){
 		printf("Nepavyko klausytis %s:%s\n", settings->getSetting("JSONapi_address"), 
@@ -66,9 +66,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		Globals::maxD = (int)JSON->GetSocket();
 	// Sukurta sujungima dedame i sarasus
 	STOContainer->Add(JSON);
-
 	*/
-	
+
 	fd_set tempRead, tempWrite, tempError;	// Laikinas dekriptoriu kintamasis
 	while(!Globals::quit){
 		// Siam ciklui skaitomi dekriptoriai

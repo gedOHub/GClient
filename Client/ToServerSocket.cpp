@@ -209,12 +209,12 @@ void ToServerSocket::CommandHello(){
 	this->Send( this->commandBuffer, sizeof( header ) + sizeof ( helloCommand ) );
 }
 void ToServerSocket::CommandInitConnect( int id, int port, SocketToObjectContainer^ container){
-	string HOST = "localhost";
+	string HOST = "0.0.0.0";
 	// For muoju komanda connect
 	int newTag = tag->GetTag();
 	cout << "Suformuojamas naujas srautas " << newTag << endl;
 	// Inicijuoju listen socketa
-	ServerSocket^ newSocket = gcnew ServerSocket(HOST, "", newTag, this->skaitomi, this->rasomi, this->klaidingi);
+	ServerSocket^ newSocket = gcnew ServerSocket(HOST, "0", newTag, this->skaitomi, this->rasomi, this->klaidingi);
 	
 	if(newSocket->GetSocket() == SOCKET_ERROR){
 		printf("Nepavyko sukurti besiklausancio prievado");
