@@ -1,4 +1,5 @@
 #pragma once
+#pragma managed
 
 /* Nuorodos:
 http://msdn.microsoft.com/en-us/library/windows/desktop/bb530743(v=vs.85).aspx

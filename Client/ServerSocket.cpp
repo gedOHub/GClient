@@ -28,11 +28,6 @@ void ServerSocket::Bind(){
 		if(rBind == SOCKET_ERROR) {
 			// Bandom tol, kol pavyks, delsiant viena minute
 			cout << "Klaida klausantis " << this->IP << ":" << this->PORT << " Kodas: " <<  WSAGetLastError() << endl;
-			cout << "Bandau klausytis " << this->IP << ":" << this->PORT << " po minutes" << endl;
-			// Miegu 1 min
-			Sleep(60000);
-			// Jungiuosi
-			this->Bind();
 		} else break;
 	}
 }
