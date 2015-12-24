@@ -208,13 +208,13 @@ void ToServerSocket::CommandHello(){
 	// Siunciu hello paketa
 	this->Send( this->commandBuffer, sizeof( header ) + sizeof ( helloCommand ) );
 }
-void ToServerSocket::CommandInitConnect( int id, int port, SocketToObjectContainer^ container){
-	string HOST = "0.0.0.0";
-	// For muoju komanda connect
+void ToServerSocket::CommandInitConnect( int id, int port, SocketToObjectContainer^ container, SettingsReader* settings){
+	// Formuoju komanda connect
 	int newTag = tag->GetTag();
 	cout << "Suformuojamas naujas srautas " << newTag << endl;
+
 	// Inicijuoju listen socketa
-	ServerSocket^ newSocket = gcnew ServerSocket(HOST, "0", newTag, this->skaitomi, this->rasomi, this->klaidingi);
+	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi);
 	
 	if(newSocket->GetSocket() == SOCKET_ERROR){
 		printf("Nepavyko sukurti besiklausancio prievado");
@@ -226,42 +226,17 @@ void ToServerSocket::CommandInitConnect( int id, int port, SocketToObjectContain
 		if(Globals::maxD < (int)newSocket->GetSocket())
 			Globals::maxD = newSocket->GetSocket();
 
-		// Ieskau PORTO
-		sockaddr_in socketInfo;
-		int ilgis = sizeof(socketInfo);
-		if(getsockname(newSocket->GetSocket(), (struct sockaddr *)&socketInfo, &ilgis) != 0 && ilgis != sizeof(socketInfo)){
-			printf("Nepavyko nustatyti prievado: %d", WSAGetLastError());
-			delete newSocket;
-			printf("Uzdarau sujungima\n");
-			return;
-		}
-
-		int listenPort = ntohs(socketInfo.sin_port);
-		/*
-		string sListenPort; sListenPort += port;
-		std::string::size_type pos = command.find("$IP");
-		string ip = "$IP";
-		string sPort = "$PORT";
-		command.replace(pos, ip.size(), "localhost");
-		command.replace(pos, sPort.size(), sListenPort);
-		//replace(command.begin(), command.end(), "$IP" , "localhost");
-		//replace(command.begin(), command.end(), "$PORT" , sListenPort);
-		*/
-
-		//cout << "Sukurtas jungimosi prievadas: " << HOST << ":" << listenPort << endl;
-
-		/*
-		// Jungiu programa
-		printf("Paleidziu komanda: %s\n", command);
-		if( system(command.c_str()) ){
-		*/
-		// Formuoju INIT_CONNECT komandos paketa serveriui
-		// Pildau command paketa
+		// Pildau InitCommand komandos pakeita
 		connectInitCommand* connect = (struct connectInitCommand* ) &this->commandBuffer[sizeof(header)];
+		// NUrodau komanda
 		connect->command = htons(INIT_CONNECT);
-		connect->source_port = htons(listenPort);
+		// Nurodau savo atverta prievada
+		connect->source_port = htons(newSocket->GetPort());
+		// Nurodau srauto zyme
 		connect->tag = htons(newTag);
+		// Nurodau koki prievada noriu pasiekti
 		connect->destination_port = htons(port);
+		// Nurodau klienta
 		connect->client_id = htonl(id);
 		// Pildau headeri
 		this->head = (struct header*) &this->commandBuffer[0];
