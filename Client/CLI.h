@@ -7,10 +7,10 @@ ref class CLI
 private:
 	SocketToObjectContainer^ STOContainer;
 	ToServerSocket^ socket;
+	SettingsReader* settings;
 	string ClearCLI();
 
 public:
-	CLI(ToServerSocket^ socket, SocketToObjectContainer^ STOContainer);
+	CLI(ToServerSocket^ socket, SocketToObjectContainer^ STOContainer, SettingsReader* settings);
 	void Start();
 };
-
