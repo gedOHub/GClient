@@ -45,7 +45,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	STOContainer->Add(ToServer);
 	
 	// Pradedu CLI gija valdymui
-	CLI ^console = gcnew CLI(ToServer, STOContainer);
+	CLI ^console = gcnew CLI(ToServer, STOContainer, settings);
 	Thread ^consoleThread = gcnew Thread(gcnew ThreadStart(console, &CLI::Start));
 	consoleThread->Start();
 
@@ -119,4 +119,3 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	return 0;
 }
-
