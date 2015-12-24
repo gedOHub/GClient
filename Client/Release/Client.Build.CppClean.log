@@ -1,27 +1,30 @@
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\CLIENT\RELEASE\.NETFRAMEWORK,VERSION=V4.0.ASSEMBLYATTRIBUTES.OBJ
-C:\Documents and Settings\Developer\Desktop\gNet\Client\Release\cl.command.1.tlog
-C:\Documents and Settings\Developer\Desktop\gNet\Client\Release\CL.read.1.tlog
-C:\Documents and Settings\Developer\Desktop\gNet\Client\Release\CL.write.1.tlog
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\CLIENT\RELEASE\CLI.OBJ
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\CLIENT\RELEASE\CLIENT.EXE.INTERMEDIATE.MANIFEST
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\CLIENT\RELEASE\CLIENT.OBJ
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\CLIENT\RELEASE\CLIENT.PCH
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\CLIENT\RELEASE\GLOBALS.OBJ
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\CLIENT\RELEASE\GNETSOCKET.OBJ
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\CLIENT\RELEASE\INBOUNDSOCKET.OBJ
-C:\Documents and Settings\Developer\Desktop\gNet\Client\Release\link.command.1.tlog
-C:\Documents and Settings\Developer\Desktop\gNet\Client\Release\link.read.1.tlog
-C:\Documents and Settings\Developer\Desktop\gNet\Client\Release\link.write.1.tlog
-C:\Documents and Settings\Developer\Desktop\gNet\Client\Release\mt.command.1.tlog
-C:\Documents and Settings\Developer\Desktop\gNet\Client\Release\mt.read.1.tlog
-C:\Documents and Settings\Developer\Desktop\gNet\Client\Release\mt.write.1.tlog
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\CLIENT\RELEASE\OUTBOUNDSOCKET.OBJ
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\CLIENT\RELEASE\SERVERSOCKET.OBJ
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\CLIENT\RELEASE\SETTINGSREADER.OBJ
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\CLIENT\RELEASE\SOCKETTOOBJECTCONTAINER.OBJ
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\CLIENT\RELEASE\STDAFX.OBJ
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\CLIENT\RELEASE\TAGGENERATOR.OBJ
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\CLIENT\RELEASE\TOSERVERSOCKET.OBJ
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\CLIENT\RELEASE\VC100.PDB
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\RELEASE\CLIENT.EXE
-C:\DOCUMENTS AND SETTINGS\DEVELOPER\DESKTOP\GNET\RELEASE\CLIENT.PDB
+d:\git\gclient\client\release\client.pch
+d:\git\gclient\client\release\vc120.pdb
+d:\git\gclient\client\release\stdafx.obj
+d:\git\gclient\client\release\toserversocket.obj
+d:\git\gclient\client\release\taggenerator.obj
+d:\git\gclient\client\release\sockettosocketcontainer.obj
+d:\git\gclient\client\release\sockettoobjectcontainer.obj
+d:\git\gclient\client\release\settingsreader.obj
+d:\git\gclient\client\release\serversocket.obj
+d:\git\gclient\client\release\outboundsocket.obj
+d:\git\gclient\client\release\json_api.obj
+d:\git\gclient\client\release\jsonapiserver.obj
+d:\git\gclient\client\release\jsonapiclient.obj
+d:\git\gclient\client\release\inboundsocket.obj
+d:\git\gclient\client\release\gnetsocket.obj
+d:\git\gclient\client\release\globals.obj
+d:\git\gclient\client\release\client.obj
+d:\git\gclient\client\release\cli.obj
+d:\git\gclient\client\release\.netframework,version=v4.0.assemblyattributes.obj
+d:\git\gclient\release\client.exe
+d:\git\gclient\release\client.pdb
+d:\git\gclient\client\release\client.tlog\cl.command.1.tlog
+d:\git\gclient\client\release\client.tlog\cl.read.1.tlog
+d:\git\gclient\client\release\client.tlog\cl.write.1.tlog
+d:\git\gclient\client\release\client.tlog\link.command.1.tlog
+d:\git\gclient\client\release\client.tlog\link.read.1.tlog
+d:\git\gclient\client\release\client.tlog\link.write.1.tlog
+d:\git\gclient\client\release\client.tlog\metagen.read.1.tlog
+d:\git\gclient\client\release\client.tlog\metagen.write.1.tlog
+d:\git\gclient\client\release\client.tlog\tzres.dll.bi

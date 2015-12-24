@@ -14,7 +14,6 @@ std::string SettingsReader::getSetting(std::string settingName){
 			// Neradau reiksmes
 			return nullptr;
 		else
-			cout << settingName << " <->" << got->second << endl;
 			return got->second;
 	}catch(System::Exception^){
 		return nullptr;

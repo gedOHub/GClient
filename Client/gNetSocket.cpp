@@ -82,6 +82,16 @@ int gNetSocket::GetTag(){
 	return this->TAG;
 }
 
+int gNetSocket::GetPort(){
+	sockaddr_in socketInfo;
+	int ilgis = sizeof(socketInfo);
+	if (getsockname(this->Socket, (struct sockaddr *)&socketInfo, &ilgis) != 0 && ilgis != sizeof(socketInfo)){
+		return -1;
+	}
+
+	return ntohs(socketInfo.sin_port);
+}
+
 // Gaunam galimus adresu varaintus
 void gNetSocket::GetAddressInfo(){
 	// Laikinieji kintamieji

@@ -47,6 +47,8 @@ ref class gNetSocket
 		virtual SOCKET GetSocket();
 		// Grazina tag
 		virtual int GetTag();
+		// Grazina kokiu preivadu klausosi
+		virtual int GetPort();
 		// Uzdarome sujungima
 		virtual bool CloseSocket();
 		// Naikiname sujungima

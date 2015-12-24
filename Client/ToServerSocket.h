@@ -18,7 +18,7 @@ public:
 	void CommandListAck(int rRecv );
 	void CommandHello();
 	void CommandHelp();
-	void CommandInitConnect(int id, int port, SocketToObjectContainer^ container);
+	void CommandInitConnect(int id, int port, SocketToObjectContainer^ container, SettingsReader* settings);
 	void CommandConnect(SocketToObjectContainer^ container);
 	void CommandClear();
 	void CommandBeginRead(SocketToObjectContainer^ container);

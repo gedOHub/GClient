@@ -1,12 +1,15 @@
 #include "StdAfx.h"
 #include "ServerSocket.h"
 
-ServerSocket::ServerSocket(string ip, string port, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket):gNetSocket(ip, port, tag,skaitomiSocket, rasomiSocket, klaidingiSocket){
+ServerSocket::ServerSocket(string ip, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket):gNetSocket(ip, "0", tag,skaitomiSocket, rasomiSocket, klaidingiSocket){
+	// Nustatau pradinius socke'o parametrus
 	this->read = true;
 	this->write = false;
 
+	// Pradedu klausymasi
 	this->Listen();
 }
+
 void ServerSocket::Listen(){
 	// kviecaim bind funkcija
 	this->Bind();
@@ -15,7 +18,7 @@ void ServerSocket::Listen(){
 	// http://msdn.microsoft.com/en-us/library/windows/desktop/ms739168(v=vs.85).aspx
 	if(listen(this->Socket, SOMAXCONN) == SOCKET_ERROR){
 		// Jei ivyko klaida
-		printf( "Nepavyko klausytis %s socket: %ld\n", this->PORT, WSAGetLastError() );
+		printf( "Nepavyko klausytis %s socket: %ld\n", this->Socket, WSAGetLastError() );
 		this->CloseSocket();
 	}
 }
@@ -27,7 +30,7 @@ void ServerSocket::Bind(){
 		// Tikrinam ar pavyko prijsungti
 		if(rBind == SOCKET_ERROR) {
 			// Bandom tol, kol pavyks, delsiant viena minute
-			cout << "Klaida klausantis " << this->IP << ":" << this->PORT << " Kodas: " <<  WSAGetLastError() << endl;
+			cout << "Klaida klausantis " << ptr->ai_addr << " Kodas: " <<  WSAGetLastError() << endl;
 		} else break;
 	}
 }
