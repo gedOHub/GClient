@@ -6,7 +6,7 @@ ref class ServerSocket : public gNetSocket
 		void Bind();
 		
 	public:
-		ServerSocket(string ip, string port, int tag, 
+		ServerSocket(string ip, int tag, 
 			fd_set* skaitomiSocket, 
 			fd_set* rasomiSocket, 
 			fd_set* klaidingiSocket
@@ -15,4 +15,3 @@ ref class ServerSocket : public gNetSocket
 		virtual void Listen() override;
 		virtual void Recive(SocketToObjectContainer^ container) override;
 };
-
