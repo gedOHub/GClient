@@ -2,9 +2,10 @@
 #include "CLI.h"
 
 
-CLI::CLI(ToServerSocket^ socket, SocketToObjectContainer^ STOContainer){
+CLI::CLI(ToServerSocket^ socket, SocketToObjectContainer^ STOContainer, SettingsReader* settings){
 	this->socket = socket;
 	this->STOContainer = STOContainer;
+	this->settings = settings;
 }
 
 void CLI::Start(){
@@ -71,7 +72,7 @@ void CLI::Start(){
 				if( cin.fail() )
 					throw "CLI_ERROR";
 
-				this->socket->CommandInitConnect(id, port, STOContainer);
+				this->socket->CommandInitConnect(id, port, STOContainer, this->settings);
 			}catch(System::Exception^ ){
 				printf("Blogai ivesta connect komanda\n");
 				zodis = this->ClearCLI();
