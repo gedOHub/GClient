@@ -1,6 +1,7 @@
 d:\git\gclient\client\debug\client.pch
 d:\git\gclient\client\debug\vc120.pdb
 d:\git\gclient\client\debug\stdafx.obj
+d:\git\gclient\client\debug\gnetsocket.obj
 d:\git\gclient\client\debug\toserversocket.obj
 d:\git\gclient\client\debug\taggenerator.obj
 d:\git\gclient\client\debug\sockettosocketcontainer.obj
@@ -8,17 +9,17 @@ d:\git\gclient\client\debug\sockettoobjectcontainer.obj
 d:\git\gclient\client\debug\settingsreader.obj
 d:\git\gclient\client\debug\serversocket.obj
 d:\git\gclient\client\debug\outboundsocket.obj
-d:\git\gclient\client\debug\json_api.obj
 d:\git\gclient\client\debug\jsonapiserver.obj
 d:\git\gclient\client\debug\jsonapiclient.obj
+d:\git\gclient\client\debug\json_api.obj
 d:\git\gclient\client\debug\inboundsocket.obj
-d:\git\gclient\client\debug\gnetsocket.obj
 d:\git\gclient\client\debug\globals.obj
 d:\git\gclient\client\debug\client.obj
 d:\git\gclient\client\debug\cli.obj
 d:\git\gclient\client\debug\.netframework,version=v4.0.assemblyattributes.obj
 d:\git\gclient\debug\client.exe
 d:\git\gclient\debug\client.pdb
+d:\git\gclient\client\debug\client.vcxprojresolveassemblyreference.cache
 d:\git\gclient\client\debug\client.tlog\cl.command.1.tlog
 d:\git\gclient\client\debug\client.tlog\cl.read.1.tlog
 d:\git\gclient\client\debug\client.tlog\cl.write.1.tlog
