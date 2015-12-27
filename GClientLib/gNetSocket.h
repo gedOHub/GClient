@@ -12,6 +12,10 @@ using namespace System;
 using namespace System::IO;
 
 namespace GClientLib {
+
+	// Del cross-reference problemos, placiau http://stackoverflow.com/questions/3735321/solving-cross-referencing
+	ref class SocketToObjectContainer;
+
 	ref class gNetSocket {
 		protected:
 			fd_set* skaitomi;

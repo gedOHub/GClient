@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "SocketToObjectContainer.h"
 
+using namespace cliext;
+using namespace GClientLib;
 
 GClientLib::SocketToObjectContainer::SocketToObjectContainer(void){
 	this->sarasas = gcnew cliext::list<gNetSocket^>();

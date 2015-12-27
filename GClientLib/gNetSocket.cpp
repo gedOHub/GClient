@@ -186,6 +186,7 @@ int GClientLib::gNetSocket::Send(char* data, int lenght){
 		}
 		return rSend;
 	}
+	return 0;
 }
 
 void GClientLib::gNetSocket::SetRead(bool state){

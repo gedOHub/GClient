@@ -186,6 +186,7 @@ int gNetSocket::Send(char* data, int lenght){
 		}
 		return rSend;
 	}
+	return 0;
 }
 
 void gNetSocket::SetRead(bool state){

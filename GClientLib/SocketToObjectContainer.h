@@ -5,6 +5,10 @@ using namespace System;
 
 
 namespace GClientLib {
+
+	// Del cross-reference problemos, placiau http://stackoverflow.com/questions/3735321/solving-cross-referencing
+	ref class gNetSocket;
+	
 	ref class SocketToObjectContainer {
 		private:
 			// Sujungimu sarasas
