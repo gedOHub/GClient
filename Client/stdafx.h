@@ -36,21 +36,6 @@
 #include <fstream>
 
 
-#include "Structures.h"
-#include "Globals.h"
-#include "SocketToObjectContainer.h"
-#include "gNetSocket.h"
-#include "SettingsReader.h"
-#include "OutboundSocket.h"
-#include "InboundSocket.h"
-#include "ServerSocket.h"
-#include "TagGenerator.h"
-#include "ToServerSocket.h"
-#include "CLI.h"
-#include "JSONapiServer.h"
-#include "JSONapiClient.h"
-
-
 /* KONSTANTOS */
 static const int OneMBofChar = 1048576;
 static const int FiveMBtoCHAR = 5242880;
