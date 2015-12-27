@@ -82,43 +82,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CLI.h" />
-    <ClInclude Include="Globals.h" />
-    <ClInclude Include="gNetSocket.h" />
-    <ClInclude Include="InboundSocket.h" />
-    <ClInclude Include="JSONapiClient.h" />
-    <ClInclude Include="JSONapiServer.h" />
-    <ClInclude Include="JSON_API.h" />
-    <ClInclude Include="OutboundSocket.h" />
-    <ClInclude Include="ServerSocket.h" />
-    <ClInclude Include="SettingsReader.h" />
-    <ClInclude Include="SocketToObjectContainer.h" />
-    <ClInclude Include="SocketToSocketContainer.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Structures.h" />
-    <ClInclude Include="TagGenerator.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="ToServerSocket.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CLI.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Globals.cpp" />
-    <ClCompile Include="gNetSocket.cpp" />
-    <ClCompile Include="InboundSocket.cpp" />
-    <ClCompile Include="JSONapiClient.cpp" />
-    <ClCompile Include="JSONapiServer.cpp" />
-    <ClCompile Include="JSON_API.cpp" />
-    <ClCompile Include="OutboundSocket.cpp" />
-    <ClCompile Include="ServerSocket.cpp" />
-    <ClCompile Include="SettingsReader.cpp" />
-    <ClCompile Include="SocketToObjectContainer.cpp" />
-    <ClCompile Include="SocketToSocketContainer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TagGenerator.cpp" />
-    <ClCompile Include="ToServerSocket.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

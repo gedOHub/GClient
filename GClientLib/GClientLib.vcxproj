@@ -77,7 +77,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GClientLib.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="gNetSocket.h" />
     <ClInclude Include="InboundSocket.h" />
@@ -98,7 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="GClientLib.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="gNetSocket.cpp" />
     <ClCompile Include="InboundSocket.cpp" />
