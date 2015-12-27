@@ -1,13 +1,5 @@
-// GClientLib.h
-
-#pragma once
-
-using namespace System;
-
-namespace GClientLib {
-
-	public ref class Class1
-	{
-		// TODO: Add your methods for this class here.
-	};
-};
+#ifdef GCLIENTLIB_EXPORTS
+	#define GCLIENTLIB_API __declspec(dllexport) 
+#else
+	#define GCLIENTLIB_API __declspec(dllimport) 
+#endif
