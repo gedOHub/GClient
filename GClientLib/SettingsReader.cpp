@@ -51,7 +51,7 @@ int GClientLib::SettingsReader::ReadRegistry(){
 		//std::string testas = ; 
 		//std::cout << testas << endl;
 	} catch (System::Exception^){
-		//std::cerr << "Nepavyko nuskaityti duomenu is registru" << std::endl;
+		std::cerr << "Nepavyko nuskaityti nustatimu is registru" << std::endl;
 		return 10;
 	}
 	__finally {
