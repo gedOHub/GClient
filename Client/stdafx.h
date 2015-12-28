@@ -20,27 +20,6 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#pragma comment (lib, "Ws2_32.lib")
-
-#include <unordered_map>
-#include <map>
-// Reikalinga System::String i std::string
-#include "msclr\marshal_cppstd.h"
-
-#using <mscorlib.dll>
-#include <windows.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include <iphlpapi.h>
-#include <stdio.h>
-#include <cliext/utility> 
-#include <cliext/list>
-#include <cliext/algorithm>
-#include <process.h>
-#include <sstream>
-#include <stdlib.h>
-#include <fstream>
-
 #include "Globals.h"
 #include "CLI.h"
 #include "GClientLib.h"

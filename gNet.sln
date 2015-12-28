@@ -4,13 +4,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client.vcxproj", "{218DB3BC-42FD-4DD9-9C3C-D7D757B73B22}"
-	ProjectSection(ProjectDependencies) = postProject
-		{25C1ABFD-7952-43D5-87D2-1C27177EDB4C} = {25C1ABFD-7952-43D5-87D2-1C27177EDB4C}
-	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GClientLib", "GClientLib\GClientLib.vcxproj", "{25C1ABFD-7952-43D5-87D2-1C27177EDB4C}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SettingReaderTests", "SettingReaderTests\SettingReaderTests.vcxproj", "{219A0720-EA48-4BC2-9EFA-A4674D279BAD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GClientLib", "GClientLib\GClientLib.vcxproj", "{2CDF672D-6C97-466E-97BE-000CC2850CDD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,14 +17,10 @@ Global
 		{218DB3BC-42FD-4DD9-9C3C-D7D757B73B22}.Debug|Win32.Build.0 = Debug|Win32
 		{218DB3BC-42FD-4DD9-9C3C-D7D757B73B22}.Release|Win32.ActiveCfg = Release|Win32
 		{218DB3BC-42FD-4DD9-9C3C-D7D757B73B22}.Release|Win32.Build.0 = Release|Win32
-		{25C1ABFD-7952-43D5-87D2-1C27177EDB4C}.Debug|Win32.ActiveCfg = Debug|Win32
-		{25C1ABFD-7952-43D5-87D2-1C27177EDB4C}.Debug|Win32.Build.0 = Debug|Win32
-		{25C1ABFD-7952-43D5-87D2-1C27177EDB4C}.Release|Win32.ActiveCfg = Release|Win32
-		{25C1ABFD-7952-43D5-87D2-1C27177EDB4C}.Release|Win32.Build.0 = Release|Win32
-		{219A0720-EA48-4BC2-9EFA-A4674D279BAD}.Debug|Win32.ActiveCfg = Debug|Win32
-		{219A0720-EA48-4BC2-9EFA-A4674D279BAD}.Debug|Win32.Build.0 = Debug|Win32
-		{219A0720-EA48-4BC2-9EFA-A4674D279BAD}.Release|Win32.ActiveCfg = Release|Win32
-		{219A0720-EA48-4BC2-9EFA-A4674D279BAD}.Release|Win32.Build.0 = Release|Win32
+		{2CDF672D-6C97-466E-97BE-000CC2850CDD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2CDF672D-6C97-466E-97BE-000CC2850CDD}.Debug|Win32.Build.0 = Debug|Win32
+		{2CDF672D-6C97-466E-97BE-000CC2850CDD}.Release|Win32.ActiveCfg = Release|Win32
+		{2CDF672D-6C97-466E-97BE-000CC2850CDD}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
