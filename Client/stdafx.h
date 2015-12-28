@@ -21,6 +21,12 @@
 #endif
 
 #pragma comment (lib, "Ws2_32.lib")
+
+#include <unordered_map>
+#include <map>
+// Reikalinga System::String i std::string
+#include "msclr\marshal_cppstd.h"
+
 #using <mscorlib.dll>
 #include <windows.h>
 #include <winsock2.h>
@@ -35,6 +41,9 @@
 #include <stdlib.h>
 #include <fstream>
 
+#include "Globals.h"
+#include "CLI.h"
+#include "GClientLib.h"
 
 /* KONSTANTOS */
 static const int OneMBofChar = 1048576;
