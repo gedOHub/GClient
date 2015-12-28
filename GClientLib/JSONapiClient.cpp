@@ -100,8 +100,6 @@ void GClientLib::JSONapiClient::Recive(SocketToObjectContainer^ container){
 	}
 }
 
-void GClientLib::JSONapiClient::CreateSocket(){}
-
 void GClientLib::JSONapiClient::SetRedirectUrl(String ^url){
 	this->redirectUrl = url;
 }

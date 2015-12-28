@@ -11,8 +11,8 @@ namespace GClientLib {
 		int SendToGNetServer(SocketToObjectContainer^ container, int dataLenght);
 	public:
 		JSONapiClient(SOCKET socket, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket);
-		void Recive(SocketToObjectContainer^ container);
-		void CreateSocket();
+		virtual void Recive(SocketToObjectContainer^ container) override;
+		virtual void CreateSocket() override {};
 		void SetRedirectUrl(String ^url);
 	};
 };

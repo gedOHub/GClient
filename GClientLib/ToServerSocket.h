@@ -1,4 +1,5 @@
 #pragma once
+#include "stdafx.h"
 
 namespace GClientLib {
 	ref class ToServerSocket : public gNetSocket {
@@ -7,10 +8,10 @@ namespace GClientLib {
 			TagGenerator^ tag;
 		public:
 			ToServerSocket(string ip, string port, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket);
-			virtual int Send(char* data, int lenght);
-			virtual void Recive(SocketToObjectContainer^ container);
-			virtual void Connect();
-			virtual void Reconnect();
+			virtual int Send(char* data, int lenght) override;
+			virtual void Recive(SocketToObjectContainer^ container) override;
+			virtual void Connect() override;
+			virtual void Reconnect() override;
 
 			// Komandos valdymui, bendravimui su serveriu
 			// LIST

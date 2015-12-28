@@ -34,7 +34,7 @@ namespace GClientLib {
 			// ---Funkcijos---
 			// Gaunam galimus adresu varaintus
 			void GetAddressInfo();
-			void CreateSocket();
+			virtual void CreateSocket();
 		public:
 			// Konstruktorius
 			gNetSocket(string ip, string port, int tag,
@@ -50,31 +50,31 @@ namespace GClientLib {
 			// Destruktorius
 			~gNetSocket();
 			// Graziname socket
-			SOCKET GetSocket();
+			virtual SOCKET GetSocket();
 			// Grazina tag
-			int GetTag();
+			virtual int GetTag();
 			// Grazina kokiu preivadu klausosi
-			int GetPort();
+			virtual int GetPort();
 			// Uzdarome sujungima
-			bool CloseSocket();
+			virtual bool CloseSocket();
 			// Naikiname sujungima
-			void ShutdownSocket();
+			virtual void ShutdownSocket();
 			// Jungaimies prie nurodito prievado
-			void Connect();
+			virtual void Connect();
 			// bando inicijuoti nauja sujungima
-			void Reconnect();
+			virtual void Reconnect();
 			// Klausomes nurodito prievado
-			void Listen();
+			virtual void Listen();
 			// TODO: Kaip turetu buti igyvendinti sie metodai
 			// Naujo kliento priemimas
-			int Accept(SocketToObjectContainer^ container);
+			virtual int Accept(SocketToObjectContainer^ container);
 			// Duomenu siuntimas
-			int Send(char* data, int lenght);
+			virtual int Send(char* data, int lenght);
 			// Duomenu gavimas
-			void Recive(SocketToObjectContainer^ container);
+			virtual void Recive(SocketToObjectContainer^ container);
 
-			void SetRead(bool state);
+			virtual void SetRead(bool state);
 			// Grazina varda
-			char* GetName();
+			virtual char* GetName();
 	};
 }

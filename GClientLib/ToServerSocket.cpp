@@ -109,7 +109,7 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 							this->CommandConnect(container);
 							break;
 						}
-						case INIT_CONNECT_ACK:{
+						case GClientLib::INIT_CONNECT_ACK:{
 							this->CommandInitConnectAck();
 							break;
 						}

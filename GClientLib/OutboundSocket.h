@@ -9,7 +9,7 @@ namespace GClientLib {
 				fd_set* rasomiSocket,
 				fd_set* klaidingiSocket
 				);
-			virtual void Connect();
-			virtual void Recive(SocketToObjectContainer^ container);
+			virtual void Connect() override;
+			virtual void Recive(SocketToObjectContainer^ container) override;
 	};
 }

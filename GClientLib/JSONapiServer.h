@@ -13,9 +13,9 @@ namespace GClientLib {
 				fd_set* klaidingiSocket
 				);
 
-			virtual int Accept(SocketToObjectContainer^ container);
-			virtual void Listen() ;
-			virtual void Recive(SocketToObjectContainer^ container);
+			virtual int Accept(SocketToObjectContainer^ container) override;
+			virtual void Listen() override;
+			virtual void Recive(SocketToObjectContainer^ container) override;
 			void SetRedirectUrl(String ^url);
 	};
 };
