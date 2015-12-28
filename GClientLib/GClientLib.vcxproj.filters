@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Sujungimai">
+      <UniqueIdentifier>{8cc49a28-6f9d-4960-ab5c-7550080ff774}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Sujungimai\JSON">
+      <UniqueIdentifier>{43503e7f-726e-4c29-a6ff-7dd15333a463}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Sujungimai\Darbiniai">
+      <UniqueIdentifier>{28a7030e-67ba-4d52-afe1-5e9ff42f4f75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -30,28 +39,10 @@
     <ClInclude Include="Globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gNetSocket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InboundSocket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="JSON_API.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="JSONapiClient.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="JSONapiServer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OutboundSocket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ServerSocket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SettingsReader.h">
@@ -69,8 +60,26 @@
     <ClInclude Include="TagGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gNetSocket.h">
+      <Filter>Header Files\Sujungimai</Filter>
+    </ClInclude>
+    <ClInclude Include="JSONapiServer.h">
+      <Filter>Header Files\Sujungimai\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="JSONapiClient.h">
+      <Filter>Header Files\Sujungimai\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="InboundSocket.h">
+      <Filter>Header Files\Sujungimai\Darbiniai</Filter>
+    </ClInclude>
+    <ClInclude Include="OutboundSocket.h">
+      <Filter>Header Files\Sujungimai\Darbiniai</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerSocket.h">
+      <Filter>Header Files\Sujungimai\Darbiniai</Filter>
+    </ClInclude>
     <ClInclude Include="ToServerSocket.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Sujungimai\Darbiniai</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
