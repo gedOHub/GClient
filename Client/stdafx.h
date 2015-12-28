@@ -20,36 +20,9 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#pragma comment (lib, "Ws2_32.lib")
-#using <mscorlib.dll>
-#include <windows.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include <iphlpapi.h>
-#include <stdio.h>
-#include <cliext/utility> 
-#include <cliext/list>
-#include <cliext/algorithm>
-#include <process.h>
-#include <sstream>
-#include <stdlib.h>
-#include <fstream>
-
-
-#include "Structures.h"
 #include "Globals.h"
-#include "SocketToObjectContainer.h"
-#include "gNetSocket.h"
-#include "SettingsReader.h"
-#include "OutboundSocket.h"
-#include "InboundSocket.h"
-#include "ServerSocket.h"
-#include "TagGenerator.h"
-#include "ToServerSocket.h"
 #include "CLI.h"
-#include "JSONapiServer.h"
-#include "JSONapiClient.h"
-
+#include "GClientLib.h"
 
 /* KONSTANTOS */
 static const int OneMBofChar = 1048576;

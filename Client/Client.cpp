@@ -3,6 +3,8 @@
 
 #include "stdafx.h"
 
+using namespace GClientLib;
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	//printf("header dydis: %d\n", sizeof header);
@@ -89,7 +91,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			}
 		}
 		// Begam per esamus sujungimus ir ieskom ar kas ka atsiunte
-		for(int i = 0; i <= Globals::maxD; i++){
+		for (int i = 0; i <= Globals::maxD; i++){
 			// Tikrinam ar i-asis yra dekriptorius kuriame ivyko klaida
 			if (FD_ISSET(i, &tempError)) {
 				printf("Ivyko kalida %d dekriptoriuje", i);

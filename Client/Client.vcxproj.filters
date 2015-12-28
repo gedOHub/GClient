@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Sujungimai">
-      <UniqueIdentifier>{c122cb55-b536-4885-af11-7f6e99d36f64}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Sujungimai">
-      <UniqueIdentifier>{eecbb4cd-bd7e-426f-bd97-71a1d5c78fef}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -33,48 +27,6 @@
     <ClInclude Include="CLI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Globals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="JSON_API.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SettingsReader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SocketToObjectContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SocketToSocketContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Structures.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TagGenerator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gNetSocket.h">
-      <Filter>Header Files\Sujungimai</Filter>
-    </ClInclude>
-    <ClInclude Include="JSONapiClient.h">
-      <Filter>Header Files\Sujungimai</Filter>
-    </ClInclude>
-    <ClInclude Include="JSONapiServer.h">
-      <Filter>Header Files\Sujungimai</Filter>
-    </ClInclude>
-    <ClInclude Include="InboundSocket.h">
-      <Filter>Header Files\Sujungimai</Filter>
-    </ClInclude>
-    <ClInclude Include="OutboundSocket.h">
-      <Filter>Header Files\Sujungimai</Filter>
-    </ClInclude>
-    <ClInclude Include="ServerSocket.h">
-      <Filter>Header Files\Sujungimai</Filter>
-    </ClInclude>
-    <ClInclude Include="ToServerSocket.h">
-      <Filter>Header Files\Sujungimai</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -85,45 +37,6 @@
     </ClCompile>
     <ClCompile Include="CLI.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Globals.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="JSON_API.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SettingsReader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SocketToObjectContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SocketToSocketContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TagGenerator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gNetSocket.cpp">
-      <Filter>Source Files\Sujungimai</Filter>
-    </ClCompile>
-    <ClCompile Include="InboundSocket.cpp">
-      <Filter>Source Files\Sujungimai</Filter>
-    </ClCompile>
-    <ClCompile Include="JSONapiClient.cpp">
-      <Filter>Source Files\Sujungimai</Filter>
-    </ClCompile>
-    <ClCompile Include="JSONapiServer.cpp">
-      <Filter>Source Files\Sujungimai</Filter>
-    </ClCompile>
-    <ClCompile Include="OutboundSocket.cpp">
-      <Filter>Source Files\Sujungimai</Filter>
-    </ClCompile>
-    <ClCompile Include="ServerSocket.cpp">
-      <Filter>Source Files\Sujungimai</Filter>
-    </ClCompile>
-    <ClCompile Include="ToServerSocket.cpp">
-      <Filter>Source Files\Sujungimai</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

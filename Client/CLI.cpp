@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "CLI.h"
 
+using namespace GClientLib;
 
 CLI::CLI(ToServerSocket^ socket, SocketToObjectContainer^ STOContainer, SettingsReader* settings){
 	this->socket = socket;
