@@ -14,12 +14,12 @@ std::string GClientLib::SettingsReader::getSetting(std::string settingName){
 		// Tikrinu ka radau
 		if (got == this->settings.end())
 			// Neradau reiksmes
-			return nullptr;
+			return "";
 		else
 			// Radus grafiname antra poros elementa
 			return got->second;
 	}catch(System::Exception^){
-		return nullptr;
+		return "";
 	}
 }
 
@@ -50,8 +50,9 @@ int GClientLib::SettingsReader::ReadRegistry(){
 		}
 		//std::string testas = ; 
 		//std::cout << testas << endl;
-	} catch (System::Exception^){
+	} catch (System::Exception^ e){
 		std::cerr << "Nepavyko nuskaityti nustatimu is registru" << std::endl;
+		throw e;
 		return 10;
 	}
 	__finally {
