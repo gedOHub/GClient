@@ -25,8 +25,8 @@ namespace GClientLib {
 		private:
 			map<string, string> settings;
 			int ReadRegistry();
-			void SystemStringToStdString(System::String^ s, std::string& string);
 		public:
+			static void SystemStringToStdString(System::String^ s, std::string& string);
 			std::string getSetting(std::string settingName);
 			SettingsReader(void);
 			~SettingsReader(void);
