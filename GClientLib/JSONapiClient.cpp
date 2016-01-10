@@ -44,7 +44,9 @@ void GClientLib::JSONapiClient::Recive(SocketToObjectContainer^ container){
 				size_t radauPost = RECIVE.find("POST");
 
 				if (radauOptions != string::npos){
-					char atsakasOptions[] = "HTTP/1.1 200 OK\r\nServer: gNet\r\nAccess-Control-Allow-Origin: http://gediminas.jancys.net\r\nAccess-Control-Allow-Methods: POST, GET, OPTIONS\r\nAccess-Control-Allow-Headers: X-Requested-With, Content-Type\r\nAccess-Control-Max-Age: 1728000\r\nVary: Accept-Encoding, Origin\r\nContent-Encoding: gzip\r\nContent-Length: 0\r\nKeep-Alive: timeout=2, max=100\r\nConnection: Keep-Alive\r\nContent-Type: text/html\r\n\r\n";
+					// TODO:
+					// 
+					char atsakasOptions[] = "HTTP/1.1 200 OK\r\nServer: gNet\r\nAccess-Control-Allow-Origin: http://panel.jancys.net\r\nAccess-Control-Allow-Methods: POST, GET, OPTIONS\r\nAccess-Control-Allow-Headers: X-Requested-With, Content-Type\r\nAccess-Control-Max-Age: 1728000\r\nVary: Accept-Encoding, Origin\r\nContent-Encoding: gzip\r\nContent-Length: 0\r\nKeep-Alive: timeout=2, max=100\r\nConnection: Keep-Alive\r\nContent-Type: text/html\r\n\r\n";
 					int rSend = send(this->Socket, atsakasOptions, sizeof atsakasOptions, 0);
 					break;
 				}
@@ -52,7 +54,7 @@ void GClientLib::JSONapiClient::Recive(SocketToObjectContainer^ container){
 				// Radau GET uzklausa
 				if (radauGetIndex != string::npos){
 					// Peradresuoju i WebGUI tinklapi
-					char atsakasGet[] = "HTTP/1.1 302 Found\r\nLocation: http://gediminas.jancys.net/panel/test1/\r\n\r\n";
+					char atsakasGet[] = "HTTP/1.1 302 Found\r\nLocation: http://panel.jancys.net/\r\n\r\n";
 					int rSend = send(this->Socket, atsakasGet, sizeof atsakasGet, 0);
 					break;
 				}

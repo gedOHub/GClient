@@ -51,7 +51,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	Thread ^consoleThread = gcnew Thread(gcnew ThreadStart(console, &CLI::Start));
 	consoleThread->Start();
 
-	/*
 	// Sukuriu JSON API socket'a
 	JSONapiServer^ JSON = gcnew JSONapiServer(settings->getSetting("JSONapi_address"), settings->getSetting("JSONapi_port"),
 		&skaitomiSocket, &rasomiSocket, &klaidingiSocket);
@@ -68,7 +67,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		Globals::maxD = (int)JSON->GetSocket();
 	// Sukurta sujungima dedame i sarasus
 	STOContainer->Add(JSON);
-	*/
 
 	fd_set tempRead, tempWrite, tempError;	// Laikinas dekriptoriu kintamasis
 	while(!Globals::quit){

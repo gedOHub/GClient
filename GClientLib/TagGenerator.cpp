@@ -13,7 +13,7 @@ GClientLib::TagGenerator::TagGenerator(void)
 
 int GClientLib::TagGenerator::GetTag(){
 	if (this->skaitliukas >= MAX)
-		this->Reset();
+		//this->Reset();
 
 	/* TODO:
 	Prideti apsauga ir patirkinima ar yra jau toks tagas isduotas
