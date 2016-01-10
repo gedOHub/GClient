@@ -58,17 +58,29 @@ void GClientLib::JSONapiClient::Recive(SocketToObjectContainer^ container){
 				// Radau GET uzklausa
 				if (radauGetIndex != string::npos){
 					// Peradresuoju i WebGUI tinklapi
-					char atsakasGet[] = "HTTP/1.1 302 Found\r\nLocation: http://panel.jancys.net/\r\n\r\n";
+					char atsakasGet[] = "HTTP/1.1 302 Found\r\nLocation: http://panel.jancys.net\r\n\r\n";
 					int rSend = send(this->Socket, atsakasGet, sizeof atsakasGet, 0);
 					break;
 				}
 
 				// Bandomasis atsakas
 					// Peradresuoju i WebGUI tinklapi
-					char atsakasGet[] = "HTTP/1.1 200 OK\r\n\r\n{ success: true, itemCount : 4, items : [{ id: 1, domain : 'GMC.LOCAL', pcname : 'GMC-GEDO', username : 'gedas' }, { id: 2, domain : 'GMC.LOCAL', pcname : 'GMC-TADO', username : 'tadas' }, { id: 3, domain : 'GMC.LOCAL', pcname : 'GMC-RAMO', username : 'ramas' }, { id: 4, domain : 'GMC.LOCAL', pcname : 'GMC-ROLANDO', username : 'asdasd' }]}";
-					int rSend = send(this->Socket, atsakasGet, sizeof atsakasGet, 0);
-					cout << "Issiusta " << rSend << " is " << sizeof atsakasGet << endl;
-					break;
+				std::ostringstream responseStream;
+
+				// Siunciu OPTIONS dali
+				//responseStream << "HTTP/1.1 200 OK\r\nServer: gNetClient\r\nAccess-Control-Allow-Origin: http://panel.jancys.net\r\nAccess-Control-Allow-Methods: POST, GET, OPTIONS\r\nAccess-Control-Max-Age: 1728000\r\nAccess-Control-Allow-Headers: x-requested-with\r\nVary: Accept-Encoding, Origin\r\nContent-Encoding: gzip\r\nContent-Length: 0\r\nKeep-Alive: timeout = 2, max = 100\r\nConnection: keep-alive\r\nContent-Type:text/plain\r\n\r\n";
+
+				string data = "{ success: true, itemCount : 4, items : [{ id: 1, domain : 'GMC.LOCAL', pcname : 'GMC-GEDO', username : 'gedas' }, { id: 2, domain : 'GMC.LOCAL', pcname : 'GMC-TADO', username : 'tadas' }, { id: 3, domain : 'GMC.LOCAL', pcname : 'GMC-RAMO', username : 'ramas' }, { id: 4, domain : 'GMC.LOCAL', pcname : 'GMC-ROLANDO', username : 'asdasd' }] }";
+				responseStream << "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: http://panel.jancys.net\r\nAccept-Ranges:bytes\r\nServer: gNetClient\r\nContent-Length: ";
+				responseStream << data.size() << "\r\nKeep-Alive: timeout=5, max=100\r\nConnection: keep-alive\r\nContent - type : application / json\r\n\r\n";
+				responseStream << data;
+				//responseStream << "\r\n\r\n";
+
+				string rString = responseStream.str();
+
+				int rSend = send(this->Socket, rString.c_str(), rString.size(), 0);
+				cout << "Issiusta " << rSend << " is " << rString.size() << endl;
+				break;
 
 
 				/*
