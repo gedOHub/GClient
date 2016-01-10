@@ -36,18 +36,22 @@ void GClientLib::JSONapiClient::Recive(SocketToObjectContainer^ container){
 				this->buffer[rRecv] = '\0';
 				// Kuriu gautu duomenu stringa
 				std::string RECIVE(this->buffer);
+
+				// Isspausdinu ka gavau
+				cout << RECIVE << endl;
+
 				// Ieskau uzklausos su options, del CROS
 				size_t radauOptions = RECIVE.find("OPTIONS");
 				// Ieskau index uzklausos, kad issiusciau nuoroda i WEB sasaja
 				size_t radauGetIndex = RECIVE.find("GET / HTTP/1.1");
-				// Iesaku POST, kad gauciau ir persiusciau komandas i serveri
-				size_t radauPost = RECIVE.find("POST");
 
 				if (radauOptions != string::npos){
-					// TODO:
-					// 
-					char atsakasOptions[] = "HTTP/1.1 200 OK\r\nServer: gNet\r\nAccess-Control-Allow-Origin: http://panel.jancys.net\r\nAccess-Control-Allow-Methods: POST, GET, OPTIONS\r\nAccess-Control-Allow-Headers: X-Requested-With, Content-Type\r\nAccess-Control-Max-Age: 1728000\r\nVary: Accept-Encoding, Origin\r\nContent-Encoding: gzip\r\nContent-Length: 0\r\nKeep-Alive: timeout=2, max=100\r\nConnection: Keep-Alive\r\nContent-Type: text/html\r\n\r\n";
-					int rSend = send(this->Socket, atsakasOptions, sizeof atsakasOptions, 0);
+					// Atejo OPTIONS uzklausa
+					cout << "OPTIONS" << endl;
+					// http://www.w3.org/TR/cors/
+					// Siunciu atgal atitnkamas antrastes
+					char atsakasGet[] = "HTTP/1.1 200 OK\r\nServer: gNetClient\r\nAccess-Control-Allow-Origin: http://panel.jancys.net\r\nAccess-Control-Allow-Methods: POST, GET, OPTIONS\r\nAccess-Control-Max-Age: 1728000\r\nAccess-Control-Allow-Headers: x-requested-with\r\nVary: Accept-Encoding, Origin\r\nContent-Encoding: gzip\r\nContent-Length: 0\r\nKeep-Alive: timeout = 2, max = 100\r\nConnection: keep-alive\r\nContent-Type:text/plain\r\n\r\n";
+					int rSend = send(this->Socket, atsakasGet, sizeof atsakasGet, 0);
 					break;
 				}
 
@@ -59,6 +63,15 @@ void GClientLib::JSONapiClient::Recive(SocketToObjectContainer^ container){
 					break;
 				}
 
+				// Bandomasis atsakas
+					// Peradresuoju i WebGUI tinklapi
+					char atsakasGet[] = "HTTP/1.1 200 OK\r\n\r\n{ success: true, itemCount : 4, items : [{ id: 1, domain : 'GMC.LOCAL', pcname : 'GMC-GEDO', username : 'gedas' }, { id: 2, domain : 'GMC.LOCAL', pcname : 'GMC-TADO', username : 'tadas' }, { id: 3, domain : 'GMC.LOCAL', pcname : 'GMC-RAMO', username : 'ramas' }, { id: 4, domain : 'GMC.LOCAL', pcname : 'GMC-ROLANDO', username : 'asdasd' }]}";
+					int rSend = send(this->Socket, atsakasGet, sizeof atsakasGet, 0);
+					cout << "Issiusta " << rSend << " is " << sizeof atsakasGet << endl;
+					break;
+
+
+				/*
 				// Radau POST uzklausa
 				if (radauPost != string::npos){
 					// Ieskau ar gavau duoemnis
@@ -91,11 +104,12 @@ void GClientLib::JSONapiClient::Recive(SocketToObjectContainer^ container){
 						int send = SendToGNetServer(container, contentLength + headerLength);
 
 						cout << "Issiusta: " << send << endl;
+						
 					} else {
 						// Negavau duomenu, nutraukiu darba
 						break;
 					}
-				}
+				}*/
 				break;
 			} // END Default
 		}

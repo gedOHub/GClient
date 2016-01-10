@@ -84,7 +84,6 @@
     <ClInclude Include="InboundSocket.h" />
     <ClInclude Include="JSONapiClient.h" />
     <ClInclude Include="JSONapiServer.h" />
-    <ClInclude Include="JSON_API.h" />
     <ClInclude Include="OutboundSocket.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ServerSocket.h" />
@@ -104,7 +103,6 @@
     <ClCompile Include="InboundSocket.cpp" />
     <ClCompile Include="JSONapiClient.cpp" />
     <ClCompile Include="JSONapiServer.cpp" />
-    <ClCompile Include="JSON_API.cpp" />
     <ClCompile Include="OutboundSocket.cpp" />
     <ClCompile Include="ServerSocket.cpp" />
     <ClCompile Include="SettingsReader.cpp" />

@@ -22,6 +22,12 @@
     <Filter Include="Header Files\Sujungimai\Darbiniai">
       <UniqueIdentifier>{28a7030e-67ba-4d52-afe1-5e9ff42f4f75}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Sujungimai">
+      <UniqueIdentifier>{d260c7ff-e103-44bb-8e9c-3380ed540804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Sujungimai\JSON">
+      <UniqueIdentifier>{4e8f90d6-c144-46b9-9070-0bba5fe58545}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -37,9 +43,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Globals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="JSON_API.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
@@ -92,27 +95,6 @@
     <ClCompile Include="Globals.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gNetSocket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InboundSocket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="JSON_API.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="JSONapiClient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="JSONapiServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OutboundSocket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ServerSocket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SettingsReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -125,8 +107,26 @@
     <ClCompile Include="TagGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gNetSocket.cpp">
+      <Filter>Source Files\Sujungimai</Filter>
+    </ClCompile>
+    <ClCompile Include="InboundSocket.cpp">
+      <Filter>Source Files\Sujungimai</Filter>
+    </ClCompile>
+    <ClCompile Include="OutboundSocket.cpp">
+      <Filter>Source Files\Sujungimai</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerSocket.cpp">
+      <Filter>Source Files\Sujungimai</Filter>
+    </ClCompile>
     <ClCompile Include="ToServerSocket.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Sujungimai</Filter>
+    </ClCompile>
+    <ClCompile Include="JSONapiClient.cpp">
+      <Filter>Source Files\Sujungimai\JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="JSONapiServer.cpp">
+      <Filter>Source Files\Sujungimai\JSON</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
