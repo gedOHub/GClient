@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#pragma once
 
 using namespace System;
 using namespace System::Reflection;
@@ -36,3 +36,4 @@ using namespace System::Security::Permissions;
 [assembly:ComVisible(false)];
 
 [assembly:CLSCompliantAttribute(true)];
+

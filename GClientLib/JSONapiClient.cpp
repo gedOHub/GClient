@@ -1,13 +1,16 @@
-#include "stdafx.h"
+#include <winsock2.h>
+#include <ws2tcpip.h>
 #include "JSONapiClient.h"
+
 
 using namespace GClientLib;
 
-GClientLib::JSONapiClient::JSONapiClient(SOCKET socket, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket) : gNetSocket(socket, tag, skaitomiSocket, rasomiSocket, klaidingiSocket){
+GClientLib::JSONapiClient::JSONapiClient(SOCKET socket, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket, JSONapi^ json) : gNetSocket(socket, tag, skaitomiSocket, rasomiSocket, klaidingiSocket){
+	this->JSON = json;
 	this->Socket = socket;
 	this->name = "JSONapiClient";
 	printf("[%s] SocketID: %d\n", this->name, this->Socket);
-	this->write = true;  
+	this->write = true;
 	this->read = true;
 }
 
@@ -18,118 +21,65 @@ void GClientLib::JSONapiClient::Recive(SocketToObjectContainer^ container){
 		// Gaunu duomenis
 		const int rRecv = recv(this->Socket, this->buffer, FiveMBtoCHAR, 0);
 		switch (rRecv){
-			case 0:{
-				printf("Klientas uzdare sujungima %d\n", this->Socket);
-				container->DeleteBySocket(this->Socket);
-				this->CloseSocket();
+		case 0:{
+			printf("Klientas uzdare sujungima %d\n", this->Socket);
+			container->DeleteBySocket(this->Socket);
+			this->CloseSocket();
+			break;
+		}
+		case SOCKET_ERROR:{
+			printf("[%s]Klaida: %d sujungime %d \n", this->name, WSAGetLastError(), this->Socket);
+			break;
+		}
+		default:{
+			// Super, gavau duomenis
+			// Ieskau ka gavau
+
+			// Pridedu, kad galeciau dirbti kaip su stringu.
+			this->buffer[rRecv] = '\0';
+			// Kuriu gautu duomenu stringa
+			std::string RECIVE(this->buffer);
+
+			// Isspausdinu ka gavau
+			//cout << RECIVE << endl;
+
+			// Ieskau uzklausos su options, del CROS
+			size_t radauOptions = RECIVE.find("OPTIONS");
+			// Ieskau index uzklausos, kad issiusciau nuoroda i WEB sasaja
+			size_t radauGetIndex = RECIVE.find("GET / HTTP/1.1");
+
+			if (radauOptions != string::npos){
+				// Atejo OPTIONS uzklausa
+				//cout << "OPTIONS" << endl;
+				// http://www.w3.org/TR/cors/
+				// Siunciu atgal atitnkamas antrastes
+				char atsakasGet[] = "HTTP/1.1 200 OK\r\nServer: gNetClient\r\nAccess-Control-Allow-Origin: http://panel.jancys.net\r\nAccess-Control-Allow-Methods: POST, GET, OPTIONS\r\nAccess-Control-Max-Age: 1728000\r\nAccess-Control-Allow-Headers: x-requested-with\r\nVary: Accept-Encoding, Origin\r\nContent-Encoding: gzip\r\nContent-Length: 0\r\nKeep-Alive: timeout = 2, max = 100\r\nConnection: keep-alive\r\nContent-Type:text/plain\r\n\r\n";
+				int rSend = send(this->Socket, atsakasGet, sizeof atsakasGet, 0);
 				break;
 			}
-			case SOCKET_ERROR:{
-				printf("[%s]Klaida: %d sujungime %d \n", this->name, WSAGetLastError(), this->Socket);
+
+			// Radau GET uzklausa
+			if (radauGetIndex != string::npos){
+				// Peradresuoju i WebGUI tinklapi
+				char atsakasGet[] = "HTTP/1.1 302 Found\r\nLocation: http://panel.jancys.net\r\n\r\n";
+				int rSend = send(this->Socket, atsakasGet, sizeof atsakasGet, 0);
 				break;
 			}
-			default:{
-				// Super, gavau duomenis
-				// Ieskau ka gavau
-				
-				// Pridedu, kad galeciau dirbti kaip su stringu.
-				this->buffer[rRecv] = '\0';
-				// Kuriu gautu duomenu stringa
-				std::string RECIVE(this->buffer);
 
-				// Isspausdinu ka gavau
-				cout << RECIVE << endl;
+			std::ostringstream responseStream;
+			string data = "{ success: true, itemCount : 4, items : [{ id: 1, domain : 'GMC.LOCAL', pcname : 'GMC-GEDO', username : 'gedas' }, { id: 2, domain : 'GMC.LOCAL', pcname : 'GMC-TADO', username : 'tadas' }, { id: 3, domain : 'GMC.LOCAL', pcname : 'GMC-RAMO', username : 'ramas' }, { id: 4, domain : 'GMC.LOCAL', pcname : 'GMC-ROLANDO', username : 'asdasd' }] }";
+			responseStream << "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: http://panel.jancys.net\r\nAccept-Ranges:bytes\r\nServer: gNetClient\r\nContent-Length: ";
+			responseStream << data.size() << "\r\nKeep-Alive: timeout=5, max=100\r\nConnection: keep-alive\r\nContent - type : application / json\r\n\r\n";
+			responseStream << data;
 
-				// Ieskau uzklausos su options, del CROS
-				size_t radauOptions = RECIVE.find("OPTIONS");
-				// Ieskau index uzklausos, kad issiusciau nuoroda i WEB sasaja
-				size_t radauGetIndex = RECIVE.find("GET / HTTP/1.1");
+			string rString = responseStream.str();
 
-				if (radauOptions != string::npos){
-					// Atejo OPTIONS uzklausa
-					cout << "OPTIONS" << endl;
-					// http://www.w3.org/TR/cors/
-					// Siunciu atgal atitnkamas antrastes
-					char atsakasGet[] = "HTTP/1.1 200 OK\r\nServer: gNetClient\r\nAccess-Control-Allow-Origin: http://panel.jancys.net\r\nAccess-Control-Allow-Methods: POST, GET, OPTIONS\r\nAccess-Control-Max-Age: 1728000\r\nAccess-Control-Allow-Headers: x-requested-with\r\nVary: Accept-Encoding, Origin\r\nContent-Encoding: gzip\r\nContent-Length: 0\r\nKeep-Alive: timeout = 2, max = 100\r\nConnection: keep-alive\r\nContent-Type:text/plain\r\n\r\n";
-					int rSend = send(this->Socket, atsakasGet, sizeof atsakasGet, 0);
-					break;
-				}
-
-				// Radau GET uzklausa
-				if (radauGetIndex != string::npos){
-					// Peradresuoju i WebGUI tinklapi
-					char atsakasGet[] = "HTTP/1.1 302 Found\r\nLocation: http://panel.jancys.net\r\n\r\n";
-					int rSend = send(this->Socket, atsakasGet, sizeof atsakasGet, 0);
-					break;
-				}
-
-				// Bandomasis atsakas
-					// Peradresuoju i WebGUI tinklapi
-				std::ostringstream responseStream;
-
-				// Siunciu OPTIONS dali
-				//responseStream << "HTTP/1.1 200 OK\r\nServer: gNetClient\r\nAccess-Control-Allow-Origin: http://panel.jancys.net\r\nAccess-Control-Allow-Methods: POST, GET, OPTIONS\r\nAccess-Control-Max-Age: 1728000\r\nAccess-Control-Allow-Headers: x-requested-with\r\nVary: Accept-Encoding, Origin\r\nContent-Encoding: gzip\r\nContent-Length: 0\r\nKeep-Alive: timeout = 2, max = 100\r\nConnection: keep-alive\r\nContent-Type:text/plain\r\n\r\n";
-
-				string data = "{ success: true, itemCount : 4, items : [{ id: 1, domain : 'GMC.LOCAL', pcname : 'GMC-GEDO', username : 'gedas' }, { id: 2, domain : 'GMC.LOCAL', pcname : 'GMC-TADO', username : 'tadas' }, { id: 3, domain : 'GMC.LOCAL', pcname : 'GMC-RAMO', username : 'ramas' }, { id: 4, domain : 'GMC.LOCAL', pcname : 'GMC-ROLANDO', username : 'asdasd' }] }";
-				responseStream << "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: http://panel.jancys.net\r\nAccept-Ranges:bytes\r\nServer: gNetClient\r\nContent-Length: ";
-				responseStream << data.size() << "\r\nKeep-Alive: timeout=5, max=100\r\nConnection: keep-alive\r\nContent - type : application / json\r\n\r\n";
-				responseStream << data;
-				//responseStream << "\r\n\r\n";
-
-				string rString = responseStream.str();
-
-				int rSend = send(this->Socket, rString.c_str(), rString.size(), 0);
-				cout << "Issiusta " << rSend << " is " << rString.size() << endl;
-				break;
-
-
-				/*
-				// Radau POST uzklausa
-				if (radauPost != string::npos){
-					// Ieskau ar gavau duoemnis
-					size_t radauContentLenght = RECIVE.find("Content-Length");
-					if (radauContentLenght != string::npos){
-						// Gavau kazkokius duomenis
-						// Bandau issifruoti ka gavau
-						// Ieskau duomenu kiekio sainio pabaigos
-						size_t dataLineEnd = RECIVE.find('\r', radauContentLenght);
-						// Gaunu duomenu kiekio sakini
-						string ContentLength = RECIVE.substr((int)radauContentLenght, (int)dataLineEnd);
-						// Gaunu tik duomenu kieki
-						// Pagal http://www.cplusplus.com/forum/articles/9645/
-						stringstream convert(ContentLength.substr((int)ContentLength.find(' ', 0) + 1, ContentLength.length()));
-						// Duomenu ilgio kintamasis, int
-						int contentLength;
-						// Bandau konvertuoti
-						if (!(convert >> contentLength)){
-							// Nepavyko konvertuoti duomenu
-							cerr << "Nepavyko konvertuoti duomenu ilgio reiksmes" << endl;
-							break;
-						}
-						//Tesiu darba su konvertuotu kintamuoju
-						// Paruosiu duomenis persiuntmui i serveri
-						string dataToServer = RECIVE.substr(rRecv - contentLength, contentLength);
-						// Uzdedu JSON headeri siuntimui i serveri
-						int headerLength = PutJSONHeader(contentLength);
-						// Paruosiu duomenis persiuntimui
-						strcpy(&this->buffer[headerLength], dataToServer.c_str());
-						int send = SendToGNetServer(container, contentLength + headerLength);
-
-						cout << "Issiusta: " << send << endl;
-						
-					} else {
-						// Negavau duomenu, nutraukiu darba
-						break;
-					}
-				}*/
-				break;
-			} // END Default
+			int rSend = send(this->Socket, rString.c_str(), rString.size(), 0);
+			cout << "Issiusta " << rSend << " is " << rString.size() << endl;
+			break;
+		}
 		}
 	}
-}
-
-void GClientLib::JSONapiClient::SetRedirectUrl(String ^url){
-	this->redirectUrl = url;
 }
 
 int GClientLib::JSONapiClient::PutJSONHeader(int dataLength){
@@ -146,13 +96,4 @@ int GClientLib::JSONapiClient::PutJSONHeader(int dataLength){
 	return sizeof APIHeader;
 }
 
-int GClientLib::JSONapiClient::SendToGNetServer(SocketToObjectContainer^ container, int dataLenght){
-	try{
-		ToServerSocket^ server = (ToServerSocket^) container->FindByTag(0);
-		cout << server->GetName() << endl;
-		return server->Send(&this->buffer[0], dataLenght);
-	} catch (exception e){
-		return -1;
-	}
-}
 

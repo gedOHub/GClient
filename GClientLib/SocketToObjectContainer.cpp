@@ -1,4 +1,3 @@
-#include "StdAfx.h"
 #include "SocketToObjectContainer.h"
 
 using namespace GClientLib;
@@ -20,18 +19,18 @@ gNetSocket^ GClientLib::SocketToObjectContainer::FindBySocket(int socket){
 	for(i=this->sarasas.begin(); i != this->sarasas.end(); ++i){
 		if(i->GetSocket() == socket){
 			return *i;
-		}
-	}
-	return nullptr;
+}
+}
+return nullptr;
 }
 
 gNetSocket^ GClientLib::SocketToObjectContainer::FindByTag(int tag){
 	cliext::list<gNetSocket^>::iterator i;
 	for(i=this->sarasas.begin(); i != this->sarasas.end(); ++i){
 		if(i->GetTag() == tag)
-			return *i;
-	}
-	return nullptr;
+		return *i;
+}
+return nullptr;
 }
 
 gNetSocket^ GClientLib::SocketToObjectContainer::DeleteBySocket(int socket){
@@ -41,9 +40,9 @@ gNetSocket^ GClientLib::SocketToObjectContainer::DeleteBySocket(int socket){
 			//gNetSocket^ tempSocket = i;
 			this->sarasas.erase(i);
 			//return tempSocket;
-		}
-	}
-	return nullptr;
+}
+}
+return nullptr;
 }
 
 gNetSocket^ GClientLib::SocketToObjectContainer::DeleteByTag(int tag){
@@ -54,7 +53,8 @@ gNetSocket^ GClientLib::SocketToObjectContainer::DeleteByTag(int tag){
 			this->sarasas.erase(i);
 			return nullptr;
 			//return tempSocket;
-		}
-	}
-	return nullptr;
 }
+}
+return nullptr;
+}
+

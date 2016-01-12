@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+
 #include "gNetSocket.h"
 
 using namespace GClientLib;
@@ -13,30 +13,30 @@ GClientLib::gNetSocket::gNetSocket(string ip, string port, int tag, fd_set* skai
 		printf("WSAStartup failed: %d\n", wdaResult);
 		// Nepavykus sunaikiname kintamaji
 		return;
-	}
+}
 
-	// Kintamuju priskirimas
-	this->name = new char[20];
-	this->name = "gNetSocket";
-	this->read = false;
-	this->write = false;
-	this->IP = new string(ip);
-	this-> PORT = new string(port);
-	this->TAG = tag;
-	this->Socket = INVALID_SOCKET;
-	this->addrResult = nullptr;
-	this->addrHints = nullptr;
-	this->buffer = new char[TenMBofChar];
-	// Socket sarasu kintamieji
-	this->skaitomi = skaitomiSocket;
-	this->rasomi = rasomiSocket;
-	this->klaidingi = klaidingiSocket;
-	// Kuriam SOCKET
-	this->CreateSocket();
-	// Pridedam socket prie sarasu
-	FD_SET(this->Socket, skaitomiSocket);
-	FD_SET(this->Socket, rasomiSocket);
-	FD_SET(this->Socket, klaidingiSocket);
+// Kintamuju priskirimas
+this->name = new char[20];
+this->name = "gNetSocket";
+this->read = false;
+this->write = false;
+this->IP = new string(ip);
+this-> PORT = new string(port);
+this->TAG = tag;
+this->Socket = INVALID_SOCKET;
+this->addrResult = nullptr;
+this->addrHints = nullptr;
+this->buffer = new char[TenMBofChar];
+// Socket sarasu kintamieji
+this->skaitomi = skaitomiSocket;
+this->rasomi = rasomiSocket;
+this->klaidingi = klaidingiSocket;
+// Kuriam SOCKET
+this->CreateSocket();
+// Pridedam socket prie sarasu
+FD_SET(this->Socket, skaitomiSocket);
+FD_SET(this->Socket, rasomiSocket);
+FD_SET(this->Socket, klaidingiSocket);
 }
 
 GClientLib::gNetSocket::gNetSocket(int socket, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket){
@@ -47,31 +47,31 @@ GClientLib::gNetSocket::gNetSocket(int socket, int tag, fd_set* skaitomiSocket, 
 		printf("WSAStartup failed: %d\n", wdaResult);
 		// Nepavykus sunaikiname kintamaji
 		return;
-	}
+}
 
-	// Tikrinam ar kintamieji teisingi
-	/*
-	if(ip.empty() || tag < 0) {
-		printf("Gauti netinkami duoemenys jungties kurimui");
-		return;
-	}
-	*/
+// Tikrinam ar kintamieji teisingi
+/*
+if(ip.empty() || tag < 0) {
+	printf("Gauti netinkami duoemenys jungties kurimui");
+	return;
+}
+*/
 
-	// Kintamuju priskirimas
-	this->Socket = INVALID_SOCKET;
-	this->Socket = socket;
-	this->TAG = tag;
-	this->addrResult = nullptr;
-	this->addrHints = nullptr;
-	this->buffer = new char[FiveMBtoCHAR];
-	// Socket sarasu kintamieji
-	this->skaitomi = skaitomiSocket;
-	this->rasomi = rasomiSocket;
-	this->klaidingi = klaidingiSocket;;
-	// Pridedam socket prie sarasu
-	FD_SET(this->Socket, skaitomiSocket);
-	FD_SET(this->Socket, rasomiSocket);
-	FD_SET(this->Socket, klaidingiSocket);
+// Kintamuju priskirimas
+this->Socket = INVALID_SOCKET;
+this->Socket = socket;
+this->TAG = tag;
+this->addrResult = nullptr;
+this->addrHints = nullptr;
+this->buffer = new char[FiveMBtoCHAR];
+// Socket sarasu kintamieji
+this->skaitomi = skaitomiSocket;
+this->rasomi = rasomiSocket;
+this->klaidingi = klaidingiSocket;;
+// Pridedam socket prie sarasu
+FD_SET(this->Socket, skaitomiSocket);
+FD_SET(this->Socket, rasomiSocket);
+FD_SET(this->Socket, klaidingiSocket);
 }
 
 // Destruktorius
@@ -89,9 +89,9 @@ int GClientLib::gNetSocket::GetPort(){
 	int ilgis = sizeof(socketInfo);
 	if (getsockname(this->Socket, (struct sockaddr *)&socketInfo, &ilgis) != 0 && ilgis != sizeof(socketInfo)){
 		return -1;
-	}
+}
 
-	return ntohs(socketInfo.sin_port);
+return ntohs(socketInfo.sin_port);
 }
 
 // Gaunam galimus adresu varaintus
@@ -117,8 +117,8 @@ void GClientLib::gNetSocket::GetAddressInfo(){
 		printf("Nepavyko gauti adreso duomenu: %d\n", rGetAddrInfo);
 		// Naikinam objekta
 		freeaddrinfo(result);
-	}
-	this->addrResult = result;
+}
+this->addrResult = result;
 }
 // Socket uzdarymas
 // Pavykus usdaryti graziname TRUE, priesingai FALSE
@@ -130,13 +130,13 @@ bool GClientLib::gNetSocket::CloseSocket(){
 		this->ShutdownSocket();
 		WSACleanup();
 		return false;
-	}
-	this->Socket = INVALID_SOCKET;
-	// Salinu is nurodytu sarasu
-	FD_CLR(this->Socket, skaitomi);
-	FD_CLR(this->Socket, rasomi);
-	FD_CLR(this->Socket, klaidingi);
-	return true;
+}
+this->Socket = INVALID_SOCKET;
+// Salinu is nurodytu sarasu
+FD_CLR(this->Socket, skaitomi);
+FD_CLR(this->Socket, rasomi);
+FD_CLR(this->Socket, klaidingi);
+return true;
 }
 
 // Socket jungties naikinimas
@@ -147,12 +147,12 @@ void GClientLib::gNetSocket::ShutdownSocket(){
 		this->Socket = INVALID_SOCKET;
 		printf("Nepavyko inicijuoti socket uzdarymo: %d\n", WSAGetLastError());
 		WSACleanup();
-	}
-	this->Socket = INVALID_SOCKET;
-	//Salinu socketa is nurodytu sarasu
-	FD_CLR(this->Socket, skaitomi);
-	FD_CLR(this->Socket, rasomi);
-	FD_CLR(this->Socket, klaidingi);
+}
+this->Socket = INVALID_SOCKET;
+//Salinu socketa is nurodytu sarasu
+FD_CLR(this->Socket, skaitomi);
+FD_CLR(this->Socket, rasomi);
+FD_CLR(this->Socket, klaidingi);
 }
 
 // Kuriam SOCKET
@@ -169,10 +169,10 @@ void GClientLib::gNetSocket::CreateSocket(){
 		if(this->Socket != INVALID_SOCKET) return;
 		// Pranesam apie klaida kodel nepavyko sukurti socket
 		printf("Klaida kuriant socket: %ld\n", WSAGetLastError());
-	}
-	// Jei nepavyko sukurti socketo
-	printf("Klaida kuriant socket: %d\n", WSAGetLastError());
-	freeaddrinfo(this->addrResult);
+}
+// Jei nepavyko sukurti socketo
+printf("Klaida kuriant socket: %d\n", WSAGetLastError());
+freeaddrinfo(this->addrResult);
 }
 
 // Grazina SOCKET
@@ -184,11 +184,11 @@ int GClientLib::gNetSocket::Send(char* data, int lenght){
 	if(this->write){
 		int rSend = 0;
 		while(rSend != lenght){
-			rSend =  rSend + send(this->Socket, &data[rSend], lenght - rSend, 0);
-		}
-		return rSend;
-	}
-	return 0;
+			rSend = rSend + send(this->Socket, &data[rSend], lenght - rSend, 0);
+}
+return rSend;
+}
+return 0;
 }
 
 void GClientLib::gNetSocket::SetRead(bool state){
@@ -215,3 +215,4 @@ void GClientLib::gNetSocket::Reconnect(){
 
 void GClientLib::gNetSocket::Listen(){
 };
+

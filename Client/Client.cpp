@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+#include "GClientLib.h"
 
 using namespace GClientLib;
 
@@ -11,7 +12,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	//printf("listCommand dydis: %d\n", sizeof listCommand);
 
 	// Nuskaito nustatymus is registru
-	SettingsReader* settings = new SettingsReader();
+	SettingsReader^ settings = gcnew SettingsReader();
 	// Kuriamas visu sujungimu saraso saugykla
 	SocketToObjectContainer^ STOContainer = gcnew SocketToObjectContainer();
 
@@ -51,13 +52,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	Thread ^consoleThread = gcnew Thread(gcnew ThreadStart(console, &CLI::Start));
 	consoleThread->Start();
 
+	// JSON API
+	JSONapi^ JSON_API = gcnew JSONapi(settings, ToServer);
+
 	// Sukuriu JSON API socket'a
-	JSONapiServer^ JSON = gcnew JSONapiServer(settings->getSetting("JSONapi_address"), settings->getSetting("JSONapi_port"),
-		&skaitomiSocket, &rasomiSocket, &klaidingiSocket);
+	JSONapiServer^ JSON = gcnew JSONapiServer(settings->getSetting("JSONapi_address"), settings->getSetting("JSONapi_port"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket, JSON_API);
 	// Tikrinam ar klausytis nurodytu adresu ir portu
 	if (ToServer->GetSocket() == INVALID_SOCKET){
-		printf("Nepavyko klausytis %s:%s\n", settings->getSetting("JSONapi_address"), 
-			settings->getSetting("JSONapi_port"));
+		printf("Nepavyko klausytis %s:%s\n", settings->getSetting("JSONapi_address"), settings->getSetting("JSONapi_port"));
 		return 2;
 	}
 	

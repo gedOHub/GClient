@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include "GClientLib.h"
 
 using namespace System;
 using namespace System::Threading;
@@ -9,10 +10,10 @@ ref class CLI {
 	private:
 		SocketToObjectContainer^ STOContainer;
 		ToServerSocket^ socket;
-		SettingsReader* settings;
-		string ClearCLI();
+		SettingsReader^ settings;
+		std::string ClearCLI();
 
 	public:
-		CLI(ToServerSocket^ socket, SocketToObjectContainer^ STOContainer, SettingsReader* settings);
+		CLI(GClientLib::ToServerSocket^ socket, GClientLib::SocketToObjectContainer^ STOContainer, GClientLib::SettingsReader^ settings);
 		void Start();
 };

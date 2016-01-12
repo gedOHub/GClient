@@ -28,14 +28,17 @@
     <Filter Include="Source Files\Sujungimai\JSON">
       <UniqueIdentifier>{4e8f90d6-c144-46b9-9070-0bba5fe58545}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\JSON">
+      <UniqueIdentifier>{39b636cf-a0d7-476b-92a3-df3fa38fcd01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\JSON">
+      <UniqueIdentifier>{f526f3f7-46b5-4a84-a503-4904b1f1ad31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -84,11 +87,11 @@
     <ClInclude Include="ToServerSocket.h">
       <Filter>Header Files\Sujungimai\Darbiniai</Filter>
     </ClInclude>
+    <ClInclude Include="JSONapi.h">
+      <Filter>Header Files\JSON</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AssemblyInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -127,6 +130,9 @@
     </ClCompile>
     <ClCompile Include="JSONapiServer.cpp">
       <Filter>Source Files\Sujungimai\JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="JSONapi.cpp">
+      <Filter>Source Files\JSON</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

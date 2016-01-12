@@ -1,4 +1,3 @@
-#include "StdAfx.h"
 #include "TagGenerator.h"
 
 using namespace GClientLib;
@@ -13,7 +12,7 @@ GClientLib::TagGenerator::TagGenerator(void)
 
 int GClientLib::TagGenerator::GetTag(){
 	if (this->skaitliukas >= MAX)
-		//this->Reset();
+	//this->Reset();
 
 	/* TODO:
 	Prideti apsauga ir patirkinima ar yra jau toks tagas isduotas
@@ -26,3 +25,4 @@ int GClientLib::TagGenerator::GetTag(){
 void GClientLib::TagGenerator::Reset(){
 	this->skaitliukas = this->MIN;
 }
+
