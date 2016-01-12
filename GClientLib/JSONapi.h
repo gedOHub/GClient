@@ -18,7 +18,7 @@ namespace GClientLib {
 		public:
 			JSONapi(SettingsReader^ settings, ToServerSocket^ toServer);
 			// Metodas skirtas nusaityti kokia komanda gauta ir ja ivygdyti
-			int readCommand(string commandData);
+			std::string readCommand(string commandData);
 };
 }
 

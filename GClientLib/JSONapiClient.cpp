@@ -66,16 +66,11 @@ void GClientLib::JSONapiClient::Recive(SocketToObjectContainer^ container){
 				break;
 			}
 
-			std::ostringstream responseStream;
-			string data = "{ success: true, itemCount : 4, items : [{ id: 1, domain : 'GMC.LOCAL', pcname : 'GMC-GEDO', username : 'gedas' }, { id: 2, domain : 'GMC.LOCAL', pcname : 'GMC-TADO', username : 'tadas' }, { id: 3, domain : 'GMC.LOCAL', pcname : 'GMC-RAMO', username : 'ramas' }, { id: 4, domain : 'GMC.LOCAL', pcname : 'GMC-ROLANDO', username : 'asdasd' }] }";
-			responseStream << "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: http://panel.jancys.net\r\nAccept-Ranges:bytes\r\nServer: gNetClient\r\nContent-Length: ";
-			responseStream << data.size() << "\r\nKeep-Alive: timeout=5, max=100\r\nConnection: keep-alive\r\nContent - type : application / json\r\n\r\n";
-			responseStream << data;
+			// Manau, kad atëjo JSON komanda
+			// Pandau gauti rezultata pagal komanda
+			string response = this->JSON->readCommand(RECIVE);
 
-			string rString = responseStream.str();
-
-			int rSend = send(this->Socket, rString.c_str(), rString.size(), 0);
-			cout << "Issiusta " << rSend << " is " << rString.size() << endl;
+			int rSend = send(this->Socket, response.c_str(), response.size(), 0);
 			break;
 		}
 		}

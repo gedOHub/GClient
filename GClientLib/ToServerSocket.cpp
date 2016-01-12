@@ -150,9 +150,7 @@ void GClientLib::ToServerSocket::CommandList(int page){
 
 	// Siunciu uzklausa i serveri
 	int size = sizeof header + sizeof listCommand;
-	//cout << "[LIST]Siusiu " << size << endl;
 	int rSend = this->Send(this->commandBuffer, size);
-	//cout << "[LIST]Issiunciau " << rSend << endl;
 }
 
 void GClientLib::ToServerSocket::CommandListAck(int rRecv){
