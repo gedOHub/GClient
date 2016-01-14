@@ -60,6 +60,10 @@ struct Client : ClientInfo{
 struct Command{
 	USHORT command; // dydis 2
 };
+// JSON komandos antraste
+struct JSONCommand : Command{
+	ULONG socketID;          // Socket numeris, kuriam bus grazinamas atsakimas
+};
 
 // HELLO
 struct helloCommand : Command, ClientInfo{
@@ -68,9 +72,19 @@ struct helloCommand : Command, ClientInfo{
 struct listCommand : Command{
 	ULONG page; // dydis 4
 };
+// JOSN_LIST
+struct jsonListCommand : JSONCommand{
+	ULONG page;		// dydis 4
+};
 // LIST_ACK
 struct listAckCommand : Command{
-	char success;
+	char success;		// True - pavyko suformuoti klientu sarasa
+						// False - nepavyko suformuoti klientu saraso
+};
+// JSON_LIST_ACK
+struct jsonListAckCommand : JSONCommand{
+	char success;       // True - pavyko suformuoti klientu sarasa
+						// False - nepavyko suformuoti klientu saraso
 };
 // CONNECT_INIT
 struct connectInitCommand : Command{
