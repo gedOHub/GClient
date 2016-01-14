@@ -9,19 +9,17 @@ namespace GClientLib {
 	// Komandu numeriai
 	// List - 1
 	enum Commands{
-		HELLO = 99, // Kompiuterio duomenu perdavimas serveriui
-		LIST = 1, // Prasimas grazinti klientu sarasa
-		LIST_ACK = 11, // Atsakas i prasima grazinti klientu sarasa
-		AUTH = 13,
-		AUTH_ACK = 31,
-		INIT_CONNECT = 100, // Administratoriaus iniciavimas tunelio
+		HELLO = 99,					// Kompiuterio duomenu perdavimas serveriui
+		LIST = 1,					// Prasimas grazinti klientu sarasa
+		LIST_ACK = 11,				// Atsakas i prasima grazinti klientu sarasa
+		INIT_CONNECT = 100,			// Administratoriaus iniciavimas tunelio
 		INIT_CONNECT_ACK = 200,
-		CONNECT = 300, // Komanda jungtis i nurodyta prievada
-		CONNECT_ACK = 400, // Atasakas i CONNECT komanda
-		CLIENT_CONNECT = 555, // Komanda, rodanti, kad kliento prohrama prpsijnge
-		CLIENT_CONNECT_ACK = 666, // ATSAKAS i CLIENT_CONNECT_ACK
-		BEGIN_READ = 777, // Leidimas pradeti skaitytma
-		BEGIN_READ_ACK = 888, // Atsakas i BEGIN_READ
+		CONNECT = 300,				// Komanda jungtis i nurodyta prievada
+		CONNECT_ACK = 400,			// Atasakas i CONNECT komanda
+		CLIENT_CONNECT = 555,		// Komanda, rodanti, kad kliento prohrama prpsijnge
+		CLIENT_CONNECT_ACK = 666,	// ATSAKAS i CLIENT_CONNECT_ACK
+		BEGIN_READ = 777,			// Leidimas pradeti skaitytma
+		BEGIN_READ_ACK = 888,		// Atsakas i BEGIN_READ
 		CLOSE = 5
 };
 
