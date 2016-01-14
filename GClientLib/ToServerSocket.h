@@ -33,6 +33,9 @@ namespace GClientLib {
 		void CommandBeginRead(SocketToObjectContainer^ container);
 		void CommandClientConnectAck(SocketToObjectContainer^ container);
 		void CommandInitConnectAck();
+		// JSON komandos
+		void CommandJsonList(int page, SOCKET socket);
+		void CommandJsonListAck(int rRecv);
 		// Grazina sugeneruota zyme
 		int GenerateTag();
 	};

@@ -34,6 +34,9 @@
     <Filter Include="Source Files\JSON">
       <UniqueIdentifier>{f526f3f7-46b5-4a84-a503-4904b1f1ad31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Sujungimai\Darbiniai">
+      <UniqueIdentifier>{4816c7e1-28a7-43af-9b66-2d7367f25fc1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -113,18 +116,6 @@
     <ClCompile Include="gNetSocket.cpp">
       <Filter>Source Files\Sujungimai</Filter>
     </ClCompile>
-    <ClCompile Include="InboundSocket.cpp">
-      <Filter>Source Files\Sujungimai</Filter>
-    </ClCompile>
-    <ClCompile Include="OutboundSocket.cpp">
-      <Filter>Source Files\Sujungimai</Filter>
-    </ClCompile>
-    <ClCompile Include="ServerSocket.cpp">
-      <Filter>Source Files\Sujungimai</Filter>
-    </ClCompile>
-    <ClCompile Include="ToServerSocket.cpp">
-      <Filter>Source Files\Sujungimai</Filter>
-    </ClCompile>
     <ClCompile Include="JSONapiClient.cpp">
       <Filter>Source Files\Sujungimai\JSON</Filter>
     </ClCompile>
@@ -133,6 +124,18 @@
     </ClCompile>
     <ClCompile Include="JSONapi.cpp">
       <Filter>Source Files\JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="InboundSocket.cpp">
+      <Filter>Source Files\Sujungimai\Darbiniai</Filter>
+    </ClCompile>
+    <ClCompile Include="OutboundSocket.cpp">
+      <Filter>Source Files\Sujungimai\Darbiniai</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerSocket.cpp">
+      <Filter>Source Files\Sujungimai\Darbiniai</Filter>
+    </ClCompile>
+    <ClCompile Include="ToServerSocket.cpp">
+      <Filter>Source Files\Sujungimai\Darbiniai</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

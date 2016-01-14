@@ -153,6 +153,34 @@ void GClientLib::ToServerSocket::CommandList(int page){
 	int rSend = this->Send(this->commandBuffer, size);
 }
 
+void GClientLib::ToServerSocket::CommandJsonList(int page, SOCKET destinationSocket){
+	
+	cout << "Puslapis: " << page << " Socket: " << destinationSocket << endl;
+	
+	// Nustatau head i buferio pradzia
+	header* head = (struct header*) &this->commandBuffer[0];
+
+	// Pildau antraste
+	head->tag = htons(Globals::CommandTag);
+	head->lenght = htonl(sizeof(jsonListCommand));
+
+	// Kuriu komandos struktura
+	jsonListCommand* list = (struct jsonListCommand*) &this->commandBuffer[sizeof(header)];
+	// Pildau duomenis
+	// Komandos numeris
+	list->command = htons(JSON_LIST);
+	// Norimas puslapis
+	list->page = htonl(page);
+	// Gristantcio socketo numeris
+	list->socketID = htonl(destinationSocket);
+
+	// Siunciu uzklausa i serveri
+	int size = sizeof header + sizeof jsonListCommand;
+	int rSend = this->Send(this->commandBuffer, size);
+
+	cout << "Puslapis: " << list->page << " Socket: " << list->page << endl;
+}
+
 void GClientLib::ToServerSocket::CommandListAck(int rRecv){
 	// Nustatau ar pavyko gauti klientu sarasa
 	listAckCommand* list = (struct listAckCommand*) &this->buffer[ sizeof header ];
@@ -176,6 +204,10 @@ printf("-----------------------------------------------------------------------\
 	// Negrazino klientu sarasa
 	printf( "Gautas tuscias klientu sarasas\n" );
 }
+}
+
+void GClientLib::ToServerSocket::CommandJsonListAck(int rRecv){
+	cout << "[" << this->name << "] Gavau JSON LIST ACK" << endl;
 }
 
 void GClientLib::ToServerSocket::CommandHello(){

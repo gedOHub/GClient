@@ -20,7 +20,7 @@ namespace GClientLib {
 		CLIENT_CONNECT_ACK = 666,	// ATSAKAS i CLIENT_CONNECT_ACK
 		BEGIN_READ = 777,			// Leidimas pradeti skaitytma
 		BEGIN_READ_ACK = 888,		// Atsakas i BEGIN_READ
-		CLOSE = 5
+		CLOSE = 5,
 		// JSON komandos
 		JSON_LIST = 201,                // LIST komanda JSON aplikacijai
 		JSON_LIST_ACK = 211             // LIST_ACK komanda JSON aplikacijai

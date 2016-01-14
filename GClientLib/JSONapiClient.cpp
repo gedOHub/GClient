@@ -67,10 +67,14 @@ void GClientLib::JSONapiClient::Recive(SocketToObjectContainer^ container){
 			}
 
 			// Manau, kad atëjo JSON komanda
-			// Pandau gauti rezultata pagal komanda
-			string response = this->JSON->readCommand(RECIVE);
-
-			int rSend = send(this->Socket, response.c_str(), response.size(), 0);
+			// Formuoju uzklausa i serveri
+			string response = this->JSON->readCommand(RECIVE, this->Socket);
+			// Tikrinu ar reikia ka nors persiusti klientui
+			if (!response.empty())
+			{
+				// Kazkas gauta, siusiu klientui
+				int rSend = send(this->Socket, response.c_str(), response.size(), 0);
+			}
 			break;
 		}
 		}

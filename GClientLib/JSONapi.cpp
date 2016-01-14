@@ -11,7 +11,7 @@ GClientLib::JSONapi::JSONapi(SettingsReader^ settings, ToServerSocket^ toServer)
 }
 
 // Metodas skirtas nauskaityti gauta komanda ir ja ivygdyti
-std::string GClientLib::JSONapi::readCommand(string commandData)
+std::string GClientLib::JSONapi::readCommand(string commandData, SOCKET clientSocket)
 {
 	// Kintamasisi nurodantis, ad atëjo uþlausà apie klientø sàraðà
 	bool clientList = false;
@@ -21,25 +21,36 @@ std::string GClientLib::JSONapi::readCommand(string commandData)
 	// Tikrinu ar neatejo klientu sàraðo komanda
 	if (commandData.find("clientList") != string::npos)
 	{
-		// Atëjo komanda praðanti klientø sàraðo
-		cout << "Klientu sarasas" << endl;
-		std::ostringstream responseStream;
-		string data = "{ success: true, itemCount : 4, items : [{ id: 1, domain : 'GMC.LOCAL', pcname : 'GMC-GEDO', username : 'gedas' }, { id: 2, domain : 'GMC.LOCAL', pcname : 'GMC-TADO', username : 'tadas' }, { id: 3, domain : 'GMC.LOCAL', pcname : 'GMC-RAMO', username : 'ramas' }, { id: 4, domain : 'GMC.LOCAL', pcname : 'GMC-ROLANDO', username : 'asdasd' }] }";
-		responseStream << "HTTP/1.1 200 OK\r\n";
-		responseStream << "Access-Control-Allow-Origin: "; 
-		responseStream << this->settings->getSetting("webGUIAddress");
-		responseStream << "\r\n";
-		responseStream << "Accept-Ranges:bytes\r\n";
-		responseStream << "Server: gNetClient\r\n";
-		responseStream << "Content-Length: ";
-		responseStream << data.size();
-		responseStream << "\r\n";
-		responseStream << "Keep-Alive: timeout = 5, max = 100\r\n";
-		responseStream << "Connection: keep-alive\r\n";
-		responseStream << "Content-type : application/json\r\n\r\n";
-		responseStream << data;
+		//Uzklausos pavizdys:
+		//GET /?_dc=1452802220979&clientList=1&start=0&limit=20 HTTP/1.1
+		//Host: 127.0.0.1:3000
+		//Connection: keep-alive
+		//Origin: http://panel.jancys.net
+		//X-Requested-With: XMLHttpRequest
+		//User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36
+		//Accept: */*
+		//DNT: 1
+		//Referer : http ://panel.jancys.net/
+		//Accept - Encoding : gzip, deflate, sdch
+		//Accept - Language : lt, en - US; q = 0.8, en; q = 0.6
 
-		return responseStream.str();
+		// Ieskau kurio puslapio nori gauti duomenis
+		// Kintamasis skirtas nustatyti reikalinga pozicija
+		size_t pos;
+
+		// Kintamasis skirtas nurodyti kokios komandos argumento ieskome
+		string commandArgument = "clientList=";
+		// Surandu kur slepiasi clientList
+		pos = commandData.find(commandArgument);
+		// Salinu uzklausos pradzia iki clientList kintamojo
+		commandData.erase(0, pos + commandArgument.length());
+		// Likusi uzklausa: 1&start=0&limit=20 HTTP/1.1....
+
+		// Siusiu JSON list komanda i serveri
+		// Isgaunu norimo puslapio numeri, placiau http://www.cplusplus.com/reference/string/stoi/
+		this->GetJSONClientList(stoi(commandData, &pos, 0), clientSocket);
+		
+		return "";
 	}
 
 	if (commandData.find("connectionList") != string::npos)
@@ -66,4 +77,10 @@ std::string GClientLib::JSONapi::readCommand(string commandData)
 	}
 
 	return "";
+}
+
+// Metodas skirtas issiusti JSON list komanda i serveri
+void GClientLib::JSONapi::GetJSONClientList(int page, SOCKET clientSocket){
+	// Siunciu komanda i serveri
+	toServer->CommandJsonList(page, clientSocket);
 }
