@@ -10,12 +10,30 @@ GClientLib::JSONapi::JSONapi(SettingsReader^ settings, ToServerSocket^ toServer)
 	this->toServer = toServer;
 }
 
+std::string GClientLib::JSONapi::putHTTPheaders(string data)
+{
+	std::ostringstream responseStream;
+	responseStream << "HTTP/1.1 200 OK\r\n";
+	responseStream << "Access-Control-Allow-Origin: ";
+	responseStream << this->settings->getSetting("webGUIAddress");
+	responseStream << "\r\n";
+	responseStream << "Accept-Ranges:bytes\r\n";
+	responseStream << "Server: gNetClient\r\n";
+	responseStream << "Content-Length: ";
+	responseStream << data.size();
+	responseStream << "\r\n";
+	responseStream << "Keep-Alive: timeout = 5, max = 100\r\n";
+	responseStream << "Connection: keep-alive\r\n";
+	responseStream << "Content-type : application/json\r\n\r\n";
+	responseStream << data;
+	return responseStream.str();
+}
+
 // Metodas skirtas nauskaityti gauta komanda ir ja ivygdyti
 std::string GClientLib::JSONapi::readCommand(string commandData, SOCKET clientSocket)
 {
-	// Kintamasisi nurodantis, ad atëjo uþlausà apie klientø sàraðà
-	bool clientList = false;
-
+	// Kintamasis skirtas nustatyti reikalinga pozicija
+	size_t pos;
 
 	// Ieskau kokia komanda atejo
 	// Tikrinu ar neatejo klientu sàraðo komanda
@@ -35,9 +53,6 @@ std::string GClientLib::JSONapi::readCommand(string commandData, SOCKET clientSo
 		//Accept - Language : lt, en - US; q = 0.8, en; q = 0.6
 
 		// Ieskau kurio puslapio nori gauti duomenis
-		// Kintamasis skirtas nustatyti reikalinga pozicija
-		size_t pos;
-
 		// Kintamasis skirtas nurodyti kokios komandos argumento ieskome
 		string commandArgument = "clientList=";
 		// Surandu kur slepiasi clientList
@@ -57,23 +72,9 @@ std::string GClientLib::JSONapi::readCommand(string commandData, SOCKET clientSo
 	{
 		// Atëjo komanda praðanti klientø sàraðo
 		cout << "Sujungimu sarasas" << endl;
-		std::ostringstream responseStream;
 		string data = "{ success:true, itemCount:0, items:[{ tag: 1, clientNumber : 1, connectedPort : 3389, localPort : 125476 }] }";
-		responseStream << "HTTP/1.1 200 OK\r\n";
-		responseStream << "Access-Control-Allow-Origin: ";
-		responseStream << this->settings->getSetting("webGUIAddress");
-		responseStream << "\r\n";
-		responseStream << "Accept-Ranges:bytes\r\n";
-		responseStream << "Server: gNetClient\r\n";
-		responseStream << "Content-Length: ";
-		responseStream << data.size();
-		responseStream << "\r\n";
-		responseStream << "Keep-Alive: timeout = 5, max = 100\r\n";
-		responseStream << "Connection: keep-alive\r\n";
-		responseStream << "Content-type : application/json\r\n\r\n";
-		responseStream << data;
 
-		return responseStream.str();
+		return this->putHTTPheaders(data);
 	}
 
 	return "";
@@ -83,4 +84,45 @@ std::string GClientLib::JSONapi::readCommand(string commandData, SOCKET clientSo
 void GClientLib::JSONapi::GetJSONClientList(int page, SOCKET clientSocket){
 	// Siunciu komanda i serveri
 	toServer->CommandJsonList(page, clientSocket);
+}
+
+std::string GClientLib::JSONapi::FormatJSONListACK(char* buffer, int dataSize, bool success)
+{
+	/* Konstruojamas pavizdys:
+		{ 
+			success: 'true', 
+			itemCount:0, 
+			items:[{ 
+				id: 1, domain : 'asdasd', pcname : 'asdasd', username : 'asdasd' }]
+			}
+	*/
+
+	// Nustatau irasu skaiciu
+	int recordCount = dataSize / sizeof Client;
+	// Nuoroda i kliento struktura
+	Client* client;
+	// nustatau pozicija
+	int position = 0;
+
+	std::ostringstream json;
+	json << "{";
+	// Visada pranesame, kad pavyko suformuoti atsaka
+	json << "success:'true',";
+	// Irasu skaicius
+	json << "itemCount:" << recordCount << ",";
+	json << "items:[";
+	// Formuoju irasu masyva
+	for (int i = 0; i < recordCount; i++){
+		// Nustatau kliento strukturos vieta
+		client = (struct Client*) &buffer[position];
+		// Suvartau identifikacini numeri
+		client->id = ntohl(client->id);
+		// Formuoju masyvo irasa
+		json << "{id:" << (int)client->id << ",domain:'" << client->domainName << "',pcname:'" << client->pcName << "',username:'" << client->userName << "'},";
+		// Perstumiu pozicija
+		position = position + sizeof Client;
+	}
+	json << "]}";
+
+	return putHTTPheaders(json.str());
 }

@@ -81,18 +81,17 @@ void GClientLib::JSONapiClient::Recive(SocketToObjectContainer^ container){
 	}
 }
 
-int GClientLib::JSONapiClient::PutJSONHeader(int dataLength){
-	// Kuriu antraste
-	APIHeader* jsonHeader = (struct APIHeader *) &this->buffer[0];
-	// Nustatau zyme
-	jsonHeader->tag = htons(1);
-	// Nustatau kiek daug bus siunciama duomenu
-	jsonHeader->lenght = htonl(dataLength);
-	// Uzdedama zyme
-	jsonHeader->apiNumber = htons(1);
-	// TAG'as per kuriuo reikai grazinti duomenis
-	jsonHeader->returnTag = htons(this->TAG);
-	return sizeof APIHeader;
-}
+void GClientLib::JSONapiClient::ReciveJSONListAck(char* buffer, int dataSize, bool success)
+{
+	string response = this->JSON->FormatJSONListACK(buffer, dataSize, success);
 
+	cout << "Suformuotas atsakas:" << endl << response << endl;
+
+	// Tikrinu ar reikia ka nors persiusti klientui
+	if (!response.empty())
+	{
+		// Kazkas gauta, siusiu klientui
+		int rSend = send(this->Socket, response.c_str(), response.size(), 0);
+	}
+}
 

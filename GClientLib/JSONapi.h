@@ -16,12 +16,16 @@ namespace GClientLib {
 			SettingsReader^ settings;
 			// Jungtis su serveriu
 			ToServerSocket^ toServer;
+			// Metodas skirtas uzdeti HTTP antrastes ant paruostu siusti JSON duomenu
+			std::string putHTTPheaders(string data);
 		public:
 			JSONapi(SettingsReader^ settings, ToServerSocket^ toServer);
 			// Metodas skirtas nusaityti kokia komanda gauta ir ja ivygdyti
 			std::string readCommand(string commandData, SOCKET clientSocket);
-			// Gauti klientu sarasa
+			// Formuoja uzklausa i serveri gauti klientu sarasui
 			void GetJSONClientList(int page, SOCKET clientSocket);
+			// Formuoja gautu klientu sarasa issiuntimui narsyklei
+			std::string FormatJSONListACK(char* buffer, int dataSize, bool success);
 };
 }
 

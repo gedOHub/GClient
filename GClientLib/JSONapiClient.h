@@ -13,11 +13,6 @@
 namespace GClientLib {
 	ref class JSONapiClient : public gNetSocket {
 		private:
-			String ^redirectUrl;
-			// Uzdeda JSON antraste i buferio pradzia
-			int PutJSONHeader(int dataLength);
-			// Siuncia nurodyta kieki duomenu  nuo buferio pradzios
-			//int SendToGNetServer(SocketToObjectContainer^ container, int dataLenght);
 			// Objetas organizuojantis darba su JSON
 			JSONapi^ JSON;
 		public:
@@ -31,6 +26,16 @@ namespace GClientLib {
 				);
 			virtual void Recive(SocketToObjectContainer^ container) override;
 			virtual void CreateSocket() override {};
+			
+			/*
+			Metodas skirtas priimti atsiunciamus duomenis is serverio, 
+			perduoti JSONapi aprodojimui ir issiusti narsyklei.
+				buffer- buferis, kuriame yra visa informacija
+				datasize- buferyje esanciu duomenu kiekis
+				success- ar gautas bent vienas irasas
+			*/
+			void ReciveJSONListAck(char* buffer, int dataSize, bool success);
+
 };
 };
 

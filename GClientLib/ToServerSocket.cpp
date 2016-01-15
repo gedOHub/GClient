@@ -1,4 +1,5 @@
 #include "ToServerSocket.h"
+#include "JSONapiClient.h"
 
 using namespace GClientLib;
 
@@ -97,23 +98,27 @@ switch(this->head->tag){
 			case LIST_ACK:{
 				this->CommandListAck(rRecv);
 				break;
-}
-case CONNECT:{
-	this->CommandConnect(container);
-	break;
-}
-case GClientLib::INIT_CONNECT_ACK:{
-	this->CommandInitConnectAck();
-	break;
-}
-case BEGIN_READ:{
-	this->CommandBeginRead(container);
-	break;
-}
-case CLIENT_CONNECT_ACK:{
-	this->CommandClientConnectAck(container);
-	break;
-}
+			}
+			case JSON_LIST_ACK:{
+				this->CommandJsonListAck(rRecv, container);
+				break;
+			}
+			case CONNECT:{
+				this->CommandConnect(container);
+				break;
+			}
+			case GClientLib::INIT_CONNECT_ACK:{
+				this->CommandInitConnectAck();
+				break;
+			}
+			case BEGIN_READ:{
+				this->CommandBeginRead(container);
+				break;
+			}
+			case CLIENT_CONNECT_ACK:{
+				this->CommandClientConnectAck(container);
+				break;
+			}
 }
 break;
 }
@@ -206,8 +211,22 @@ printf("-----------------------------------------------------------------------\
 }
 }
 
-void GClientLib::ToServerSocket::CommandJsonListAck(int rRecv){
+void GClientLib::ToServerSocket::CommandJsonListAck(int rRecv, SocketToObjectContainer^ container){
 	cout << "[" << this->name << "] Gavau JSON LIST ACK" << endl;
+
+	// Nuskaitau paketo tipa
+	jsonListAckCommand* list = (struct jsonListAckCommand*) &this->buffer[sizeof header];
+	// Suvartau socketID kintamaji
+	list->socketID = ntohl(list->socketID);
+	try {
+		// Ieskau reikalingo socketo
+		JSONapiClient^ client = (JSONapiClient^)container->FindBySocket(list->socketID);
+		// Perduodu gautus duomenis tolimesniam apdorojimui
+		client->ReciveJSONListAck(&this->buffer[sizeof header + sizeof jsonListAckCommand], rRecv - sizeof header + sizeof jsonListAckCommand, list->success);
+	} catch (Exception^ e) {
+		cout << "Klaida konvertuojant i JSONapiCLient" << endl;
+		Console::WriteLine(e->Message);
+	}
 }
 
 void GClientLib::ToServerSocket::CommandHello(){
