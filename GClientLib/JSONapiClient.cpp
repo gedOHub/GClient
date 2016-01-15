@@ -85,8 +85,6 @@ void GClientLib::JSONapiClient::ReciveJSONListAck(char* buffer, int dataSize, bo
 {
 	string response = this->JSON->FormatJSONListACK(buffer, dataSize, success);
 
-	cout << "Suformuotas atsakas:" << endl << response << endl;
-
 	// Tikrinu ar reikia ka nors persiusti klientui
 	if (!response.empty())
 	{

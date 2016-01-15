@@ -126,11 +126,7 @@ break;
 default: {
 	// Persiunciu duomenis i  reikalinga socket
 	// Pildau buferi
-	//cout << "[" << this->name << "]Reikia issiusti " << this->head->lenght << endl;
-
 	int rSend = container->FindByTag(this->head->tag)->Send(&this->buffer[sizeof(header)], this->head->lenght);
-
-	//cout << "[" << this->name << "]" << rRecv << " -> " << rSend <<  endl;
 	break;
 }
 } // switch(this->head->tag)
@@ -212,8 +208,6 @@ printf("-----------------------------------------------------------------------\
 }
 
 void GClientLib::ToServerSocket::CommandJsonListAck(int rRecv, SocketToObjectContainer^ container){
-	cout << "[" << this->name << "] Gavau JSON LIST ACK" << endl;
-
 	// Nuskaitau paketo tipa
 	jsonListAckCommand* list = (struct jsonListAckCommand*) &this->buffer[sizeof header];
 	// Suvartau socketID kintamaji

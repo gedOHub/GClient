@@ -47,6 +47,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	// JSON API
 	JSONapi^ JSON_API = gcnew JSONapi(settings, ToServer);
+	
+	// TODO: padaryti kad veiktu net ir tada kai nepavyksta uzkrauti JSON socketo
 	// WEB klientu socketas
 	JSONapiServer^ JSON;
 	try{

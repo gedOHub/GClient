@@ -71,7 +71,6 @@ std::string GClientLib::JSONapi::readCommand(string commandData, SOCKET clientSo
 	if (commandData.find("connectionList") != string::npos)
 	{
 		// Atëjo komanda praðanti klientø sàraðo
-		cout << "Sujungimu sarasas" << endl;
 		string data = "{ success:true, itemCount:0, items:[{ tag: 1, clientNumber : 1, connectedPort : 3389, localPort : 125476 }] }";
 
 		return this->putHTTPheaders(data);
