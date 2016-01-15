@@ -8,9 +8,6 @@ using namespace GClientLib;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	//printf("header dydis: %d\n", sizeof header);
-	//printf("listCommand dydis: %d\n", sizeof listCommand);
-
 	// Nuskaito nustatymus is registru
 	SettingsReader^ settings = gcnew SettingsReader();
 	// Kuriamas visu sujungimu saraso saugykla
@@ -29,17 +26,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	// Pridedu konsole prie rasomu
 	//FD_SET(0, &rasomiSocket);
 	FD_ZERO(&klaidingiSocket);
-
-	// Dirbanciu deskriptriu didziausai reimske
-	//int maxD = -1;
-
 	
 	//Sukuria socketa jungtis prie pagrindinio serverio
 	ToServerSocket^ ToServer = gcnew ToServerSocket(settings->getSetting("serverAddress"),
 		settings->getSetting("serverPort"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket);
 	// Tikrinam ar pavyko uzmegsti rysi iki centrinio serverio
 	if(ToServer->GetSocket() == INVALID_SOCKET){
-		printf("Nepavyko uzmegsti rysio iki centrini serveri\n");
+		printf("Nepavyko sukurti objekto darbui su centriniu serveriu\n");
 		return 1;
 	}
 	// Priskiriam pradinius rezius
@@ -54,21 +47,28 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	// JSON API
 	JSONapi^ JSON_API = gcnew JSONapi(settings, ToServer);
-
-	// Sukuriu JSON API socket'a
-	JSONapiServer^ JSON = gcnew JSONapiServer(settings->getSetting("JSONapi_address"), settings->getSetting("JSONapi_port"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket, JSON_API);
-	// Tikrinam ar klausytis nurodytu adresu ir portu
-	if (ToServer->GetSocket() == INVALID_SOCKET){
-		printf("Nepavyko klausytis %s:%s\n", settings->getSetting("JSONapi_address"), settings->getSetting("JSONapi_port"));
-		return 2;
+	// WEB klientu socketas
+	JSONapiServer^ JSON;
+	try{
+		// Sukuriu JSON API socket'a
+		JSON = gcnew JSONapiServer(settings->getSetting("JSONapi_address"), settings->getSetting("JSONapi_port"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket, JSON_API);
+		// Tikrinam ar klausytis nurodytu adresu ir portu
+		if (JSON->GetSocket() == INVALID_SOCKET){
+			printf("Nepavyko klausytis %s:%s\n", settings->getSetting("JSONapi_address"), settings->getSetting("JSONapi_port"));
+		}
+		else {
+			// Nustatom maksimalu deskriptoriu
+			// Tikrinu ar JSON socketas nera didensi nei ToServer :)
+			if (Globals::maxD < (int)JSON->GetSocket())
+				Globals::maxD = (int)JSON->GetSocket();
+			// Sukurta sujungima dedame i sarasus
+			STOContainer->Add(JSON);
+		}
+	} catch (Exception^ e)
+	{
+		Console::WriteLine("Nepavyko sukurti prievado grafinei sasajai. Klaida:");
+		Console::WriteLine(e);
 	}
-	
-	// Nustatom maksimalu deskriptoriu
-	// Tikrinu ar JSON socketas nera didensi nei ToServer :)
-	if (Globals::maxD < (int)JSON->GetSocket())
-		Globals::maxD = (int)JSON->GetSocket();
-	// Sukurta sujungima dedame i sarasus
-	STOContainer->Add(JSON);
 
 	fd_set tempRead, tempWrite, tempError;	// Laikinas dekriptoriu kintamasis
 	while(!Globals::quit){
