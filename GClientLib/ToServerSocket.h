@@ -34,8 +34,13 @@ namespace GClientLib {
 		void CommandClientConnectAck(SocketToObjectContainer^ container);
 		void CommandInitConnectAck();
 		// JSON komandos
+		// Metodas skirtas paprasyti klientu saraso is serverio
 		void CommandJsonList(int page, SOCKET socket);
+		// Metodas skirtas gauta kleintu sarasa persiusti atitinkamui pbjektui apdorojimui
 		void CommandJsonListAck(int rRecv, SocketToObjectContainer^ container);
+		// Metodas skirtas inicijuoti sujungima su klientu
+		void CommandJsonInitConnect(int id, int port, SocketToObjectContainer^ container, SettingsReader^ settings, SOCKET socket);
+
 		// Grazina sugeneruota zyme
 		int GenerateTag();
 	};

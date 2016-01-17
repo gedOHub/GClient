@@ -23,7 +23,11 @@ namespace GClientLib {
 		CLOSE = 5,
 		// JSON komandos
 		JSON_LIST = 201,                // LIST komanda JSON aplikacijai
-		JSON_LIST_ACK = 211             // LIST_ACK komanda JSON aplikacijai
+		JSON_LIST_ACK = 211,            // LIST_ACK komanda JSON aplikacijai
+		JSON_INIT_CONNECT = 220,		// Administratoriaus iniciavimas tunelio
+		JSON_INIT_CONNECT_ACK = 221,	
+		JSON_CONNECT = 230,				// Komanda jungtis i nurodyta prievada
+		JSON_CONNECT_ACK = 231			// Atasakas i CONNECT komanda
 };
 
 enum CONNECT_STATUS{
@@ -92,6 +96,13 @@ struct connectInitCommand : Command{
 	USHORT source_port; // Lokalus prievadas, kuri atidarem tuneliui
 	USHORT tag; // Srauto zyme
 	ULONG client_id; // Kliento ID prie kurio jungsiuos
+};
+// JSON_CONNECT_INIT
+struct jsonConnectInitCommand : JSONCommand{
+	USHORT destination_port;	// kliento prie kurio jungiames prievadas
+	USHORT source_port;			// Lokalus prievadas, kuri atidarem tuneliui
+	USHORT tag;					// Srauto zyme
+	ULONG client_id;			// Kliento ID prie kurio jungsiuos
 };
 // CONNECT
 struct connectCommand : Command{

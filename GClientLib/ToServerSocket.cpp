@@ -292,6 +292,50 @@ void GClientLib::ToServerSocket::CommandInitConnect(int id, int port, SocketToOb
 	}
 };
 
+void GClientLib::ToServerSocket::CommandJsonInitConnect(int id, int port, SocketToObjectContainer^ container, SettingsReader^ settings, SOCKET socket)
+{
+	// Formuoju komanda connect
+	int newTag = tag->GetTag();
+	cout << "Suformuojamas naujas srautas " << newTag << endl;
+
+	// Inicijuoju listen socketa
+	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi);
+
+	if (newSocket->GetSocket() == SOCKET_ERROR){
+		printf("Nepavyko sukurti besiklausancio prievado");
+		delete newSocket;
+		return;
+	}
+	else {
+		container->Add(newSocket);
+
+		if (Globals::maxD < (int)newSocket->GetSocket())
+			Globals::maxD = newSocket->GetSocket();
+
+		// Pildau InitCommand komandos pakeita
+		jsonConnectInitCommand* connect = (struct jsonConnectInitCommand*) &this->commandBuffer[sizeof(header)];
+		// Nurodau komanda
+		connect->command = htons(JSON_INIT_CONNECT);
+		// Nurodau savo atverta prievada
+		connect->source_port = htons(newSocket->GetPort());
+		// Nurodau srauto zyme
+		connect->tag = htons(newTag);
+		// Nurodau koki prievada noriu pasiekti
+		connect->destination_port = htons(port);
+		// Nurodau klienta
+		connect->client_id = htonl(id);
+		// Nurodau JSON socketa
+		connect->socketID = htonl(socket);
+		// Pildau headeri
+		this->head = (struct header*) &this->commandBuffer[0];
+		head->tag = htons(0);
+		head->lenght = htonl(sizeof connectInitCommand);
+		// Siunciu komanda i serveri
+		this->Send(this->commandBuffer, sizeof(header) + sizeof(jsonConnectInitCommand));
+		printf("Laukiu atsakymo is serverio...\n");
+	}
+}
+
 void GClientLib::ToServerSocket::CommandConnect(SocketToObjectContainer^ container){
 	connectCommand* connect = (struct connectCommand*) &this->buffer[ sizeof header ];
 	// Nustatau duomenis i tinkama puse
