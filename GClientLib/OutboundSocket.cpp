@@ -25,7 +25,6 @@ void GClientLib::OutboundSocket::Connect(){
 			this->Connect();
 } else {
 	printf("Prisjungiau prie %s:%s\n", this->IP->c_str(), this->PORT->c_str());
-	//cout << "Prisijungiau prie " << this->IP << ":" << this->PORT << endl;
 	break;
 }
 }
@@ -33,7 +32,6 @@ void GClientLib::OutboundSocket::Connect(){
 
 void GClientLib::OutboundSocket::Recive(SocketToObjectContainer^ container){
 	using namespace std;
-
 	if(this->read){
 		// Gaunu duomenis
 		const int rRecv = recv(this->Socket, &this->buffer[sizeof(header)], FiveMBtoCHAR - sizeof(header), 0);
@@ -43,30 +41,31 @@ void GClientLib::OutboundSocket::Recive(SocketToObjectContainer^ container){
 				container->DeleteBySocket(this->Socket);
 				this->CloseSocket();
 				break;
-}
-case SOCKET_ERROR:{
-	printf("Klaida: %d sujungime %d \n", WSAGetLastError(), this->Socket);
-	break;
-}
-default:{
-	head = (struct header *) &this->buffer[0];
+			}
+			case SOCKET_ERROR:{
+				printf("Klaida: %d sujungime %d \n", WSAGetLastError(), this->Socket);
+				this->RemuveFromLists();
+				break;
+			}
+			default:{
+				head = (struct header *) &this->buffer[0];
 
-	// Kuriu antraste
-	head->tag = htons(this->TAG);
-	head->lenght = htonl(rRecv);
+				// Kuriu antraste
+				head->tag = htons(this->TAG);
+				head->lenght = htonl(rRecv);
 
-	// Siunciam serveriui duomenis
-	int rSend = container->FindByTag(0)->Send(&this->buffer[0], rRecv + sizeof(header));
-	string status;
-	if(rSend > rRecv)
-	status = "OK";
-	else
-	status = "ERROR";
-	//cout << "[" << this->name << "]" << status << " " << rRecv << " -> " << rSend <<  endl;
-	break;
-}
-}
-}
+				// Siunciam serveriui duomenis
+				int rSend = container->FindByTag(0)->Send(&this->buffer[0], rRecv + sizeof(header));
+				string status;
+				if(rSend > rRecv)
+				status = "OK";
+				else
+				status = "ERROR";
+				//cout << "[" << this->name << "]" << status << " " << rRecv << " -> " << rSend <<  endl;
+				break;
+			}
+		}
+	}
 }
 
 

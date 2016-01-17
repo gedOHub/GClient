@@ -211,3 +211,12 @@ void GClientLib::gNetSocket::Reconnect(){
 void GClientLib::gNetSocket::Listen(){
 };
 
+void GClientLib::gNetSocket::RemuveFromLists()
+{
+	// Salinu is skaitomu saraso
+	FD_CLR(this->Socket, skaitomi);
+	// Salinu is rasomu saraso
+	FD_CLR(this->Socket, rasomi);
+	// Salinu is klaidingu saraso
+	FD_CLR(this->Socket, klaidingi);
+}

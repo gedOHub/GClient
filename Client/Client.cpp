@@ -16,8 +16,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	// 1s = 1000000 microsekundziu
 	timeval time;
 	time.tv_sec = 0;
-	// 0.1s
-	time.tv_usec = 100000;
+	// 0.01s
+	time.tv_usec = 10000;
 
 	// --- Select funkcijos kintamieji ---
 	// Inicijuoju
@@ -78,10 +78,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	while(!Globals::quit){
 		// Siam ciklui skaitomi dekriptoriai
 		tempRead = skaitomiSocket;
-		//tempWrite = rasomiSocket;
-		//tempError = klaidingiSocket;
+		tempWrite = rasomiSocket;
+		tempError = klaidingiSocket;
 		// Pasiemam dekriptorius kurie turi kazka nuskaitimui
-		if (select(Globals::maxD + 1, &tempRead, nullptr, nullptr, &time) == SOCKET_ERROR){
+		if (select(Globals::maxD + 1, &tempRead, &tempWrite, &tempError, &time) == SOCKET_ERROR){
 			// Select nepasiseke grazinti dekriptoriu
 			Console::WriteLine(WSAGetLastError());
 			switch(WSAGetLastError()){
@@ -108,7 +108,6 @@ int _tmain(int argc, _TCHAR* argv[])
 				printf("Ivyko rasimas %d dekriptoriuje", i);
 			}
 			*/
-			
 
 			// Tikrinam ar i-asis yra deskriptorius is kurio reikia ka nors nuskaityti
 			if (FD_ISSET(i, &tempRead)) {

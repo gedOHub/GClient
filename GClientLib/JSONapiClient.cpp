@@ -29,6 +29,7 @@ void GClientLib::JSONapiClient::Recive(SocketToObjectContainer^ container){
 		}
 		case SOCKET_ERROR:{
 			printf("[%s]Klaida: %d sujungime %d \n", this->name, WSAGetLastError(), this->Socket);
+			this->RemuveFromLists();
 			break;
 		}
 		default:{
