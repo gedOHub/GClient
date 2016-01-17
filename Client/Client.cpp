@@ -13,9 +13,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	// Kuriamas visu sujungimu saraso saugykla
 	SocketToObjectContainer^ STOContainer = gcnew SocketToObjectContainer();
 
+	// 1s = 1000000 microsekundziu
 	timeval time;
 	time.tv_sec = 0;
-	time.tv_usec = 5000;
+	// 0.1s
+	time.tv_usec = 100000;
 
 	// --- Select funkcijos kintamieji ---
 	// Inicijuoju
@@ -29,7 +31,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	//Sukuria socketa jungtis prie pagrindinio serverio
 	ToServerSocket^ ToServer = gcnew ToServerSocket(settings->getSetting("serverAddress"),
-		settings->getSetting("serverPort"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket);
+		settings->getSetting("serverPort"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket, STOContainer, settings);
 	// Tikrinam ar pavyko uzmegsti rysi iki centrinio serverio
 	if(ToServer->GetSocket() == INVALID_SOCKET){
 		printf("Nepavyko sukurti objekto darbui su centriniu serveriu\n");
@@ -76,10 +78,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	while(!Globals::quit){
 		// Siam ciklui skaitomi dekriptoriai
 		tempRead = skaitomiSocket;
-		tempWrite = rasomiSocket;
-		tempError = klaidingiSocket;
+		//tempWrite = rasomiSocket;
+		//tempError = klaidingiSocket;
 		// Pasiemam dekriptorius kurie turi kazka nuskaitimui
-		if(select(Globals::maxD+1, &tempRead, &tempWrite, &tempError, &time) == SOCKET_ERROR){
+		if (select(Globals::maxD + 1, &tempRead, nullptr, nullptr, &time) == SOCKET_ERROR){
 			// Select nepasiseke grazinti dekriptoriu
 			Console::WriteLine(WSAGetLastError());
 			switch(WSAGetLastError()){
@@ -94,12 +96,13 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 		// Begam per esamus sujungimus ir ieskom ar kas ka atsiunte
 		for (int i = 0; i <= Globals::maxD; i++){
+			
+			/*
 			// Tikrinam ar i-asis yra dekriptorius kuriame ivyko klaida
 			if (FD_ISSET(i, &tempError)) {
 				printf("Ivyko kalida %d dekriptoriuje", i);
 			}
 			
-			/*
 			// Tikrinam ar i-asis yra dekriptorius kuriame ivyko klaida
 			if (FD_ISSET(i, &tempWrite)) {
 				printf("Ivyko rasimas %d dekriptoriuje", i);

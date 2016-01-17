@@ -110,13 +110,31 @@ struct connectCommand : Command{
 	USHORT tag; // Zyme, kuri bus naudojama kliento
 	ULONG tunnelID; // Tunelio ID
 };
+// JSON_CONNECT
+struct jsonConnectCommand : JSONCommand{
+	USHORT destinatio_port; // Prievadas i kuri jungsiuos
+	USHORT tag; // Zyme, kuri bus naudojama kliento
+	ULONG tunnelID; // Tunelio ID
+};
 // CONNECT_ACK
 struct connectAckCommand : Command{
 	ULONG tunnelID; // Tunelio ID
 	USHORT status; // Sujungimo statusas
 };
+// JSON_CONNECT_ACK
+struct jsonConnectAckCommand : JSONCommand{
+	ULONG tunnelID; // Tunelio ID
+	USHORT status; // Sujungimo statusas
+};
 // CONNECT_INIT_ACK
 struct connectInitAckCommand : Command{
+	USHORT status;
+	ULONG client_id;
+	USHORT adm_port;
+	USHORT cln_port;
+};
+// CONNECT_INIT_ACK
+struct jsonConnectInitAckCommand : JSONCommand{
 	USHORT status;
 	ULONG client_id;
 	USHORT adm_port;

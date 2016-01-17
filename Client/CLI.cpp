@@ -63,7 +63,7 @@ void CLI::Start(){
 				if( cin.fail() )
 					throw "CLI_ERROR";
 
-				this->socket->CommandInitConnect(id, port, STOContainer, this->settings);
+				this->socket->CommandInitConnect(id, port, STOContainer );
 			}catch(System::Exception^ ){
 				printf("Blogai ivesta connect komanda\n");
 				zodis = this->ClearCLI();

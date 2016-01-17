@@ -171,5 +171,5 @@ std::string GClientLib::JSONapi::FormatJSONListACK(char* buffer, int dataSize, b
 
 void GClientLib::JSONapi::ConnectClientJSON(int clientID, int portNumber, SOCKET clientSocket)
 {
-	
+	toServer->CommandJsonInitConnect(clientID, portNumber, clientSocket);
 }

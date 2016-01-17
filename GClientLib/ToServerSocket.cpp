@@ -3,11 +3,13 @@
 
 using namespace GClientLib;
 
-GClientLib::ToServerSocket::ToServerSocket(string ip, string port, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket) : GClientLib::gNetSocket(ip, port, 0, skaitomiSocket, rasomiSocket, klaidingiSocket){
+GClientLib::ToServerSocket::ToServerSocket(string ip, string port, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket, SocketToObjectContainer^ STOC, SettingsReader^ settings) : GClientLib::gNetSocket(ip, port, 0, skaitomiSocket, rasomiSocket, klaidingiSocket){
 	// Nustatom, kad galetu tiek siusti tiek gauti duomenis
 	this->read = true;
 	this->write = true;
 	this->name = "ToServerSocket";
+	this->STOC = STOC;
+	this->settings = settings;
 
 	this->Connect();
 	this->tag = gcnew TagGenerator();
@@ -92,6 +94,8 @@ switch(this->head->tag){
 		// Verciu komanda i tikraji pavidala
 		cmd->command = ntohs(cmd->command);
 
+		cout << "Gauta komanda: " << cmd->command << endl;
+
 		// Tikrinu komanda
 		switch(cmd->command){
 			// LIST_ACK komanda
@@ -100,6 +104,7 @@ switch(this->head->tag){
 				break;
 			}
 			case JSON_LIST_ACK:{
+				cout << "gavau JSON_LIST_ACK komanda" << endl;
 				this->CommandJsonListAck(rRecv, container);
 				break;
 			}
@@ -107,11 +112,23 @@ switch(this->head->tag){
 				this->CommandConnect(container);
 				break;
 			}
+			case JSON_CONNECT: {
+				// Inicijuojamas sujungimas su nurodytu prievadu
+				cout << "[JSON] JSON_CONNECT" << endl;
+				this->CommandJSONConnect(container);
+				break;
+			}
 			case GClientLib::INIT_CONNECT_ACK:{
 				this->CommandInitConnectAck();
 				break;
 			}
+			case GClientLib::JSON_INIT_CONNECT_ACK:{
+				cout << "[JSON] JSON_INIT_CONNECT_ACK" << endl;
+				this->CommandJsonInitConnectAck();
+				break;
+			}
 			case BEGIN_READ:{
+
 				this->CommandBeginRead(container);
 				break;
 			}
@@ -252,7 +269,7 @@ void GClientLib::ToServerSocket::CommandHello(){
 	this->Send( this->commandBuffer, sizeof( header ) + sizeof ( helloCommand ) );
 }
 
-void GClientLib::ToServerSocket::CommandInitConnect(int id, int port, SocketToObjectContainer^ container, SettingsReader^ settings){
+void GClientLib::ToServerSocket::CommandInitConnect(int id, int port, SocketToObjectContainer^ container){
 	// Formuoju komanda connect
 	int newTag = tag->GetTag();
 	cout << "Suformuojamas naujas srautas " << newTag << endl;
@@ -292,22 +309,27 @@ void GClientLib::ToServerSocket::CommandInitConnect(int id, int port, SocketToOb
 	}
 };
 
-void GClientLib::ToServerSocket::CommandJsonInitConnect(int id, int port, SocketToObjectContainer^ container, SettingsReader^ settings, SOCKET socket)
+void GClientLib::ToServerSocket::CommandJsonInitConnect(int id, int port, SOCKET socket)
 {
+
+	cout << "[SJON]Gauti parametrai" << endl;
+	cout << "[SJON]ID: " << id << endl;
+	cout << "[SJON]Port: " << port << endl;
+
 	// Formuoju komanda connect
 	int newTag = tag->GetTag();
-	cout << "Suformuojamas naujas srautas " << newTag << endl;
+	cout << "[JSON]Suformuojamas naujas srautas " << newTag << endl;
 
 	// Inicijuoju listen socketa
 	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi);
 
 	if (newSocket->GetSocket() == SOCKET_ERROR){
-		printf("Nepavyko sukurti besiklausancio prievado");
+		printf("[JSON]Nepavyko sukurti besiklausancio prievado");
 		delete newSocket;
 		return;
 	}
 	else {
-		container->Add(newSocket);
+		STOC->Add(newSocket);
 
 		if (Globals::maxD < (int)newSocket->GetSocket())
 			Globals::maxD = newSocket->GetSocket();
@@ -323,16 +345,19 @@ void GClientLib::ToServerSocket::CommandJsonInitConnect(int id, int port, Socket
 		// Nurodau koki prievada noriu pasiekti
 		connect->destination_port = htons(port);
 		// Nurodau klienta
-		connect->client_id = htonl(id);
+		connect->client_id = id;
+		// Nurodau klienta
+		connect->client_id = htonl(connect->client_id);
 		// Nurodau JSON socketa
 		connect->socketID = htonl(socket);
 		// Pildau headeri
 		this->head = (struct header*) &this->commandBuffer[0];
 		head->tag = htons(0);
-		head->lenght = htonl(sizeof connectInitCommand);
+		head->lenght = htonl(sizeof jsonConnectInitCommand);
+
 		// Siunciu komanda i serveri
 		this->Send(this->commandBuffer, sizeof(header) + sizeof(jsonConnectInitCommand));
-		printf("Laukiu atsakymo is serverio...\n");
+		printf("[JSON]Laukiu atsakymo is serverio...\n");
 	}
 }
 
@@ -347,7 +372,7 @@ void GClientLib::ToServerSocket::CommandConnect(SocketToObjectContainer^ contain
 	// Kuriu sujungima
 	char portas[20];
 	_itoa_s(connect->destinatio_port, portas, 10);
-	OutboundSocket^ connectSocket = gcnew OutboundSocket("localhost", portas, connect->tag, this->skaitomi, this->rasomi, this->klaidingi);
+	OutboundSocket^ connectSocket = gcnew OutboundSocket(settings->getSetting("bindAddress"), portas, connect->tag, this->skaitomi, this->rasomi, this->klaidingi);
 
 	if(Globals::maxD < (int)connectSocket->GetSocket())
 	Globals::maxD = connectSocket->GetSocket();
@@ -377,6 +402,51 @@ head->lenght = htonl(sizeof(connectAckCommand));
 this->Send( this->commandBuffer, sizeof(header)+sizeof(connectAckCommand) );
 }
 
+void GClientLib::ToServerSocket::CommandJSONConnect(SocketToObjectContainer^ container)
+{
+	jsonConnectCommand* connect = (struct jsonConnectCommand*) &this->buffer[sizeof header];
+	// Nustatau duomenis i tinkama puse
+	connect->destinatio_port = ntohs(connect->destinatio_port);
+	connect->tag = ntohs(connect->tag);
+	connect->tunnelID = ntohl(connect->tunnelID);
+	// Generuoju tag sujungimui
+	int status = INIT;
+	// Kuriu sujungima
+	char portas[20];
+	_itoa_s(connect->destinatio_port, portas, 10);
+	OutboundSocket^ connectSocket = gcnew OutboundSocket(settings->getSetting("bindAddress"), portas, connect->tag, this->skaitomi, this->rasomi, this->klaidingi);
+
+	if (Globals::maxD < (int)connectSocket->GetSocket())
+		Globals::maxD = connectSocket->GetSocket();
+
+	if (connectSocket->GetSocket() == SOCKET_ERROR){
+		// Jei nepavyko sukurti sujungimo
+		cout << "Nepavyko prisijungti prie " << connect->destinatio_port << endl;
+		status = FAULT;
+		delete connectSocket;
+	}
+	else {
+		// Sukurus sujungima
+		status = CREATED;
+		container->Add(connectSocket);
+	}
+	// CONNECT_ACK
+	// Formuoju atsaka serveriui
+	// Formuoju connect ack paketa
+	jsonConnectAckCommand* connectAck = (struct jsonConnectAckCommand*) &this->commandBuffer[sizeof(header)];
+	connectAck->command = htons(JSON_CONNECT_ACK);
+	connectAck->tunnelID = htonl(connect->tunnelID);
+	connectAck->status = htons(status);
+	// socketID nevartytas, persiunciu is karto suvartyta
+	connectAck->socketID = connect->socketID;
+	// Formuoju gNet paketa
+	this->head = (struct header*) &this->commandBuffer[0];
+	head->tag = htons(0);
+	head->lenght = htonl(sizeof(jsonConnectAckCommand));
+	// Siunciu serveriui
+	this->Send(this->commandBuffer, sizeof(header) + sizeof(jsonConnectAckCommand));
+}
+
 void GClientLib::ToServerSocket::CommandInitConnectAck(){
 	connectInitAckCommand* ack = (struct connectInitAckCommand*) &this->buffer[sizeof(header)];
 	// Suvartau tinkama tvarka skacius
@@ -402,6 +472,33 @@ case FAULT:{
 	break;
 }
 }
+}
+
+void GClientLib::ToServerSocket::CommandJsonInitConnectAck(){
+	jsonConnectInitAckCommand* ack = (struct jsonConnectInitAckCommand*) &this->buffer[sizeof(header)];
+	// Suvartau tinkama tvarka skacius
+	ack->status = ntohs(ack->status);
+	ack->client_id = ntohl(ack->client_id);
+	ack->adm_port = ntohs(ack->adm_port);
+	ack->cln_port = ntohs(ack->cln_port);
+
+	// Spausdinu rezultataus
+	switch (ack->status){
+	case INIT: {
+		printf("Sujungimas per ilgai inicijuojamas, bandykite kurti sujungima is naujo\n");
+		break;
+	}
+	case CREATED:{
+		long int client_id = ack->client_id, adm_port = ack->adm_port, cln_port = ack->cln_port;
+		cout << "Sujungimas sekmingai sukurtas su " << client_id << " klientu" << endl;
+		cout << "Pas Jus atverta " << adm_port << " jungtis, kuri sujungta su kliento " << cln_port << " jungtimi" << endl;
+		break;
+	}
+	case FAULT:{
+		printf("Nepavyko sukurti sujungimo\n");
+		break;
+	}
+	}
 }
 
 void GClientLib::ToServerSocket::CommandBeginRead(SocketToObjectContainer^ container){
