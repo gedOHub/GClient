@@ -13,30 +13,32 @@ GClientLib::gNetSocket::gNetSocket(string ip, string port, int tag, fd_set* skai
 		printf("WSAStartup failed: %d\n", wdaResult);
 		// Nepavykus sunaikiname kintamaji
 		return;
-}
+	}
 
-// Kintamuju priskirimas
-this->name = new char[20];
-this->name = "gNetSocket";
-this->read = false;
-this->write = false;
-this->IP = new string(ip);
-this-> PORT = new string(port);
-this->TAG = tag;
-this->Socket = INVALID_SOCKET;
-this->addrResult = nullptr;
-this->addrHints = nullptr;
-this->buffer = new char[TenMBofChar];
-// Socket sarasu kintamieji
-this->skaitomi = skaitomiSocket;
-this->rasomi = rasomiSocket;
-this->klaidingi = klaidingiSocket;
-// Kuriam SOCKET
-this->CreateSocket();
-// Pridedam socket prie sarasu
-FD_SET(this->Socket, skaitomiSocket);
-FD_SET(this->Socket, rasomiSocket);
-FD_SET(this->Socket, klaidingiSocket);
+	// Kintamuju priskirimas
+	this->name = new char[20];
+	this->name = "gNetSocket";
+	this->read = false;
+	this->write = false;
+	this->IP = new string(ip);
+	this-> PORT = new string(port);
+	this->TAG = tag;
+	this->Socket = INVALID_SOCKET;
+	this->addrResult = nullptr;
+	this->addrHints = nullptr;
+	this->buffer = new char[TenMBofChar];
+	// Socket sarasu kintamieji
+	this->skaitomi = skaitomiSocket;
+	this->rasomi = rasomiSocket;
+	this->klaidingi = klaidingiSocket;
+	// Kuriam SOCKET
+	this->CreateSocket();
+	if (this->Socket != INVALID_SOCKET) {
+		// Pridedam socket prie sarasu
+		FD_SET(this->Socket, skaitomiSocket);
+		FD_SET(this->Socket, rasomiSocket);
+		FD_SET(this->Socket, klaidingiSocket);
+	}
 }
 
 GClientLib::gNetSocket::gNetSocket(int socket, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket){
@@ -47,31 +49,24 @@ GClientLib::gNetSocket::gNetSocket(int socket, int tag, fd_set* skaitomiSocket, 
 		printf("WSAStartup failed: %d\n", wdaResult);
 		// Nepavykus sunaikiname kintamaji
 		return;
-}
-
-// Tikrinam ar kintamieji teisingi
-/*
-if(ip.empty() || tag < 0) {
-	printf("Gauti netinkami duoemenys jungties kurimui");
-	return;
-}
-*/
-
-// Kintamuju priskirimas
-this->Socket = INVALID_SOCKET;
-this->Socket = socket;
-this->TAG = tag;
-this->addrResult = nullptr;
-this->addrHints = nullptr;
-this->buffer = new char[FiveMBtoCHAR];
-// Socket sarasu kintamieji
-this->skaitomi = skaitomiSocket;
-this->rasomi = rasomiSocket;
-this->klaidingi = klaidingiSocket;;
-// Pridedam socket prie sarasu
-FD_SET(this->Socket, skaitomiSocket);
-FD_SET(this->Socket, rasomiSocket);
-FD_SET(this->Socket, klaidingiSocket);
+	}
+	// Kintamuju priskirimas
+	this->Socket = socket;
+	this->TAG = tag;
+	this->addrResult = nullptr;
+	this->addrHints = nullptr;
+	this->buffer = new char[FiveMBtoCHAR];
+	// Socket sarasu kintamieji
+	this->skaitomi = skaitomiSocket;
+	this->rasomi = rasomiSocket;
+	this->klaidingi = klaidingiSocket;;
+	// Pridedam socket prie sarasu
+	if (this->Socket != INVALID_SOCKET) {
+		// Pridedam socket prie sarasu
+		FD_SET(this->Socket, skaitomiSocket);
+		FD_SET(this->Socket, rasomiSocket);
+		FD_SET(this->Socket, klaidingiSocket);
+	}
 }
 
 // Destruktorius

@@ -56,7 +56,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		JSON = gcnew JSONapiServer(settings->getSetting("JSONapi_address"), settings->getSetting("JSONapi_port"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket, JSON_API);
 		// Tikrinam ar klausytis nurodytu adresu ir portu
 		if (JSON->GetSocket() == INVALID_SOCKET){
-			printf("Nepavyko klausytis %s:%s\n", settings->getSetting("JSONapi_address"), settings->getSetting("JSONapi_port"));
+			Console::WriteLine("Nepavyko atverti JSOn prievado");
+			//printf("Nepavyko klausytis %s:%s\n", settings->getSetting("JSONapi_address"), settings->getSetting("JSONapi_port"));
 		}
 		else {
 			// Nustatom maksimalu deskriptoriu
@@ -66,10 +67,9 @@ int _tmain(int argc, _TCHAR* argv[])
 			// Sukurta sujungima dedame i sarasus
 			STOContainer->Add(JSON);
 		}
-	} catch (Exception^ e)
-	{
-		Console::WriteLine("Nepavyko sukurti prievado grafinei sasajai. Klaida:");
-		Console::WriteLine(e);
+	} catch (Exception^ e) {
+		Console::WriteLine("Nepavyko sukurti prievado grafinei sasajai");
+		Diagnostics::Debug::WriteLine(e);
 	}
 
 	fd_set tempRead, tempWrite, tempError;	// Laikinas dekriptoriu kintamasis
@@ -81,15 +81,15 @@ int _tmain(int argc, _TCHAR* argv[])
 		// Pasiemam dekriptorius kurie turi kazka nuskaitimui
 		if(select(Globals::maxD+1, &tempRead, &tempWrite, &tempError, &time) == SOCKET_ERROR){
 			// Select nepasiseke grazinti dekriptoriu
+			Console::WriteLine(WSAGetLastError());
 			switch(WSAGetLastError()){
-			case WSAENOTSOCK:{
-				printf("Praradau rysi su serveriu\n");
-				ToServer->Reconnect();
-							 }
-			default:{
-				printf("Select klaida : %d\n", WSAGetLastError());
-				continue;
-					}
+				case WSAENOTSOCK:{
+					Console::WriteLine("Socket operation on nonsocket");
+				}
+				default:{
+					printf("Select klaida : %d\n", WSAGetLastError());
+					continue;
+				}
 			}
 		}
 		// Begam per esamus sujungimus ir ieskom ar kas ka atsiunte

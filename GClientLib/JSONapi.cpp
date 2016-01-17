@@ -34,10 +34,16 @@ std::string GClientLib::JSONapi::readCommand(string commandData, SOCKET clientSo
 {
 	// Kintamasis skirtas nustatyti reikalinga pozicija
 	size_t pos;
+	// Kintamasis skirtas ieskomai daliai laikyti
+	string tempString;
+
+	// Komanudi fragmentai kuriu ieskosiu
+	string clientListCommandArgument = "clientList=";
+	string connectCommandArgument = "command=connectClient";
 
 	// Ieskau kokia komanda atejo
-	// Tikrinu ar neatejo klientu sàraðo komanda
-	if (commandData.find("clientList") != string::npos)
+	// * Tikrinu ar neatejo klientu sàraðo komanda
+	if (commandData.find(clientListCommandArgument) != string::npos)
 	{
 		//Uzklausos pavizdys:
 		//GET /?_dc=1452802220979&clientList=1&start=0&limit=20 HTTP/1.1
@@ -54,17 +60,54 @@ std::string GClientLib::JSONapi::readCommand(string commandData, SOCKET clientSo
 
 		// Ieskau kurio puslapio nori gauti duomenis
 		// Kintamasis skirtas nurodyti kokios komandos argumento ieskome
-		string commandArgument = "clientList=";
+		
 		// Surandu kur slepiasi clientList
-		pos = commandData.find(commandArgument);
+		pos = commandData.find(clientListCommandArgument);
 		// Salinu uzklausos pradzia iki clientList kintamojo
-		commandData.erase(0, pos + commandArgument.length());
+		commandData.erase(0, pos + clientListCommandArgument.length());
 		// Likusi uzklausa: 1&start=0&limit=20 HTTP/1.1....
 
 		// Siusiu JSON list komanda i serveri
 		// Isgaunu norimo puslapio numeri, placiau http://www.cplusplus.com/reference/string/stoi/
 		this->GetJSONClientList(stoi(commandData, &pos, 0), clientSocket);
 		
+		return "";
+	}
+	// * Tikrinu ar neatejo sujungimo komanda
+	if (commandData.find(connectCommandArgument) != string::npos)
+	{
+		// Uzklausos pavizdys
+		//GET /?_dc=1452918791392&command=connectClient&id=5&port=12313 HTTP/1.1
+		//Host: 127.0.0.1 : 3000
+		//User - Agent : Mozilla / 5.0 (Windows NT 10.0; WOW64; rv:43.0) Gecko / 20100101 Firefox / 43.0
+		//Accept : text / html, application / xhtml + xml, application / xml; q = 0.9, */*;q=0.8
+		//Accept-Language: en-US,en;q=0.5
+		//Accept-Encoding: gzip, deflate
+		//X-Requested-With: XMLHttpRequest
+		//Referer: http://panel.jancys.net/
+		//Origin: http://panel.jancys.net
+		//Connection: keep-alive
+
+		// Nustatau ieskoma dali
+		// Ieskosiu &id
+		tempString = "&id=";
+		// Surandu kur slepiasi id
+		pos = commandData.find(tempString);
+		// Trinu vska iki &id pozicijos
+		commandData.erase(0, pos + tempString.length());
+		// Gaunu 5&port=12313 HTTP/1.1...
+		// Nuskaitu cliento numeri i integer
+		int clientID = stoi(commandData, &pos, 0);
+		// Nustatau ieskoma dali port=
+		tempString = "&port=";
+		// Salinu pradzia
+		commandData.erase(0, pos + tempString.length());
+		// Gaunu 12313 HTTP/1.1...
+		// Nustatau prievado numeri
+		int remotePort = stoi(commandData, &pos, 0);
+		// Siunciu connect uzklausa i serveri
+		this->ConnectClientJSON(clientID, remotePort, clientSocket);
+
 		return "";
 	}
 
@@ -124,4 +167,9 @@ std::string GClientLib::JSONapi::FormatJSONListACK(char* buffer, int dataSize, b
 	json << "]}";
 
 	return putHTTPheaders(json.str());
+}
+
+void GClientLib::JSONapi::ConnectClientJSON(int clientID, int portNumber, SOCKET clientSocket)
+{
+	
 }

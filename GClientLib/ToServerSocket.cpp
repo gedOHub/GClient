@@ -258,39 +258,38 @@ void GClientLib::ToServerSocket::CommandInitConnect(int id, int port, SocketToOb
 	cout << "Suformuojamas naujas srautas " << newTag << endl;
 
 	// Inicijuoju listen socketa
-	//ServerSocket^ newSocket = gcnew ServerSocket((std::string)settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi);
 	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi);
 
 	if(newSocket->GetSocket() == SOCKET_ERROR){
 		printf("Nepavyko sukurti besiklausancio prievado");
 		delete newSocket;
 		return;
-} else {
-	container->Add(newSocket);
+	} else {
+		container->Add(newSocket);
 
-	if(Globals::maxD < (int)newSocket->GetSocket())
-	Globals::maxD = newSocket->GetSocket();
+		if(Globals::maxD < (int)newSocket->GetSocket())
+		Globals::maxD = newSocket->GetSocket();
 
-	// Pildau InitCommand komandos pakeita
-	connectInitCommand* connect = (struct connectInitCommand* ) &this->commandBuffer[sizeof(header)];
-	// NUrodau komanda
-	connect->command = htons(INIT_CONNECT);
-	// Nurodau savo atverta prievada
-	connect->source_port = htons(newSocket->GetPort());
-	// Nurodau srauto zyme
-	connect->tag = htons(newTag);
-	// Nurodau koki prievada noriu pasiekti
-	connect->destination_port = htons(port);
-	// Nurodau klienta
-	connect->client_id = htonl(id);
-	// Pildau headeri
-	this->head = (struct header*) &this->commandBuffer[0];
-	head->tag = htons(0);
-	head->lenght = htonl(sizeof connectInitCommand);
-	// Siunciu komanda i serveri
-	this->Send(this->commandBuffer, sizeof(header)+sizeof(connectInitCommand));
-	printf("Laukiu atsakymo is serverio...\n");
-}
+		// Pildau InitCommand komandos pakeita
+		connectInitCommand* connect = (struct connectInitCommand* ) &this->commandBuffer[sizeof(header)];
+		// Nurodau komanda
+		connect->command = htons(INIT_CONNECT);
+		// Nurodau savo atverta prievada
+		connect->source_port = htons(newSocket->GetPort());
+		// Nurodau srauto zyme
+		connect->tag = htons(newTag);
+		// Nurodau koki prievada noriu pasiekti
+		connect->destination_port = htons(port);
+		// Nurodau klienta
+		connect->client_id = htonl(id);
+		// Pildau headeri
+		this->head = (struct header*) &this->commandBuffer[0];
+		head->tag = htons(0);
+		head->lenght = htonl(sizeof connectInitCommand);
+		// Siunciu komanda i serveri
+		this->Send(this->commandBuffer, sizeof(header)+sizeof(connectInitCommand));
+		printf("Laukiu atsakymo is serverio...\n");
+	}
 };
 
 void GClientLib::ToServerSocket::CommandConnect(SocketToObjectContainer^ container){

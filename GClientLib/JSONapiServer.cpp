@@ -31,10 +31,16 @@ void GClientLib::JSONapiServer::Bind(){
 		// Tikrinam ar pavyko prijsungti
 		if (rBind == SOCKET_ERROR) {
 			// Bandom tol, kol pavyks, delsiant viena minute
-			cout << "Klaida klausantis " << this->IP << ":" << this->PORT << " Kodas: " << WSAGetLastError() << endl;
-}
-else break;
-}
+			cout << "Klaida klausantis JSONapiServer Kodas: " << WSAGetLastError() << endl;
+			// salinu socketa is skaitomu saraso
+			FD_CLR(this->Socket, skaitomi);
+			// Salinu sokceta is rasomu saraso
+			FD_CLR(this->Socket, rasomi);
+			// Salinu socketa is klaidingu saraso
+			FD_CLR(this->Socket, klaidingi);
+		}
+		else break;
+	}
 }
 
 int GClientLib::JSONapiServer::Accept(SocketToObjectContainer^ container){
