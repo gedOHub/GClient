@@ -12,7 +12,7 @@ GClientLib::ToServerSocket::ToServerSocket(string ip, string port, fd_set* skait
 	this->settings = settings;
 
 	this->Connect();
-	this->tag = gcnew TagGenerator();
+	this->tag = gcnew TagGenerator(STOC);
 	this->commandBuffer = new char[OneMBofChar];
 	this->CommandHello(); // Siunciam labas serveriui
 	this->CommandHelp(); // Isspausdinam galimas komandas
@@ -94,45 +94,47 @@ switch(this->head->tag){
 		// Verciu komanda i tikraji pavidala
 		cmd->command = ntohs(cmd->command);
 
-		cout << "Gauta komanda: " << cmd->command << endl;
-
 		// Tikrinu komanda
 		switch(cmd->command){
 			// LIST_ACK komanda
 			case LIST_ACK:{
+				cout << "[" << this->name << "] Gavau LIST_ACK" << endl;
 				this->CommandListAck(rRecv);
 				break;
 			}
 			case JSON_LIST_ACK:{
-				cout << "gavau JSON_LIST_ACK komanda" << endl;
+				cout << "[" << this->name << "] Gavau JSON_LIST_ACK" << endl;
 				this->CommandJsonListAck(rRecv, container);
 				break;
 			}
 			case CONNECT:{
+				cout << "[" << this->name << "] Gavau CONNECT" << endl;
 				this->CommandConnect(container);
 				break;
 			}
 			case JSON_CONNECT: {
 				// Inicijuojamas sujungimas su nurodytu prievadu
-				cout << "[JSON] JSON_CONNECT" << endl;
+				cout << "[" << this->name << "] Gavau JSON_CONNECT" << endl;
 				this->CommandJSONConnect(container);
 				break;
 			}
-			case GClientLib::INIT_CONNECT_ACK:{
+			case INIT_CONNECT_ACK:{
+				cout << "[" << this->name << "] Gavau INIT_CONNECT_ACK" << endl;
 				this->CommandInitConnectAck();
 				break;
 			}
-			case GClientLib::JSON_INIT_CONNECT_ACK:{
-				cout << "[JSON] JSON_INIT_CONNECT_ACK" << endl;
+			case JSON_INIT_CONNECT_ACK:{
+				cout << "[" << this->name << "] Gavau JSON_INIT_CONNECT_ACK" << endl;
 				this->CommandJsonInitConnectAck();
 				break;
 			}
 			case BEGIN_READ:{
-
+				cout << "[" << this->name << "] Gavau BEGIN_READ" << endl;
 				this->CommandBeginRead(container);
 				break;
 			}
 			case CLIENT_CONNECT_ACK:{
+				cout << "[" << this->name << "] Gavau CLIENT_CONNECT_ACK" << endl;
 				this->CommandClientConnectAck(container);
 				break;
 			}
@@ -172,9 +174,6 @@ void GClientLib::ToServerSocket::CommandList(int page){
 }
 
 void GClientLib::ToServerSocket::CommandJsonList(int page, SOCKET destinationSocket){
-	
-	cout << "Puslapis: " << page << " Socket: " << destinationSocket << endl;
-	
 	// Nustatau head i buferio pradzia
 	header* head = (struct header*) &this->commandBuffer[0];
 
@@ -195,8 +194,6 @@ void GClientLib::ToServerSocket::CommandJsonList(int page, SOCKET destinationSoc
 	// Siunciu uzklausa i serveri
 	int size = sizeof header + sizeof jsonListCommand;
 	int rSend = this->Send(this->commandBuffer, size);
-
-	cout << "Puslapis: " << list->page << " Socket: " << list->page << endl;
 }
 
 void GClientLib::ToServerSocket::CommandListAck(int rRecv){
@@ -465,6 +462,7 @@ case CREATED:{
 	long int client_id = ack->client_id, adm_port = ack->adm_port, cln_port = ack->cln_port;
 	cout << "Sujungimas sekmingai sukurtas su " << client_id << " klientu" << endl;
 	cout << "Pas Jus atverta " << adm_port << " jungtis, kuri sujungta su kliento " << cln_port << " jungtimi" << endl;
+	cout << "Jungimos duomenys: " << settings->getSetting("bindAddress") << ":" << adm_port << endl;
 	break;
 }
 case FAULT:{
@@ -491,7 +489,8 @@ void GClientLib::ToServerSocket::CommandJsonInitConnectAck(){
 	case CREATED:{
 		long int client_id = ack->client_id, adm_port = ack->adm_port, cln_port = ack->cln_port;
 		cout << "Sujungimas sekmingai sukurtas su " << client_id << " klientu" << endl;
-		cout << "Pas Jus atverta " << adm_port << " jungtis, kuri sujungta su kliento " << cln_port << " jungtimi" << endl;
+		cout << "Pas Jus atverta " << adm_port << " prievadas, kuri sujungta su kliento " << cln_port << " prievadu" << endl;
+		cout << "Jungimos duomenys: " << settings->getSetting("bindAddress") << ":" << adm_port << endl;
 		break;
 	}
 	case FAULT:{
@@ -520,6 +519,7 @@ void GClientLib::ToServerSocket::CommandBeginRead(SocketToObjectContainer^ conta
 	head->tag = htons(Globals::CommandTag);
 	head->lenght = htonl(sizeof beginReadAckCommand );
 
+	cout << "[" << this->name << "] Siunciu BEGIN_READ_ACK" << endl;
 	this->Send(&this->commandBuffer[0], sizeof header + sizeof beginReadAckCommand);
 }
 

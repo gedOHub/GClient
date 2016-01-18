@@ -61,6 +61,8 @@ InboundSocket^ guest = gcnew InboundSocket(newConnection, this->TAG, skaitomi, r
 container->DeleteByTag(this->TAG);
 container->Add(guest);
 
+cout << "[" << this->name << "]Prisijunge klientas prie " << IP << ":" << PORT << " Deskriptorius: " << guest->GetSocket() << endl;
+
 // --- Pridejimas prie sarasu ---
 // Pridedam prie besiklausanciu saraso
 FD_SET(newConnection, this->skaitomi);
@@ -94,6 +96,7 @@ this->head = (struct header*) &this->buffer[0];
 this->head->tag = htons(Globals::CommandTag);
 this->head->lenght = htonl(sizeof clientConnectCommand );
 
+cout << "[" << this->name << "] Siunciu CLIENT_CONNECT" << endl;
 // Issiunciu pranesima apir prisijungima
 container->FindByTag(Globals::CommandTag)->Send(&this->buffer[0], sizeof header + sizeof clientConnectCommand);
 

@@ -55,40 +55,41 @@ int GClientLib::JSONapiServer::Accept(SocketToObjectContainer^ container){
 		printf("Klaida priimant sujungima: %d\n", WSAGetLastError());
 		// Baigiam darba su deskriptorium, pereinam prie kito
 		return newConnection;
-}
-// Nustatom maksimalu deskriptoriu
-if (Globals::maxD < (int)newConnection)
-Globals::maxD = newConnection;
-// Ieskau ToServer jungtis
-ToServerSocket^ server = (ToServerSocket^ )(container->FindByTag(0));
+	}
+	cout << "[" << this->name << "] Priimtas naujas sujungimas. Dekriptorius: " << newConnection << endl;
+	// Nustatom maksimalu deskriptoriu	
+	if (Globals::maxD < (int)newConnection)
+		Globals::maxD = newConnection;
+	// Ieskau ToServer jungtis
+	ToServerSocket^ server = (ToServerSocket^ )(container->FindByTag(0));
 
-// Naujo sujungimo objektas
-JSONapiClient^ guest = gcnew JSONapiClient(newConnection, server->GenerateTag(), skaitomi, rasomi, klaidingi, this->json);
+	// Naujo sujungimo objektas
+	JSONapiClient^ guest = gcnew JSONapiClient(newConnection, server->GenerateTag(), skaitomi, rasomi, klaidingi, this->json);
 
-// Besiklausanti socketa
-container->Add(guest);
+	// Besiklausanti socketa
+	container->Add(guest);
 
-// --- Pridejimas prie sarasu ---
-// Pridedam prie besiklausanciu saraso
-FD_SET(newConnection, this->skaitomi);
-// Pridedam prie rasanciu saraso
-FD_SET(newConnection, this->rasomi);
-// Pridedam prie klaidu saraso
-FD_SET(newConnection, this->klaidingi);
+	// --- Pridejimas prie sarasu ---
+	// Pridedam prie besiklausanciu saraso
+	FD_SET(newConnection, this->skaitomi);
+	// Pridedam prie rasanciu saraso
+	FD_SET(newConnection, this->rasomi);
+	// Pridedam prie klaidu saraso
+	FD_SET(newConnection, this->klaidingi);
 
-// Gaunam prisijungusiojo duomenis
-// Pagal https://support.sas.com/documentation/onlinedoc/sasc/doc750/html/lr2/zeername.htm
-struct sockaddr peer;
-int peer_len = sizeof(&peer);
-// Guanma kiento duomenis
-if (getpeername(newConnection, &peer, &peer_len) > 0){
-	// Jei nepavyko gauti kliento duomenu
-	printf("Nepavyko gauti kliento duomenu: %d\n", WSAGetLastError());
-}
-else {
-	struct sockaddr_in *p = (struct sockaddr_in *) &peer;
-	printf("Klientas %s prisijunge prie %d deskriptoriaus\n", inet_ntoa(p->sin_addr), (int)ntohs(p->sin_port));
-}
+	// Gaunam prisijungusiojo duomenis
+	// Pagal https://support.sas.com/documentation/onlinedoc/sasc/doc750/html/lr2/zeername.htm
+	struct sockaddr peer;
+	int peer_len = sizeof(&peer);
+	// Guanma kiento duomenis
+	if (getpeername(newConnection, &peer, &peer_len) > 0){
+		// Jei nepavyko gauti kliento duomenu
+		printf("Nepavyko gauti kliento duomenu: %d\n", WSAGetLastError());
+	}
+	else {
+		struct sockaddr_in *p = (struct sockaddr_in *) &peer;
+		printf("Klientas %s prisijunge prie %d deskriptoriaus\n", inet_ntoa(p->sin_addr), (int)ntohs(p->sin_port));
+	}
 
 return newConnection;
 }

@@ -32,7 +32,7 @@ namespace GClientLib {
 		gNetSocket^ DeleteBySocket(int socket);
 		// Pasalina nurodyta elementa pagal tag
 		gNetSocket^ DeleteByTag(int tag);
+	};
 };
-}
 
 #endif

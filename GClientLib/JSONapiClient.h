@@ -36,7 +36,7 @@ namespace GClientLib {
 			*/
 			void ReciveJSONListAck(char* buffer, int dataSize, bool success);
 
-};
+	};
 };
 
 #endif

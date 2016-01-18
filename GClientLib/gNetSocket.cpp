@@ -187,6 +187,7 @@ return 0;
 }
 
 void GClientLib::gNetSocket::SetRead(bool state){
+	cout << "[" << this->name << "] Socket: " << this->Socket << " Skaitymo statusas: " << state << endl;
 	this->read = state;
 }
 

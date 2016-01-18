@@ -34,8 +34,8 @@ namespace GClientLib {
 		std::string getSetting(std::string settingName);
 		SettingsReader(void);
 		~SettingsReader(void);
+	};
 };
-}
 
 #endif
 

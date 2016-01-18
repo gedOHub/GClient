@@ -159,6 +159,6 @@ struct beginReadAckCommand : Command{
 
 
 #pragma pack(pop) // nustatom i normalu isdestyma
-}
+};
 
 #endif

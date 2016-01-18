@@ -28,7 +28,7 @@ namespace GClientLib {
 		virtual int Accept(SocketToObjectContainer^ container) override;
 		virtual void Listen() override;
 		virtual void Recive(SocketToObjectContainer^ container) override;
-};
+	};
 };
 
 #endif

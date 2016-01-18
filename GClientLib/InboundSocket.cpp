@@ -17,13 +17,13 @@ void GClientLib::InboundSocket::Recive(SocketToObjectContainer^ container){
 		const int rRecv = recv(this->Socket, &this->buffer[sizeof(header)], FiveMBtoCHAR - sizeof(header), 0);
 		switch(rRecv){
 			case 0:{
-				printf("Klientas uzdare sujungima %d\n", this->Socket);
+				printf("[%s]Klientas uzdare sujungima %d\n", this->name, this->Socket);
 				container->DeleteBySocket(this->Socket);
 				this->CloseSocket();
 				break;
 			}
 			case SOCKET_ERROR:{
-				printf("Klaida: %d sujungime %d \n", WSAGetLastError(), this->Socket);
+				printf("[%s]Klaida: %d sujungime %d \n", this->name, WSAGetLastError(), this->Socket);
 				this->RemuveFromLists();
 				break;
 			}

@@ -28,7 +28,7 @@ namespace GClientLib {
 			std::string FormatJSONListACK(char* buffer, int dataSize, bool success);
 			// Formuoja uzklausa i serveri inicijuoti sujungma prie kliento
 			void ConnectClientJSON(int clientID, int portNumber, SOCKET clientSocket);
+	};
 };
-}
 
 #endif

@@ -16,8 +16,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	// 1s = 1000000 microsekundziu
 	timeval time;
 	time.tv_sec = 0;
-	// 0.01s
-	time.tv_usec = 10000;
+	// 0.1s
+	time.tv_usec = 300000;
 
 	// --- Select funkcijos kintamieji ---
 	// Inicijuoju
@@ -97,12 +97,12 @@ int _tmain(int argc, _TCHAR* argv[])
 		// Begam per esamus sujungimus ir ieskom ar kas ka atsiunte
 		for (int i = 0; i <= Globals::maxD; i++){
 			
-			/*
 			// Tikrinam ar i-asis yra dekriptorius kuriame ivyko klaida
 			if (FD_ISSET(i, &tempError)) {
 				printf("Ivyko kalida %d dekriptoriuje", i);
 			}
 			
+			/*
 			// Tikrinam ar i-asis yra dekriptorius kuriame ivyko klaida
 			if (FD_ISSET(i, &tempWrite)) {
 				printf("Ivyko rasimas %d dekriptoriuje", i);

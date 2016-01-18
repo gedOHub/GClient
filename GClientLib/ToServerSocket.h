@@ -50,6 +50,6 @@ namespace GClientLib {
 		// Grazina sugeneruota zyme
 		int GenerateTag();
 	};
-}
+};
 
 #endif

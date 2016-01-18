@@ -18,7 +18,7 @@ namespace GClientLib {
 		void Add(int, int);
 		int Find(int);
 		void Delete(int);
+	};
 };
-}
 
 #endif

@@ -24,12 +24,15 @@ void GClientLib::JSONapiClient::Recive(SocketToObjectContainer^ container){
 		case 0:{
 			printf("Klientas uzdare sujungima %d\n", this->Socket);
 			container->DeleteBySocket(this->Socket);
+			this->RemuveFromLists();
 			this->CloseSocket();
 			break;
 		}
 		case SOCKET_ERROR:{
 			printf("[%s]Klaida: %d sujungime %d \n", this->name, WSAGetLastError(), this->Socket);
+			container->DeleteBySocket(this->Socket);
 			this->RemuveFromLists();
+			this->CloseSocket();
 			break;
 		}
 		default:{
