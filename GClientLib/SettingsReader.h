@@ -1,8 +1,12 @@
-#pragma once
+#ifndef SettingsReader_H
+#define SettingsReader_H
 
-#include "Stdafx.h"
+// Sisteminiai includai
+#include <iostream>
+#include <Windows.h>
 
-#include <map>
+// Mano includai
+
 // Reikalinga System::String i std::string
 #include "msclr\marshal_cppstd.h"
 
@@ -10,8 +14,8 @@
 
 using namespace System;
 using namespace System::Security::Permissions;
+using namespace System::Collections::Generic;
 using namespace Microsoft::Win32;
-using namespace stdext;
 // Reikalinga System::String o std::string
 using namespace msclr::interop;
 
@@ -21,14 +25,17 @@ using namespace msclr::interop;
 */
 
 namespace GClientLib {
-	class SettingsReader{
+	ref class SettingsReader{
 		private:
-			map<string, string> settings;
-			int ReadRegistry();
+		Dictionary< String^, String^ >^ settings;
+		int ReadRegistry();
 		public:
-			static void SystemStringToStdString(System::String^ s, std::string& string);
-			std::string getSetting(std::string settingName);
-			SettingsReader(void);
-			~SettingsReader(void);
+		static void SystemStringToStdString(System::String^ s, std::string& string);
+		std::string getSetting(std::string settingName);
+		SettingsReader(void);
+		~SettingsReader(void);
 	};
-}
+};
+
+#endif
+

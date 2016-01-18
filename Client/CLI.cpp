@@ -3,7 +3,7 @@
 
 using namespace GClientLib;
 
-CLI::CLI(ToServerSocket^ socket, SocketToObjectContainer^ STOContainer, SettingsReader* settings){
+CLI::CLI(ToServerSocket^ socket, SocketToObjectContainer^ STOContainer, SettingsReader^ settings){
 	this->socket = socket;
 	this->STOContainer = STOContainer;
 	this->settings = settings;
@@ -14,17 +14,7 @@ void CLI::Start(){
 	stringstream stream;
 	while(true){
 		Sleep(500);
-		// Isvalau ivestas komandas
-		//stream.str("");
-		//stream.clear();
 
-		// gaunu visa komanda
-		//getline(cin, zodis);
-		// Komanda dedu streama
-		//stream << zodis;
-		//zodis.clear();
-		// Nagrineju komanda
-		//stream >> zodis;
 		cin >> zodis;
 
 		// Komanda quit ir exit
@@ -73,7 +63,7 @@ void CLI::Start(){
 				if( cin.fail() )
 					throw "CLI_ERROR";
 
-				this->socket->CommandInitConnect(id, port, STOContainer, this->settings);
+				this->socket->CommandInitConnect(id, port, STOContainer );
 			}catch(System::Exception^ ){
 				printf("Blogai ivesta connect komanda\n");
 				zodis = this->ClearCLI();

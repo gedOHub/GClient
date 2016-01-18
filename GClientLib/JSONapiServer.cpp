@@ -1,10 +1,10 @@
-#include "stdafx.h"
 #include "JSONapiServer.h"
 
 using namespace GClientLib;
 
-GClientLib::JSONapiServer::JSONapiServer(string ip, string port, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket) :gNetSocket(ip, port, 0, skaitomiSocket, rasomiSocket, klaidingiSocket)
+GClientLib::JSONapiServer::JSONapiServer(string ip, string port, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket, JSONapi^ JSON) :gNetSocket(ip, port, 0, skaitomiSocket, rasomiSocket, klaidingiSocket)
 {
+	this->json = JSON;
 	this->Listen();
 	this->read = true;
 	this->write = true;
@@ -20,7 +20,7 @@ void GClientLib::JSONapiServer::Listen(){
 		// Jei ivyko klaida
 		printf("Nepavyko klausytis %s socket: %ld\n", this->PORT, WSAGetLastError());
 		this->CloseSocket();
-	}
+}
 }
 
 void GClientLib::JSONapiServer::Bind(){
@@ -31,7 +31,13 @@ void GClientLib::JSONapiServer::Bind(){
 		// Tikrinam ar pavyko prijsungti
 		if (rBind == SOCKET_ERROR) {
 			// Bandom tol, kol pavyks, delsiant viena minute
-			cout << "Klaida klausantis " << this->IP << ":" << this->PORT << " Kodas: " << WSAGetLastError() << endl;
+			cout << "Klaida klausantis JSONapiServer Kodas: " << WSAGetLastError() << endl;
+			// salinu socketa is skaitomu saraso
+			FD_CLR(this->Socket, skaitomi);
+			// Salinu sokceta is rasomu saraso
+			FD_CLR(this->Socket, rasomi);
+			// Salinu socketa is klaidingu saraso
+			FD_CLR(this->Socket, klaidingi);
 		}
 		else break;
 	}
@@ -50,14 +56,15 @@ int GClientLib::JSONapiServer::Accept(SocketToObjectContainer^ container){
 		// Baigiam darba su deskriptorium, pereinam prie kito
 		return newConnection;
 	}
-	// Nustatom maksimalu deskriptoriu
+	cout << "[" << this->name << "] Priimtas naujas sujungimas. Dekriptorius: " << newConnection << endl;
+	// Nustatom maksimalu deskriptoriu	
 	if (Globals::maxD < (int)newConnection)
 		Globals::maxD = newConnection;
 	// Ieskau ToServer jungtis
 	ToServerSocket^ server = (ToServerSocket^ )(container->FindByTag(0));
 
 	// Naujo sujungimo objektas
-	JSONapiClient^ guest = gcnew JSONapiClient(newConnection, server->GenerateTag(), skaitomi, rasomi, klaidingi);
+	JSONapiClient^ guest = gcnew JSONapiClient(newConnection, server->GenerateTag(), skaitomi, rasomi, klaidingi, this->json);
 
 	// Besiklausanti socketa
 	container->Add(guest);
@@ -84,7 +91,7 @@ int GClientLib::JSONapiServer::Accept(SocketToObjectContainer^ container){
 		printf("Klientas %s prisijunge prie %d deskriptoriaus\n", inet_ntoa(p->sin_addr), (int)ntohs(p->sin_port));
 	}
 
-	return newConnection;
+return newConnection;
 }
 
 void GClientLib::JSONapiServer::Recive(SocketToObjectContainer^ container){
@@ -92,10 +99,6 @@ void GClientLib::JSONapiServer::Recive(SocketToObjectContainer^ container){
 		// Atejo nuajas sujungimas i bseiklausanti socketa
 		if (this->Accept(container) == SOCKET_ERROR) {
 			printf("Nepavyko priimti jungties\n");
-		}
-	}
 }
-
-void GClientLib::JSONapiServer::SetRedirectUrl(String ^url){
-	this->redirectUrl = url;
+}
 }

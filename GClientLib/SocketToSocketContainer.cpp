@@ -1,4 +1,3 @@
-#include "StdAfx.h"
 #include "SocketToSocketContainer.h"
 
 using namespace GClientLib;
@@ -18,9 +17,9 @@ int GClientLib::SocketToSocketContainer::Find(int socket){
 	cliext::list<cliext::pair<int, int>>::iterator i;
 	for(i=this->sarasas.begin(); i != this->sarasas.end(); ++i){
 		if(i->first == socket)
-			return i->second;
-	}
-	return -1;
+		return i->second;
+}
+return -1;
 }
 
 void GClientLib::SocketToSocketContainer::Delete(int socket){
@@ -28,11 +27,12 @@ void GClientLib::SocketToSocketContainer::Delete(int socket){
 	for(i=this->sarasas.begin(); i != this->sarasas.end(); ++i){
 		if(i->first == socket) {
 			this->sarasas.erase(i);
-		}
-	}
-	for(i=this->sarasas.begin(); i != this->sarasas.end(); ++i){
-		if(i->second == socket) {
-			this->sarasas.erase(i);
-		}
-	}
 }
+}
+for(i=this->sarasas.begin(); i != this->sarasas.end(); ++i){
+	if(i->second == socket) {
+		this->sarasas.erase(i);
+}
+}
+}
+

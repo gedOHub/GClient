@@ -128,6 +128,7 @@ namespace SettingsReaderTest
 			Assert::AreEqual(Correct, Value);
 		};
 
+		/*
 		// Metodas skirtas patirkinti ar teisingai dirba objektas kai nëra reikalingos registø ðakos
 		[TestMethod]
 		void NoRegistryTree()
@@ -154,6 +155,7 @@ namespace SettingsReaderTest
 			// Tikrinu kas gavosi
 			Assert::IsTrue(tinkamasExeptionas);
 		};
+		**/
 
 		// Metodas skirtas patikrinti ar gerai konvertuojamas stringas
 		[TestMethod]

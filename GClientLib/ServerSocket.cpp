@@ -1,4 +1,3 @@
-#include "StdAfx.h"
 #include "ServerSocket.h"
 
 using namespace GClientLib;
@@ -22,7 +21,7 @@ void GClientLib::ServerSocket::Listen(){
 		// Jei ivyko klaida
 		printf( "Nepavyko klausytis %s socket: %ld\n", this->Socket, WSAGetLastError() );
 		this->CloseSocket();
-	}
+}
 }
 
 void GClientLib::ServerSocket::Bind(){
@@ -33,9 +32,9 @@ void GClientLib::ServerSocket::Bind(){
 		// Tikrinam ar pavyko prijsungti
 		if(rBind == SOCKET_ERROR) {
 			// Bandom tol, kol pavyks, delsiant viena minute
-			cout << "Klaida klausantis " << ptr->ai_addr << " Kodas: " <<  WSAGetLastError() << endl;
-		} else break;
-	}
+			cout << "Klaida klausantis " << ptr->ai_addr << " Kodas: " << WSAGetLastError() << endl;
+} else break;
+}
 }
 
 int GClientLib::ServerSocket::Accept(SocketToObjectContainer^ container){
@@ -49,54 +48,59 @@ int GClientLib::ServerSocket::Accept(SocketToObjectContainer^ container){
 		printf("Klaida priimant sujungima: %d\n", WSAGetLastError());
 		// Baigiam darba su deskriptorium, pereinam prie kito
 		return newConnection;
-	}
-	// Nustatom maksimalu deskriptoriu
-	if(Globals::maxD < (int)newConnection)
-		Globals::maxD = newConnection;
+}
+// Nustatom maksimalu deskriptoriu
+if(Globals::maxD < (int)newConnection)
+Globals::maxD = newConnection;
 
-	// Naujo sujungimo objektas
-	InboundSocket^ guest = gcnew InboundSocket(newConnection, this->TAG, skaitomi, rasomi, klaidingi);
-	
-	// Salinu dabartini tag naudotoja
-	// Besiklausanti socketa
-	container->DeleteByTag(this->TAG);
-	container->Add(guest);
+// Naujo sujungimo objektas
+InboundSocket^ guest = gcnew InboundSocket(newConnection, this->TAG, skaitomi, rasomi, klaidingi);
 
-	// --- Pridejimas prie sarasu ---
-	// Pridedam prie besiklausanciu saraso
-	FD_SET(newConnection, this->skaitomi);
-	// Pridedam prie rasanciu saraso
-	FD_SET(newConnection, this->rasomi);
-	// Pridedam prie klaidu saraso
-	FD_SET(newConnection, this->klaidingi);
+// Salinu dabartini tag naudotoja
+// Besiklausanti socketa
+container->DeleteByTag(this->TAG);
+container->Add(guest);
 
-	// Gaunam prisijungusiojo duomenis
-	// Pagal https://support.sas.com/documentation/onlinedoc/sasc/doc750/html/lr2/zeername.htm
-	struct sockaddr peer;
-	int peer_len = sizeof(&peer);
-	// Guanma kiento duomenis
-	if(getpeername(newConnection, &peer, &peer_len) > 0){
-		// Jei nepavyko gauti kliento duomenu
-		printf("Nepavyko gauti kliento duomenu: %d\n", WSAGetLastError());
-	} else {
-		struct sockaddr_in *p = (struct sockaddr_in *) &peer;
-		printf("Klientas %s prisijunge prie %d deskriptoriaus", inet_ntoa(p->sin_addr), (int) ntohs(p->sin_port));
-	}
+cout << "[" << this->name << "]Prisijunge klientas prie " << IP << ":" << PORT << " Deskriptorius: " << guest->GetSocket() << endl;
 
-	// Siunciu i serveri CLIENT_CONNECT pranesima
-	// Pildau CLIENT_CONNECT struktura
-	clientConnectCommand* connect = (struct clientConnectCommand *) &this->buffer[sizeof header];
-	connect->command  = htons(CLIENT_CONNECT);
-	connect->tag = htons(guest->GetTag());
-	// pildau paketo antraste
-	this->head = (struct header*) &this->buffer[0];
-	this->head->tag = htons(Globals::CommandTag);
-	this->head->lenght = htonl(sizeof clientConnectCommand );
+// --- Pridejimas prie sarasu ---
+// Pridedam prie besiklausanciu saraso
+FD_SET(newConnection, this->skaitomi);
+// Pridedam prie rasanciu saraso
+FD_SET(newConnection, this->rasomi);
+// Pridedam prie klaidu saraso
+FD_SET(newConnection, this->klaidingi);
 
-	// Issiunciu pranesima apir prisijungima
-	container->FindByTag(Globals::CommandTag)->Send(&this->buffer[0], sizeof header + sizeof clientConnectCommand);
+// Gaunam prisijungusiojo duomenis
+// Pagal https://support.sas.com/documentation/onlinedoc/sasc/doc750/html/lr2/zeername.htm
+struct sockaddr peer;
+int peer_len = sizeof(&peer);
+// Guanma kiento duomenis
+if(getpeername(newConnection, &peer, &peer_len) > 0){
+	// Jei nepavyko gauti kliento duomenu
+	printf("Nepavyko gauti kliento duomenu: %d\n", WSAGetLastError());
+} else {
+	struct sockaddr_in *p = (struct sockaddr_in *) &peer;
+	char address[INET_ADDRSTRLEN];
+	inet_ntop(AF_INET, &(p->sin_addr), address, INET_ADDRSTRLEN);
+	printf("Klientas %s prisijunge prie %d deskriptoriaus", address, (int)ntohs(p->sin_port));
+}
 
-	return newConnection;
+// Siunciu i serveri CLIENT_CONNECT pranesima
+// Pildau CLIENT_CONNECT struktura
+clientConnectCommand* connect = (struct clientConnectCommand *) &this->buffer[sizeof header];
+connect->command = htons(CLIENT_CONNECT);
+connect->tag = htons(guest->GetTag());
+// pildau paketo antraste
+this->head = (struct header*) &this->buffer[0];
+this->head->tag = htons(Globals::CommandTag);
+this->head->lenght = htonl(sizeof clientConnectCommand );
+
+cout << "[" << this->name << "] Siunciu CLIENT_CONNECT" << endl;
+// Issiunciu pranesima apir prisijungima
+container->FindByTag(Globals::CommandTag)->Send(&this->buffer[0], sizeof header + sizeof clientConnectCommand);
+
+return newConnection;
 }
 
 void GClientLib::ServerSocket::Recive(SocketToObjectContainer^ container){
@@ -104,6 +108,7 @@ void GClientLib::ServerSocket::Recive(SocketToObjectContainer^ container){
 		// Atejo nuajas sujungimas i bseiklausanti socketa
 		if( this->Accept(container) == SOCKET_ERROR ) {
 			printf("Nepavyko priimti jungties\n");
-		}
-	}
 }
+}
+}
+

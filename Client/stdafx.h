@@ -20,14 +20,8 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include "Globals.h"
 #include "CLI.h"
 #include "GClientLib.h"
-
-/* KONSTANTOS */
-static const int OneMBofChar = 1048576;
-static const int FiveMBtoCHAR = 5242880;
-static const int TenMBofChar = 10485760;
 
 using namespace System;
 using namespace System::IO;
