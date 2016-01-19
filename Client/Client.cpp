@@ -13,7 +13,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	// Kuriamas visu sujungimu saraso saugykla
 	SocketToObjectContainer^ STOContainer = gcnew SocketToObjectContainer();
 	// Objektas augantis visu tuneliu informacija
-	TunnelContainer^ tunnels = gcnew TunnelContainer();
+	//TunnelContainer^ tunnels = gcnew TunnelContainer();
 
 	// 1s = 1000000 microsekundziu
 	timeval time;
