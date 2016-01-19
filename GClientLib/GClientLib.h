@@ -38,6 +38,7 @@
 #include "SettingsReader.h"
 #include "SocketToObjectContainer.h"
 #include "SocketToSocketContainer.h"
+#include "TunnelContainer.h"
 // Sujungimai
 //Bazinins
 #include "gNetSocket.h"

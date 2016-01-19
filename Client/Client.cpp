@@ -12,6 +12,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	SettingsReader^ settings = gcnew SettingsReader();
 	// Kuriamas visu sujungimu saraso saugykla
 	SocketToObjectContainer^ STOContainer = gcnew SocketToObjectContainer();
+	// Objektas augantis visu tuneliu informacija
+	TunnelContainer^ tunnels = gcnew TunnelContainer();
 
 	// 1s = 1000000 microsekundziu
 	timeval time;

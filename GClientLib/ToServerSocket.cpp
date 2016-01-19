@@ -308,14 +308,8 @@ void GClientLib::ToServerSocket::CommandInitConnect(int id, int port, SocketToOb
 
 void GClientLib::ToServerSocket::CommandJsonInitConnect(int id, int port, SOCKET socket)
 {
-
-	cout << "[SJON]Gauti parametrai" << endl;
-	cout << "[SJON]ID: " << id << endl;
-	cout << "[SJON]Port: " << port << endl;
-
 	// Formuoju komanda connect
 	int newTag = tag->GetTag();
-	cout << "[JSON]Suformuojamas naujas srautas " << newTag << endl;
 
 	// Inicijuoju listen socketa
 	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi);
