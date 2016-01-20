@@ -19,10 +19,9 @@ using namespace Microsoft::Win32;
 // Reikalinga System::String o std::string
 using namespace msclr::interop;
 
-/*
 #undef MessageBox
 #define _DEFINE_DEPRECATED_HASH_CLASSES 0
-*/
+
 
 namespace GClientLib {
 	ref class SettingsReader{

@@ -3,13 +3,14 @@
 
 using namespace GClientLib;
 
-GClientLib::ToServerSocket::ToServerSocket(string ip, string port, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket, SocketToObjectContainer^ STOC, SettingsReader^ settings) : GClientLib::gNetSocket(ip, port, 0, skaitomiSocket, rasomiSocket, klaidingiSocket){
+GClientLib::ToServerSocket::ToServerSocket(string ip, string port, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket, SocketToObjectContainer^ STOC, SettingsReader^ settings, TunnelContainer^ tunnel) : GClientLib::gNetSocket(ip, port, 0, skaitomiSocket, rasomiSocket, klaidingiSocket){
 	// Nustatom, kad galetu tiek siusti tiek gauti duomenis
 	this->read = true;
 	this->write = true;
 	this->name = "ToServerSocket";
 	this->STOC = STOC;
 	this->settings = settings;
+	this->tunnels = tunnel;
 
 	this->Connect();
 	this->tag = gcnew TagGenerator(STOC);
@@ -267,12 +268,26 @@ void GClientLib::ToServerSocket::CommandHello(){
 }
 
 void GClientLib::ToServerSocket::CommandInitConnect(int id, int port, SocketToObjectContainer^ container){
+	// Formuoju tunelio struktura
+	Tunnel^ tunnel = gcnew Tunnel();
+	// Nustatau zinoma tunelio inforamcija
+	// Nutolusio kliento prievadas
+	tunnel->dport = port;
+	// Kliento, prie kurio jungiamasi, ID
+	tunnel->clientid = id;
+
 	// Formuoju komanda connect
 	int newTag = tag->GetTag();
 	cout << "Suformuojamas naujas srautas " << newTag << endl;
+	// Nustatau tunelio zyme
+	tunnel->tag = newTag;
 
 	// Inicijuoju listen socketa
-	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi);
+	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi, tunnel);
+	// Nustatau serverSocket
+	tunnel->serverSocket = newSocket->GetSocket();
+	// Nustatau atverta preivada
+	tunnel->sport = newSocket->GetPort();
 
 	if(newSocket->GetSocket() == SOCKET_ERROR){
 		printf("Nepavyko sukurti besiklausancio prievado");
@@ -303,16 +318,34 @@ void GClientLib::ToServerSocket::CommandInitConnect(int id, int port, SocketToOb
 		// Siunciu komanda i serveri
 		this->Send(this->commandBuffer, sizeof(header)+sizeof(connectInitCommand));
 		printf("Laukiu atsakymo is serverio...\n");
+		
+		// Pridedu tuneli prie tuneliu saraso
+		tunnels->Add(tunnel);
 	}
 };
 
 void GClientLib::ToServerSocket::CommandJsonInitConnect(int id, int port, SOCKET socket)
 {
+	// Formuoju tunelio struktura
+	Tunnel^ tunnel = gcnew Tunnel();
+	// Nustatau zinoma tunelio inforamcija
+	// Nutolusio kliento prievadas
+	tunnel->dport = port;
+	// Kliento, prie kurio jungiamasi, ID
+	tunnel->clientid = id;
+
 	// Formuoju komanda connect
 	int newTag = tag->GetTag();
+	cout << "Suformuojamas naujas srautas " << newTag << endl;
+	// Nustatau tunelio zyme
+	tunnel->tag = newTag;
 
 	// Inicijuoju listen socketa
-	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi);
+	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi, tunnel);
+	// Nustatau serverSocket
+	tunnel->serverSocket = newSocket->GetSocket();
+	// Nustatau atverta preivada
+	tunnel->sport = newSocket->GetPort();
 
 	if (newSocket->GetSocket() == SOCKET_ERROR){
 		printf("[JSON]Nepavyko sukurti besiklausancio prievado");
@@ -349,6 +382,9 @@ void GClientLib::ToServerSocket::CommandJsonInitConnect(int id, int port, SOCKET
 		// Siunciu komanda i serveri
 		this->Send(this->commandBuffer, sizeof(header) + sizeof(jsonConnectInitCommand));
 		printf("[JSON]Laukiu atsakymo is serverio...\n");
+
+		// Pridedu tuneli prie tuneliu saraso
+		tunnels->Add(tunnel);
 	}
 }
 
@@ -356,8 +392,10 @@ void GClientLib::ToServerSocket::CommandConnect(SocketToObjectContainer^ contain
 	connectCommand* connect = (struct connectCommand*) &this->buffer[ sizeof header ];
 	// Nustatau duomenis i tinkama puse
 	connect->destinatio_port = ntohs(connect->destinatio_port);
+	connect->source_port = ntohs(connect->source_port);
 	connect->tag = ntohs(connect->tag);
 	connect->tunnelID = ntohl(connect->tunnelID);
+	connect->client_id = ntohl(connect->client_id);
 	// Generuoju tag sujungimui
 	int status = INIT;
 	// Kuriu sujungima
@@ -373,24 +411,29 @@ void GClientLib::ToServerSocket::CommandConnect(SocketToObjectContainer^ contain
 		cout << "Nepavyko prisijungti prie " << connect->destinatio_port << endl;
 		status = FAULT;
 		delete connectSocket;
-} else {
-	// Sukurus sujungima
-	status = CREATED;
-	container->Add(connectSocket);
-}
-// CONNECT_ACK
-// Formuoju atsaka serveriui
-// Formuoju connect ack paketa
-connectAckCommand* connectAck = (struct connectAckCommand*) &this->commandBuffer[sizeof(header)];
-connectAck->command = htons(CONNECT_ACK);
-connectAck->tunnelID = htonl(connect->tunnelID);
-connectAck->status = htons(status);
-// Formuoju gNet paketa
-this->head = (struct header*) &this->commandBuffer[0];
-head->tag = htons(0);
-head->lenght = htonl(sizeof(connectAckCommand));
-// Siunciu serveriui
-this->Send( this->commandBuffer, sizeof(header)+sizeof(connectAckCommand) );
+	} else {
+		// Sukurus sujungima
+		status = CREATED;
+		container->Add(connectSocket);
+		// Pildau tunelio informacija
+		//int tag, int dport, int clientid, int sport, int serverSocket, int clientSocket
+		this->tunnels->Add(connect->tag, connect->destinatio_port, connect->client_id, connect->source_port, INVALID_SOCKET, connectSocket->GetSocket());
+		// Nustatau statusa i laukia programos
+		this->tunnels->ChangeStatus(connect->tag, LAUKIA_PROGRAMOS);
+	}
+	// CONNECT_ACK
+	// Formuoju atsaka serveriui
+	// Formuoju connect ack paketa
+	connectAckCommand* connectAck = (struct connectAckCommand*) &this->commandBuffer[sizeof(header)];
+	connectAck->command = htons(CONNECT_ACK);
+	connectAck->tunnelID = htonl(connect->tunnelID);
+	connectAck->status = htons(status);
+	// Formuoju gNet paketa
+	this->head = (struct header*) &this->commandBuffer[0];
+	head->tag = htons(0);
+	head->lenght = htonl(sizeof(connectAckCommand));
+	// Siunciu serveriui
+	this->Send( this->commandBuffer, sizeof(header)+sizeof(connectAckCommand) );
 }
 
 void GClientLib::ToServerSocket::CommandJSONConnect(SocketToObjectContainer^ container)
@@ -398,6 +441,7 @@ void GClientLib::ToServerSocket::CommandJSONConnect(SocketToObjectContainer^ con
 	jsonConnectCommand* connect = (struct jsonConnectCommand*) &this->buffer[sizeof header];
 	// Nustatau duomenis i tinkama puse
 	connect->destinatio_port = ntohs(connect->destinatio_port);
+	connect->source_port = ntohs(connect->source_port);
 	connect->tag = ntohs(connect->tag);
 	connect->tunnelID = ntohl(connect->tunnelID);
 	// Generuoju tag sujungimui
@@ -444,26 +488,37 @@ void GClientLib::ToServerSocket::CommandInitConnectAck(){
 	ack->status = ntohs(ack->status);
 	ack->client_id = ntohl(ack->client_id);
 	ack->adm_port = ntohs(ack->adm_port);
+	ack->adm_tag = ntohs(ack->adm_tag);
 	ack->cln_port = ntohs(ack->cln_port);
 
-	// Spausdinu rezultataus
+	// Spausdinu rezultatus
 	switch(ack->status){
+		// Nepavykus uzmegzti rysio
 		case INIT: {
 			printf("Sujungimas per ilgai inicijuojamas, bandykite kurti sujungima is naujo\n");
+			// Salinu tuneli is tuneliu saraso
+			// TODO: Surasti koki TAG grazino
+			Tunnel^ removedTunnel = tunnels->Remove(ack->adm_tag);
 			break;
-}
-case CREATED:{
-	long int client_id = ack->client_id, adm_port = ack->adm_port, cln_port = ack->cln_port;
-	cout << "Sujungimas sekmingai sukurtas su " << client_id << " klientu" << endl;
-	cout << "Pas Jus atverta " << adm_port << " jungtis, kuri sujungta su kliento " << cln_port << " jungtimi" << endl;
-	cout << "Jungimos duomenys: " << settings->getSetting("bindAddress") << ":" << adm_port << endl;
-	break;
-}
-case FAULT:{
-	printf("Nepavyko sukurti sujungimo\n");
-	break;
-}
-}
+		}
+		// Pavykus uzmegzti rysi
+		case CREATED:{
+			long int client_id = ack->client_id, adm_port = ack->adm_port, cln_port = ack->cln_port;
+			cout << "Sujungimas sekmingai sukurtas su " << client_id << " klientu" << endl;
+			cout << "Pas Jus atverta " << adm_port << " jungtis, kuri sujungta su kliento " << cln_port << " jungtimi" << endl;
+			cout << "Jungimos duomenys: " << settings->getSetting("bindAddress") << ":" << adm_port << endl;
+			// Nustatau tunelio statusa i laukia programos
+			tunnels->ChangeStatus(ack->adm_tag, LAUKIA_PROGRAMOS);
+			break;
+		}
+		// Nepavykus uzmegzti rysio
+		case FAULT:{
+			printf("Nepavyko sukurti sujungimo\n");
+			// Salinu tuneli is tuneliu saraso
+			Tunnel^ removedTunnel = tunnels->Remove(ack->adm_tag);
+			break;
+		}
+	}
 }
 
 void GClientLib::ToServerSocket::CommandJsonInitConnectAck(){
@@ -472,12 +527,14 @@ void GClientLib::ToServerSocket::CommandJsonInitConnectAck(){
 	ack->status = ntohs(ack->status);
 	ack->client_id = ntohl(ack->client_id);
 	ack->adm_port = ntohs(ack->adm_port);
+	ack->adm_tag = ntohs(ack->adm_tag);
 	ack->cln_port = ntohs(ack->cln_port);
 
 	// Spausdinu rezultataus
 	switch (ack->status){
 	case INIT: {
 		printf("Sujungimas per ilgai inicijuojamas, bandykite kurti sujungima is naujo\n");
+		Tunnel^ removedTunnel = tunnels->Remove(ack->adm_tag);
 		break;
 	}
 	case CREATED:{
@@ -485,10 +542,12 @@ void GClientLib::ToServerSocket::CommandJsonInitConnectAck(){
 		cout << "Sujungimas sekmingai sukurtas su " << client_id << " klientu" << endl;
 		cout << "Pas Jus atverta " << adm_port << " prievadas, kuri sujungta su kliento " << cln_port << " prievadu" << endl;
 		cout << "Jungimos duomenys: " << settings->getSetting("bindAddress") << ":" << adm_port << endl;
+		tunnels->ChangeStatus(ack->adm_tag, LAUKIA_PROGRAMOS);
 		break;
 	}
 	case FAULT:{
 		printf("Nepavyko sukurti sujungimo\n");
+		Tunnel^ removedTunnel = tunnels->Remove(ack->adm_tag);
 		break;
 	}
 	}
@@ -515,6 +574,9 @@ void GClientLib::ToServerSocket::CommandBeginRead(SocketToObjectContainer^ conta
 
 	cout << "[" << this->name << "] Siunciu BEGIN_READ_ACK" << endl;
 	this->Send(&this->commandBuffer[0], sizeof header + sizeof beginReadAckCommand);
+
+	// Nustatua tunelio status ai vyskta komunikacija
+	this->tunnels->ChangeStatus(read->tag, KOMUNIKACIJA);
 }
 
 void GClientLib::ToServerSocket::CommandClientConnectAck(SocketToObjectContainer^ container){
@@ -527,6 +589,9 @@ void GClientLib::ToServerSocket::CommandClientConnectAck(SocketToObjectContainer
 	// Ijungiu skaityma
 	socket->SetRead(true);
 	// KOMUNIAKCIJA PRASIDEDA :)
+
+	// Nustatua tuneli i komunikacijos statusa
+	this->tunnels->ChangeStatus(ack->tag, KOMUNIKACIJA);
 }
 
 void GClientLib::ToServerSocket::CommandHelp(){

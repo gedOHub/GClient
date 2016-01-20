@@ -14,7 +14,7 @@ Tunnel^ GClientLib::TunnelContainer::Add(Tunnel^ tunelis){
 	return tunelis;
 }
 
-Tunnel^ GClientLib::TunnelContainer::Add(int tag, int dport, int clientid, int sport, int serverSocket)
+Tunnel^ GClientLib::TunnelContainer::Add(int tag, int dport, int clientid, int sport, int serverSocket, int clientSocket)
 {
 	Tunnel^ tunelis;
 	// Pildau Tunnel struktura
@@ -23,6 +23,7 @@ Tunnel^ GClientLib::TunnelContainer::Add(int tag, int dport, int clientid, int s
 	tunelis->clientid = clientid;
 	tunelis->sport = sport;
 	tunelis->serverSocket = serverSocket;
+	tunelis->clientSocket = clientSocket;
 	tunelis->status = JUNGIASI;
 	// Pridedu prie saraso
 	return this->Add(tunelis);

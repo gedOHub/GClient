@@ -36,7 +36,7 @@ enum CONNECT_STATUS{
 	FAULT = 3, // Nepavyko sukurti sujungimo kleinto puseje
 };
 
-#pragma pack(push, 1)	// Nustatom sstrukturas i tikra isdestyma
+#pragma pack(push, 1)	// Nustatom strukturas i tikra isdestyma
 
 // gNet paketo antrastes struktura
 struct header{
@@ -106,13 +106,17 @@ struct jsonConnectInitCommand : JSONCommand{
 };
 // CONNECT
 struct connectCommand : Command{
-	USHORT destinatio_port; // Prievadas i kuri jungsiuos
+	USHORT destinatio_port;	// Prievadas i kuri jungsiuos
+	USHORT source_port;		// Prievadas, kuris atvertas pas iniciatoriu
+	ULONG client_id;     // Kliento ID, kuris inicijuoja sujungima
 	USHORT tag; // Zyme, kuri bus naudojama kliento
 	ULONG tunnelID; // Tunelio ID
 };
 // JSON_CONNECT
 struct jsonConnectCommand : JSONCommand{
-	USHORT destinatio_port; // Prievadas i kuri jungsiuos
+	USHORT destinatio_port;	// Prievadas i kuri jungsiuos
+	USHORT source_port;		// Prievadas, kuris atvertas pas iniciatoriu
+	ULONG client_id;     // Kliento ID, kuris inicijuoja sujungima
 	USHORT tag; // Zyme, kuri bus naudojama kliento
 	ULONG tunnelID; // Tunelio ID
 };
@@ -132,6 +136,7 @@ struct connectInitAckCommand : Command{
 	ULONG client_id;
 	USHORT adm_port;
 	USHORT cln_port;
+	USHORT adm_tag;
 };
 // CONNECT_INIT_ACK
 struct jsonConnectInitAckCommand : JSONCommand{
@@ -139,6 +144,7 @@ struct jsonConnectInitAckCommand : JSONCommand{
 	ULONG client_id;
 	USHORT adm_port;
 	USHORT cln_port;
+	USHORT adm_tag;
 };
 // CLIENT_CONNECT
 struct clientConnectCommand : Command{
@@ -159,6 +165,7 @@ struct beginReadAckCommand : Command{
 
 
 #pragma pack(pop) // nustatom i normalu isdestyma
+
 };
 
 #endif

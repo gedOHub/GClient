@@ -1,5 +1,5 @@
-#ifndef GClientLib_H
-#define GClientLib_H
+#ifndef TunnelContainer_H
+#define TunnelContainer_H
 
 // Sisteminiai includai
 #include <cliext/utility> 
@@ -24,6 +24,7 @@ namespace GClientLib {
 		int clientid;	//Kliento ID su kuriuo sujungta
 		int sport;		//Vietinis prievadas
 		int serverSocket;	//Socketas, prie kuris priima duomenu srauta
+		int clientSocket;	//Socketas, kuris prisjunge prie laukaincio serverio socketo
 		int status;		// Sujungimo statusas (Jungiasi, prisjungta, laukia jungties)
 	};
 
@@ -37,7 +38,7 @@ namespace GClientLib {
 		// Pridedamas naujas tunelis. PERRASO statusa i JUNGIAMASI
 		Tunnel^ Add(Tunnel^ tunelis);
 		// Pridedamas naujas tunelis. Statusa nustato i JUNGIAMASI
-		Tunnel^ Add(int tag, int dport, int clientid, int sport, int serverSocket);
+		Tunnel^ Add(int tag, int dport, int clientid, int sport, int serverSocket, int clientSocket);
 		// Tunelio paieska pagal tag
 		Tunnel^ Find(int tag);
 		// Salina tuneli pagal tag
