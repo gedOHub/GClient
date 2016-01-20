@@ -68,89 +68,97 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 		printf("Serveris uzdare sujungima :(\n");
 		// Bandau jungti sprie serverio is naujo
 		this->Reconnect();
-} else if( rRecv < 0 ){ // Sujungime ivyko klaida
-	printf("Klaida sujungime %d\n", this->Socket);
-} else { // Gauti duomenis, persiusiu i serveri
-	//printf("Gauta duomenu %d\n", rRecv);
+	} else if( rRecv < 0 ){ // Sujungime ivyko klaida
+		printf("Klaida sujungime %d\n", this->Socket);
+	} else { // Gauti duomenis, persiusiu i serveri
+		//printf("Gauta duomenu %d\n", rRecv);
 
-	this->head = (struct header*) &this->buffer[0];
-	// Atstatau zyme ir ilgi i tinkama pavidala
-	this->head->tag = ntohs(this->head->tag);
-	this->head->lenght = ntohl(this->head->lenght);
+		this->head = (struct header*) &this->buffer[0];
+		// Atstatau zyme ir ilgi i tinkama pavidala
+		this->head->tag = ntohs(this->head->tag);
+		this->head->lenght = ntohl(this->head->lenght);
 
-	// Nusiskaitau pilna paketa
-	//cout << "[" << this->name << "]Laukiama " << this->head->lenght << endl;
-	int paketo_ilgis = this->head->lenght+sizeof(header);
-	while( rRecv != paketo_ilgis ){
-		rRecv = rRecv + recv(this->Socket, &buffer[rRecv], paketo_ilgis - rRecv, 0);
-		//cout << "[" << this->name << "]Siuo metu turiu " << rRecv << endl;
-}
-//cout << "[" << this->name << "]Gavau " << rRecv << endl;
+		// Nusiskaitau pilna paketa
+		//cout << "[" << this->name << "]Laukiama " << this->head->lenght << endl;
+		int paketo_ilgis = this->head->lenght+sizeof(header);
+		while( rRecv != paketo_ilgis ){
+			rRecv = rRecv + recv(this->Socket, &buffer[rRecv], paketo_ilgis - rRecv, 0);
+			//cout << "[" << this->name << "]Siuo metu turiu " << rRecv << endl;
+		}
+		cout << "[" << this->name << "]Gavau " << rRecv << endl;
 
-switch(this->head->tag){
-	// Atejo komanda is serverio
-	case 0: {
-		// Nustatinesiu kokia komanda atejo
-		Command* cmd = (struct Command*) &this->buffer[sizeof header];
-		// Verciu komanda i tikraji pavidala
-		cmd->command = ntohs(cmd->command);
+		switch(this->head->tag){
+			// Atejo komanda is serverio
+			case 0: {
+				// Nustatinesiu kokia komanda atejo
+				Command* cmd = (struct Command*) &this->buffer[sizeof header];
+				// Verciu komanda i tikraji pavidala
+				cmd->command = ntohs(cmd->command);
 
-		// Tikrinu komanda
-		switch(cmd->command){
-			// LIST_ACK komanda
-			case LIST_ACK:{
-				cout << "[" << this->name << "] Gavau LIST_ACK" << endl;
-				this->CommandListAck(rRecv);
+				// Tikrinu komanda
+				switch (cmd->command){
+						// LIST_ACK komanda
+					case LIST_ACK:{
+						cout << "[" << this->name << "] Gavau LIST_ACK" << endl;
+						this->CommandListAck(rRecv);
+						break;
+					}
+					case JSON_LIST_ACK:{
+						cout << "[" << this->name << "] Gavau JSON_LIST_ACK" << endl;
+						this->CommandJsonListAck(rRecv, container);
+						break;
+					}
+					case CONNECT:{
+						cout << "[" << this->name << "] Gavau CONNECT" << endl;
+						this->CommandConnect(container);
+						break;
+					}
+					case JSON_CONNECT: {
+						// Inicijuojamas sujungimas su nurodytu prievadu
+						cout << "[" << this->name << "] Gavau JSON_CONNECT" << endl;
+						this->CommandJSONConnect(container);
+						break;
+					}
+					case INIT_CONNECT_ACK:{
+						cout << "[" << this->name << "] Gavau INIT_CONNECT_ACK" << endl;
+						this->CommandInitConnectAck();
+						break;
+					}
+					case JSON_INIT_CONNECT_ACK:{
+						cout << "[" << this->name << "] Gavau JSON_INIT_CONNECT_ACK" << endl;
+						this->CommandJsonInitConnectAck();
+						break;
+					}
+					case BEGIN_READ:{
+						cout << "[" << this->name << "] Gavau BEGIN_READ" << endl;
+						this->CommandBeginRead(container);
+						break;
+					}
+					case CLIENT_CONNECT_ACK:{
+						cout << "[" << this->name << "] Gavau CLIENT_CONNECT_ACK" << endl;
+						this->CommandClientConnectAck(container);
+						break;
+					}
+					case CLOSE_TUNNEL:{
+						cout << "[" << this->name << "] Gavau CLOSE_TUNNEL" << endl;
+						// Suvartau duomenis
+						closeTunnelCommand* close = (struct closeTunnelCommand*) &this->buffer[sizeof header];
+						close->tag = ntohs(close->tag);
+						this->CloseTunnel(close->tag);
+						break;
+					}
+				}// Baigiu switch(cmd->command){
 				break;
 			}
-			case JSON_LIST_ACK:{
-				cout << "[" << this->name << "] Gavau JSON_LIST_ACK" << endl;
-				this->CommandJsonListAck(rRecv, container);
+			// Atejo duomenys, kuriuos reikia permesti i kita sokceta
+			default: {
+				// Persiunciu duomenis i  reikalinga socket
+				// Pildau buferi
+				int rSend = container->FindByTag(this->head->tag)->Send(&this->buffer[sizeof(header)], this->head->lenght);
 				break;
 			}
-			case CONNECT:{
-				cout << "[" << this->name << "] Gavau CONNECT" << endl;
-				this->CommandConnect(container);
-				break;
-			}
-			case JSON_CONNECT: {
-				// Inicijuojamas sujungimas su nurodytu prievadu
-				cout << "[" << this->name << "] Gavau JSON_CONNECT" << endl;
-				this->CommandJSONConnect(container);
-				break;
-			}
-			case INIT_CONNECT_ACK:{
-				cout << "[" << this->name << "] Gavau INIT_CONNECT_ACK" << endl;
-				this->CommandInitConnectAck();
-				break;
-			}
-			case JSON_INIT_CONNECT_ACK:{
-				cout << "[" << this->name << "] Gavau JSON_INIT_CONNECT_ACK" << endl;
-				this->CommandJsonInitConnectAck();
-				break;
-			}
-			case BEGIN_READ:{
-				cout << "[" << this->name << "] Gavau BEGIN_READ" << endl;
-				this->CommandBeginRead(container);
-				break;
-			}
-			case CLIENT_CONNECT_ACK:{
-				cout << "[" << this->name << "] Gavau CLIENT_CONNECT_ACK" << endl;
-				this->CommandClientConnectAck(container);
-				break;
-			}
-}
-break;
-}
-// Atejo duomenys, kuriuos reikia permesti i kita sokceta
-default: {
-	// Persiunciu duomenis i  reikalinga socket
-	// Pildau buferi
-	int rSend = container->FindByTag(this->head->tag)->Send(&this->buffer[sizeof(header)], this->head->lenght);
-	break;
-}
-} // switch(this->head->tag)
-} // if(rRecv == 0)
+		} // switch(this->head->tag)
+	} // if(rRecv == 0)
 }
 
 void GClientLib::ToServerSocket::CommandList(int page){
@@ -283,7 +291,7 @@ void GClientLib::ToServerSocket::CommandInitConnect(int id, int port, SocketToOb
 	tunnel->tag = newTag;
 
 	// Inicijuoju listen socketa
-	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi, tunnel);
+	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi, tunnel, this);
 	// Nustatau serverSocket
 	tunnel->serverSocket = newSocket->GetSocket();
 	// Nustatau atverta preivada
@@ -341,7 +349,7 @@ void GClientLib::ToServerSocket::CommandJsonInitConnect(int id, int port, SOCKET
 	tunnel->tag = newTag;
 
 	// Inicijuoju listen socketa
-	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi, tunnel);
+	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi, tunnel, this);
 	// Nustatau serverSocket
 	tunnel->serverSocket = newSocket->GetSocket();
 	// Nustatau atverta preivada
@@ -401,7 +409,7 @@ void GClientLib::ToServerSocket::CommandConnect(SocketToObjectContainer^ contain
 	// Kuriu sujungima
 	char portas[20];
 	_itoa_s(connect->destinatio_port, portas, 10);
-	OutboundSocket^ connectSocket = gcnew OutboundSocket(settings->getSetting("bindAddress"), portas, connect->tag, this->skaitomi, this->rasomi, this->klaidingi);
+	OutboundSocket^ connectSocket = gcnew OutboundSocket(settings->getSetting("bindAddress"), portas, connect->tag, this->skaitomi, this->rasomi, this->klaidingi, this);
 
 	if(Globals::maxD < (int)connectSocket->GetSocket())
 	Globals::maxD = connectSocket->GetSocket();
@@ -449,7 +457,7 @@ void GClientLib::ToServerSocket::CommandJSONConnect(SocketToObjectContainer^ con
 	// Kuriu sujungima
 	char portas[20];
 	_itoa_s(connect->destinatio_port, portas, 10);
-	OutboundSocket^ connectSocket = gcnew OutboundSocket(settings->getSetting("bindAddress"), portas, connect->tag, this->skaitomi, this->rasomi, this->klaidingi);
+	OutboundSocket^ connectSocket = gcnew OutboundSocket(settings->getSetting("bindAddress"), portas, connect->tag, this->skaitomi, this->rasomi, this->klaidingi, this);
 
 	if (Globals::maxD < (int)connectSocket->GetSocket())
 		Globals::maxD = connectSocket->GetSocket();
@@ -594,20 +602,101 @@ void GClientLib::ToServerSocket::CommandClientConnectAck(SocketToObjectContainer
 	this->tunnels->ChangeStatus(ack->tag, KOMUNIKACIJA);
 }
 
+std::string GClientLib::ToServerSocket::CommandCloseTunnel(int tag)
+{
+	// Nustatau head i buferio pradzia
+	header* head = (struct header*) &this->commandBuffer[0];
+
+	// Pildau antraste
+	head->tag = htons(Globals::CommandTag);
+	head->lenght = htonl(sizeof(closeTunnelCommand));
+
+	// Kuriu komandos struktura
+	closeTunnelCommand* close = (struct closeTunnelCommand*) &this->commandBuffer[sizeof(header)];
+	// Pildau duomenis
+	close->tag = htons(tag);
+	close->command = htons(CLOSE_TUNNEL);
+
+	// Siunciu uzklausa i serveri
+	int size = sizeof header + sizeof closeTunnelCommand;
+	int rSend = this->Send(this->commandBuffer, size);
+
+	return this->CloseTunnel(tag);
+}
+
+std::string GClientLib::ToServerSocket::CloseTunnel(int tag)
+{
+	// Tikrinu ar toks tunelis egzistuoja
+	if (this->tunnels->Find(tag))
+	{
+		// Jei radau
+
+		// Salinu is tuneliu saraso
+		Tunnel^ tunelis = this->tunnels->Remove(tag);
+		// Tirkinu is kurios puses inicijuojamas nutraukimas
+		if (tunelis->serverSocket == -1)
+		{
+			// Is tos prie kurios jungesi, nutolusios
+
+			// Naikinu kliento objekta
+			OutboundSocket^ client = (OutboundSocket^)STOC->FindBySocket(tunelis->clientSocket);
+			if (client != nullptr)
+			{
+				// Salinu is saraso
+				STOC->DeleteBySocket(client->GetSocket());
+				// naikinu objekta
+				delete client;
+			}
+		}
+		else
+		{
+			// Jei nutraukiama is iniciatoriaus puses
+
+			// Naikinu kliento objekta
+			InboundSocket^ client = (InboundSocket^)STOC->FindBySocket(tunelis->clientSocket);
+			if (client != nullptr)
+			{
+				// Salinu is saraso
+				STOC->DeleteBySocket(client->GetSocket());
+				// naikinu objekta
+				delete client;
+			}
+
+			// Naikinu serverio objekta
+			ServerSocket^ server = (ServerSocket^)STOC->FindBySocket(tunelis->serverSocket);
+			if (client != nullptr)
+			{
+				// Salinu is saraso
+				STOC->DeleteBySocket(server->GetSocket());
+				// naikinu objekta
+				delete server;
+			}
+		}
+
+		return "Sujungimas nr. " + std::to_string(tag) + " sekmingai nutrauktas";
+	}
+	return "Sujungimas nr. " + std::to_string(tag) + "nerastas";
+}
+
 void GClientLib::ToServerSocket::CommandHelp(){
+	printf(" ---------------------------------------------------------------------------\n");
 	printf("    gNet klientas\n");
-	printf(" ---------------------\n");
+	printf(" ---------------------------------------------------------------------------\n");
 	printf(" Galimos komandos:\n");
 	printf("   list $page - praso klientu sarano nuroditos saraso dalies\n");
 	printf("       $page - pusalpio nuemris, kuri norime gauti. I puslapi telpa 20 irasu\n");
 	printf("   connect $id $destination-port - inicijuoja sujungima su klientu\n");
 	printf("       $id - kliento id sistemoje. Galima perziureti list komanda\n");
 	printf("       $destination-port - kliento prievadas i kuri bus norima jungtis\n");
+	printf("   connection \n");
+	printf("       print - isveda informacija apie sujungimus\n");
+	printf("       close $id - uzdaromas sujungimas\n");
+	printf("           $id - uzdaromo sujungimo numeris. Suzinimas su connection print komanda\n");
 	printf("   help - isspausdina sia pagalba\n");
 	printf("   clear - isvalo komandini langa ir atspausdina pagalba\n");
 	printf("   exit - baigia kliento darba\n");
 	printf("   quit - ziureti exit\n");
-	printf("\n");
+	printf(" ---------------------------------------------------------------------------\n");
 }
 
 void GClientLib::ToServerSocket::CommandClear(){
@@ -619,3 +708,8 @@ int GClientLib::ToServerSocket::GenerateTag(){
 	return this->tag->GetTag();
 }
 
+void GClientLib::ToServerSocket::PrintTunnelList()
+{
+	// Saukiu tuneliu saraso spausdinima
+	this->tunnels->Print();
+}

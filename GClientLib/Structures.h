@@ -20,7 +20,7 @@ namespace GClientLib {
 		CLIENT_CONNECT_ACK = 666,	// ATSAKAS i CLIENT_CONNECT_ACK
 		BEGIN_READ = 777,			// Leidimas pradeti skaitytma
 		BEGIN_READ_ACK = 888,		// Atsakas i BEGIN_READ
-		CLOSE = 5,
+		CLOSE_TUNNEL = 5,			// Komanda, kuri siuncia pranesima, kad uzvertu tuneli		
 		// JSON komandos
 		JSON_LIST = 201,                // LIST komanda JSON aplikacijai
 		JSON_LIST_ACK = 211,            // LIST_ACK komanda JSON aplikacijai
@@ -66,7 +66,7 @@ struct Command{
 };
 // JSON komandos antraste
 struct JSONCommand : Command{
-	ULONG socketID;          // Socket numeris, kuriam bus grazinamas atsakimas
+	ULONG socketID;	// Socket numeris, kuriam bus grazinamas atsakimas
 };
 
 // HELLO
@@ -162,7 +162,10 @@ struct beginReadCommand : Command{
 struct beginReadAckCommand : Command{
 	USHORT tag; // Srauto zyme
 };
-
+// CLOSE_TUNNEL
+struct closeTunnelCommand : Command {
+	USHORT tag;	// Tunelio srauto zyme
+};
 
 #pragma pack(pop) // nustatom i normalu isdestyma
 

@@ -3,6 +3,7 @@
 
 #include "gNetSocket.h"
 #include "SocketToObjectContainer.h"
+#include "ToServerSocket.h"
 
 namespace GClientLib {
 	ref class InboundSocket : public gNetSocket {

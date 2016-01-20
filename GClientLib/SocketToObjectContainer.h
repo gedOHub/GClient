@@ -19,7 +19,8 @@ namespace GClientLib {
 	ref class SocketToObjectContainer {
 		private:
 		// Sujungimu sarasas
-		cliext::list<gNetSocket^> sarasas;
+		// bool, nes reikejo issvengti sutuacijos kai ServerSocket priima jungti ir perduoda TAG InboundSocket
+			cliext::list<cliext::pair<bool, gNetSocket^>> sarasas;
 		public:
 		SocketToObjectContainer();
 		// Prideda nauja pora
@@ -32,6 +33,8 @@ namespace GClientLib {
 		gNetSocket^ DeleteBySocket(int socket);
 		// Pasalina nurodyta elementa pagal tag
 		gNetSocket^ DeleteByTag(int tag);
+		// Metodas nustato Socketa i neieskotus pagal TAG
+		void SetSerchByTag(int tag, bool status);
 	};
 };
 

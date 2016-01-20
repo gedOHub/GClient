@@ -71,6 +71,7 @@ GClientLib::gNetSocket::gNetSocket(int socket, int tag, fd_set* skaitomiSocket, 
 
 // Destruktorius
 GClientLib::gNetSocket::~gNetSocket(){
+	this->RemuveFromLists();
 	this->CloseSocket();
 }
 

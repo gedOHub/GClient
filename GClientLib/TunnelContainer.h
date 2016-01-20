@@ -45,6 +45,10 @@ namespace GClientLib {
 		Tunnel^ Remove(int tag);
 		// Keicia tunelio statusa
 		void ChangeStatus(int tag, TunnelStatus status);
+		// Metodas tikrina ar sarasas yra tuscias
+		bool isEmpty();
+		// Metodas, kuris i CMD langa issausdina ka turi
+		void Print();
 	};
 };
 

@@ -2,10 +2,12 @@
 
 using namespace GClientLib;
 
-GClientLib::ServerSocket::ServerSocket(string ip, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket, Tunnel^ tunnel) :gNetSocket(ip, "0", tag, skaitomiSocket, rasomiSocket, klaidingiSocket){
+GClientLib::ServerSocket::ServerSocket(string ip, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket, Tunnel^ tunnel, ToServerSocket^ server) :gNetSocket(ip, "0", tag, skaitomiSocket, rasomiSocket, klaidingiSocket){
 	// Nustatau pradinius socke'o parametrus
 	this->read = true;
 	this->write = false;
+
+	this->server = server;
 
 	this->tunnelInfo = tunnel;
 
@@ -22,8 +24,9 @@ void GClientLib::ServerSocket::Listen(){
 	if(listen(this->Socket, SOMAXCONN) == SOCKET_ERROR){
 		// Jei ivyko klaida
 		printf( "Nepavyko klausytis %s socket: %ld\n", this->Socket, WSAGetLastError() );
-		this->CloseSocket();
-}
+		this->server->CommandCloseTunnel(this->TAG);
+		return;
+	}
 }
 
 void GClientLib::ServerSocket::Bind(){
@@ -35,8 +38,11 @@ void GClientLib::ServerSocket::Bind(){
 		if(rBind == SOCKET_ERROR) {
 			// Bandom tol, kol pavyks, delsiant viena minute
 			cout << "Klaida klausantis " << ptr->ai_addr << " Kodas: " << WSAGetLastError() << endl;
-} else break;
-}
+			this->server->CommandCloseTunnel(this->TAG);
+			return;
+		} else 
+			break;
+	}
 }
 
 int GClientLib::ServerSocket::Accept(SocketToObjectContainer^ container){
@@ -49,6 +55,7 @@ int GClientLib::ServerSocket::Accept(SocketToObjectContainer^ container){
 		// Jei ivyko klaida kuriant dekriptoriu, pranesam
 		printf("Klaida priimant sujungima: %d\n", WSAGetLastError());
 		// Baigiam darba su deskriptorium, pereinam prie kito
+		this->server->CommandCloseTunnel(this->TAG);
 		return newConnection;
 	}
 	// Nustatom maksimalu deskriptoriu
@@ -61,9 +68,9 @@ int GClientLib::ServerSocket::Accept(SocketToObjectContainer^ container){
 	// Nustatau prisijungusios programos socketa
 	this->tunnelInfo->clientSocket = guest->GetSocket();
 
-	// Salinu dabartini tag naudotoja
-	// Besiklausanti socketa
-	container->DeleteByTag(this->TAG);
+	// Nustatau kad socketas nebus ieskomas pagal TAG
+	container->SetSerchByTag(this->TAG, false);
+	// Priedeu klieno objekta i konteineri
 	container->Add(guest);
 
 	cout << "[" << this->name << "]Prisijunge klientas prie " << IP << ":" << PORT << " Deskriptorius: " << guest->GetSocket() << endl;
@@ -112,7 +119,8 @@ void GClientLib::ServerSocket::Recive(SocketToObjectContainer^ container){
 	if(this->read){
 		// Atejo nuajas sujungimas i bseiklausanti socketa
 		if( this->Accept(container) == SOCKET_ERROR ) {
-			printf("Nepavyko priimti jungties\n");
+			this->server->CommandCloseTunnel(this->TAG);
+			return;
 		}
 	}
 }

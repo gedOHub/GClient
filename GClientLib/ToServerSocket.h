@@ -54,9 +54,15 @@ namespace GClientLib {
 			void CommandJSONConnect(SocketToObjectContainer^ container);
 			// Metodas apdodorja gauta sujungimo statusa
 			void CommandJsonInitConnectAck();
+			// Metodas siucnaintis CLOSE_TUNNNEL komanda i serveri
+			std::string CommandCloseTunnel(int tag);
 
+			// Metodas skirtas uzverti tuneli
+			std::string CloseTunnel(int tag);
 			// Grazina sugeneruota zyme
 			int GenerateTag();
+			// Isspausdina sujungimu duomenis
+			void PrintTunnelList();
 	};
 };
 
