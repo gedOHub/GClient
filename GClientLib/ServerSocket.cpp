@@ -3,6 +3,9 @@
 using namespace GClientLib;
 
 GClientLib::ServerSocket::ServerSocket(string ip, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket, Tunnel^ tunnel, ToServerSocket^ server) :gNetSocket(ip, "0", tag, skaitomiSocket, rasomiSocket, klaidingiSocket){
+	
+	this->name = "ServerSocket";
+	
 	// Nustatau pradinius socke'o parametrus
 	this->read = true;
 	this->write = false;
@@ -73,7 +76,7 @@ int GClientLib::ServerSocket::Accept(SocketToObjectContainer^ container){
 	// Priedeu klieno objekta i konteineri
 	container->Add(guest);
 
-	cout << "[" << this->name << "]Prisijunge klientas prie " << IP << ":" << PORT << " Deskriptorius: " << guest->GetSocket() << endl;
+	//cout << "[" << this->name << "]Prisijunge klientas prie " << IP << ":" << PORT << " Deskriptorius: " << guest->GetSocket() << endl;
 
 	// --- Pridejimas prie sarasu ---
 	// Pridedam prie besiklausanciu saraso
@@ -95,7 +98,7 @@ int GClientLib::ServerSocket::Accept(SocketToObjectContainer^ container){
 		struct sockaddr_in *p = (struct sockaddr_in *) &peer;
 		char address[INET_ADDRSTRLEN];
 		inet_ntop(AF_INET, &(p->sin_addr), address, INET_ADDRSTRLEN);
-		printf("Klientas %s prisijunge prie %d deskriptoriaus", address, (int)ntohs(p->sin_port));
+		// printf("Klientas %s prisijunge prie %d deskriptoriaus", address, (int)ntohs(p->sin_port));
 	}
 
 	// Siunciu i serveri CLIENT_CONNECT pranesima
@@ -108,7 +111,7 @@ int GClientLib::ServerSocket::Accept(SocketToObjectContainer^ container){
 	this->head->tag = htons(Globals::CommandTag);
 	this->head->lenght = htonl(sizeof clientConnectCommand );
 
-	cout << "[" << this->name << "] Siunciu CLIENT_CONNECT" << endl;
+	//cout << "[" << this->name << "] Siunciu CLIENT_CONNECT" << endl;
 	// Issiunciu pranesima apir prisijungima
 	container->FindByTag(Globals::CommandTag)->Send(&this->buffer[0], sizeof header + sizeof clientConnectCommand);
 

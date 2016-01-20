@@ -5,7 +5,7 @@ using namespace GClientLib;
 GClientLib::InboundSocket::InboundSocket(SOCKET socket, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket) : gNetSocket(socket, tag, skaitomiSocket, rasomiSocket, klaidingiSocket){
 	this->Socket = socket;
 	this->name = "InboundSocket";
-	printf("[%s] SocketID: %d\n", this->name, this->Socket);
+	//printf("[%s] SocketID: %d\n", this->name, this->Socket);
 	this->write = true;
 }
 
