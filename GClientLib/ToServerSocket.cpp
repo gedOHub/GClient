@@ -85,7 +85,7 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 			rRecv = rRecv + recv(this->Socket, &buffer[rRecv], paketo_ilgis - rRecv, 0);
 			//cout << "[" << this->name << "]Siuo metu turiu " << rRecv << endl;
 		}
-		cout << "[" << this->name << "]Gavau " << rRecv << endl;
+		//cout << "[" << this->name << "]Gavau " << rRecv << endl;
 
 		switch(this->head->tag){
 			// Atejo komanda is serverio
@@ -99,48 +99,48 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 				switch (cmd->command){
 						// LIST_ACK komanda
 					case LIST_ACK:{
-						cout << "[" << this->name << "] Gavau LIST_ACK" << endl;
+						//cout << "[" << this->name << "] Gavau LIST_ACK" << endl;
 						this->CommandListAck(rRecv);
 						break;
 					}
 					case JSON_LIST_ACK:{
-						cout << "[" << this->name << "] Gavau JSON_LIST_ACK" << endl;
+						//cout << "[" << this->name << "] Gavau JSON_LIST_ACK" << endl;
 						this->CommandJsonListAck(rRecv, container);
 						break;
 					}
 					case CONNECT:{
-						cout << "[" << this->name << "] Gavau CONNECT" << endl;
+						//cout << "[" << this->name << "] Gavau CONNECT" << endl;
 						this->CommandConnect(container);
 						break;
 					}
 					case JSON_CONNECT: {
 						// Inicijuojamas sujungimas su nurodytu prievadu
-						cout << "[" << this->name << "] Gavau JSON_CONNECT" << endl;
+						//cout << "[" << this->name << "] Gavau JSON_CONNECT" << endl;
 						this->CommandJSONConnect(container);
 						break;
 					}
 					case INIT_CONNECT_ACK:{
-						cout << "[" << this->name << "] Gavau INIT_CONNECT_ACK" << endl;
+						//cout << "[" << this->name << "] Gavau INIT_CONNECT_ACK" << endl;
 						this->CommandInitConnectAck();
 						break;
 					}
 					case JSON_INIT_CONNECT_ACK:{
-						cout << "[" << this->name << "] Gavau JSON_INIT_CONNECT_ACK" << endl;
+						//cout << "[" << this->name << "] Gavau JSON_INIT_CONNECT_ACK" << endl;
 						this->CommandJsonInitConnectAck();
 						break;
 					}
 					case BEGIN_READ:{
-						cout << "[" << this->name << "] Gavau BEGIN_READ" << endl;
+						//cout << "[" << this->name << "] Gavau BEGIN_READ" << endl;
 						this->CommandBeginRead(container);
 						break;
 					}
 					case CLIENT_CONNECT_ACK:{
-						cout << "[" << this->name << "] Gavau CLIENT_CONNECT_ACK" << endl;
+						//cout << "[" << this->name << "] Gavau CLIENT_CONNECT_ACK" << endl;
 						this->CommandClientConnectAck(container);
 						break;
 					}
 					case CLOSE_TUNNEL:{
-						cout << "[" << this->name << "] Gavau CLOSE_TUNNEL" << endl;
+						//cout << "[" << this->name << "] Gavau CLOSE_TUNNEL" << endl;
 						// Suvartau duomenis
 						closeTunnelCommand* close = (struct closeTunnelCommand*) &this->buffer[sizeof header];
 						close->tag = ntohs(close->tag);
@@ -241,7 +241,7 @@ void GClientLib::ToServerSocket::CommandJsonListAck(int rRecv, SocketToObjectCon
 		// Perduodu gautus duomenis tolimesniam apdorojimui
 		client->ReciveJSONListAck(&this->buffer[sizeof header + sizeof jsonListAckCommand], rRecv - sizeof header + sizeof jsonListAckCommand, list->success);
 	} catch (Exception^ e) {
-		cout << "Klaida konvertuojant i JSONapiCLient" << endl;
+		//cout << "Klaida konvertuojant i JSONapiCLient" << endl;
 		Console::WriteLine(e->Message);
 	}
 }
@@ -580,7 +580,7 @@ void GClientLib::ToServerSocket::CommandBeginRead(SocketToObjectContainer^ conta
 	head->tag = htons(Globals::CommandTag);
 	head->lenght = htonl(sizeof beginReadAckCommand );
 
-	cout << "[" << this->name << "] Siunciu BEGIN_READ_ACK" << endl;
+	//cout << "[" << this->name << "] Siunciu BEGIN_READ_ACK" << endl;
 	this->Send(&this->commandBuffer[0], sizeof header + sizeof beginReadAckCommand);
 
 	// Nustatua tunelio status ai vyskta komunikacija
