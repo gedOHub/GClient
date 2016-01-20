@@ -20,7 +20,7 @@ namespace GClientLib {
 		CLIENT_CONNECT_ACK = 666,	// ATSAKAS i CLIENT_CONNECT_ACK
 		BEGIN_READ = 777,			// Leidimas pradeti skaitytma
 		BEGIN_READ_ACK = 888,		// Atsakas i BEGIN_READ
-		CLOSE = 5,
+		CLOSE_TUNNEL = 5,			// Komanda, kuri siuncia pranesima, kad uzvertu tuneli		
 		// JSON komandos
 		JSON_LIST = 201,                // LIST komanda JSON aplikacijai
 		JSON_LIST_ACK = 211,            // LIST_ACK komanda JSON aplikacijai
@@ -36,7 +36,7 @@ enum CONNECT_STATUS{
 	FAULT = 3, // Nepavyko sukurti sujungimo kleinto puseje
 };
 
-#pragma pack(push, 1)	// Nustatom sstrukturas i tikra isdestyma
+#pragma pack(push, 1)	// Nustatom strukturas i tikra isdestyma
 
 // gNet paketo antrastes struktura
 struct header{
@@ -66,7 +66,7 @@ struct Command{
 };
 // JSON komandos antraste
 struct JSONCommand : Command{
-	ULONG socketID;          // Socket numeris, kuriam bus grazinamas atsakimas
+	ULONG socketID;	// Socket numeris, kuriam bus grazinamas atsakimas
 };
 
 // HELLO
@@ -106,13 +106,17 @@ struct jsonConnectInitCommand : JSONCommand{
 };
 // CONNECT
 struct connectCommand : Command{
-	USHORT destinatio_port; // Prievadas i kuri jungsiuos
+	USHORT destinatio_port;	// Prievadas i kuri jungsiuos
+	USHORT source_port;		// Prievadas, kuris atvertas pas iniciatoriu
+	ULONG client_id;     // Kliento ID, kuris inicijuoja sujungima
 	USHORT tag; // Zyme, kuri bus naudojama kliento
 	ULONG tunnelID; // Tunelio ID
 };
 // JSON_CONNECT
 struct jsonConnectCommand : JSONCommand{
-	USHORT destinatio_port; // Prievadas i kuri jungsiuos
+	USHORT destinatio_port;	// Prievadas i kuri jungsiuos
+	USHORT source_port;		// Prievadas, kuris atvertas pas iniciatoriu
+	ULONG client_id;     // Kliento ID, kuris inicijuoja sujungima
 	USHORT tag; // Zyme, kuri bus naudojama kliento
 	ULONG tunnelID; // Tunelio ID
 };
@@ -132,6 +136,7 @@ struct connectInitAckCommand : Command{
 	ULONG client_id;
 	USHORT adm_port;
 	USHORT cln_port;
+	USHORT adm_tag;
 };
 // CONNECT_INIT_ACK
 struct jsonConnectInitAckCommand : JSONCommand{
@@ -139,6 +144,7 @@ struct jsonConnectInitAckCommand : JSONCommand{
 	ULONG client_id;
 	USHORT adm_port;
 	USHORT cln_port;
+	USHORT adm_tag;
 };
 // CLIENT_CONNECT
 struct clientConnectCommand : Command{
@@ -156,9 +162,13 @@ struct beginReadCommand : Command{
 struct beginReadAckCommand : Command{
 	USHORT tag; // Srauto zyme
 };
-
+// CLOSE_TUNNEL
+struct closeTunnelCommand : Command {
+	USHORT tag;	// Tunelio srauto zyme
+};
 
 #pragma pack(pop) // nustatom i normalu isdestyma
+
 };
 
 #endif

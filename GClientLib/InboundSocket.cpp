@@ -5,7 +5,7 @@ using namespace GClientLib;
 GClientLib::InboundSocket::InboundSocket(SOCKET socket, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket) : gNetSocket(socket, tag, skaitomiSocket, rasomiSocket, klaidingiSocket){
 	this->Socket = socket;
 	this->name = "InboundSocket";
-	printf("[%s] SocketID: %d\n", this->name, this->Socket);
+	//printf("[%s] SocketID: %d\n", this->name, this->Socket);
 	this->write = true;
 }
 
@@ -18,13 +18,16 @@ void GClientLib::InboundSocket::Recive(SocketToObjectContainer^ container){
 		switch(rRecv){
 			case 0:{
 				printf("[%s]Klientas uzdare sujungima %d\n", this->name, this->Socket);
-				container->DeleteBySocket(this->Socket);
-				this->CloseSocket();
+				ToServerSocket^ toServer = (ToServerSocket^) container->FindByTag(Globals::CommandTag);
+				toServer->CommandCloseTunnel(this->TAG);
+				return;
 				break;
 			}
 			case SOCKET_ERROR:{
 				printf("[%s]Klaida: %d sujungime %d \n", this->name, WSAGetLastError(), this->Socket);
-				this->RemuveFromLists();
+				ToServerSocket^ toServer = (ToServerSocket^)container->FindByTag(Globals::CommandTag);
+				toServer->CommandCloseTunnel(this->TAG);
+				return;
 				break;
 			}
 			default:{

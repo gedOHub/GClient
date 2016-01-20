@@ -71,6 +71,7 @@ GClientLib::gNetSocket::gNetSocket(int socket, int tag, fd_set* skaitomiSocket, 
 
 // Destruktorius
 GClientLib::gNetSocket::~gNetSocket(){
+	this->RemuveFromLists();
 	this->CloseSocket();
 }
 
@@ -187,7 +188,7 @@ return 0;
 }
 
 void GClientLib::gNetSocket::SetRead(bool state){
-	cout << "[" << this->name << "] Socket: " << this->Socket << " Skaitymo statusas: " << state << endl;
+	//cout << "[" << this->name << "] Socket: " << this->Socket << " Skaitymo statusas: " << state << endl;
 	this->read = state;
 }
 

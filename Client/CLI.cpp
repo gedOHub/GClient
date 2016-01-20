@@ -55,7 +55,6 @@ void CLI::Start(){
 		if(zodis == "connect"){
 			try{
 				int id, port;
-				string command;
 				cin >> id;
 				if( cin.fail() )
 					throw "CLI_ERROR";
@@ -69,6 +68,29 @@ void CLI::Start(){
 				zodis = this->ClearCLI();
 			}
 			continue;
+		}
+
+		if (zodis == "connection")
+		{
+			try{
+				cin >> zodis;
+				if (zodis == "print")
+				{
+					this->socket->PrintTunnelList();
+					continue;
+				}
+				if (zodis == "close")
+				{
+					int tagNr;
+					cin >> tagNr;
+					cout << this->socket->CommandCloseTunnel(tagNr) << endl;
+					continue;
+				}
+			}
+			catch (System::Exception^){
+				printf("Blogai ivesta connect komanda\n");
+				zodis = this->ClearCLI();
+			}
 		}
 
 		// Jeigu atejo iki cia tada reikia kad ivede bet ka

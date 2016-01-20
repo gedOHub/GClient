@@ -93,6 +93,9 @@
     <ClInclude Include="JSONapi.h">
       <Filter>Header Files\JSON</Filter>
     </ClInclude>
+    <ClInclude Include="TunnelContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -136,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="ToServerSocket.cpp">
       <Filter>Source Files\Sujungimai\Darbiniai</Filter>
+    </ClCompile>
+    <ClCompile Include="TunnelContainer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

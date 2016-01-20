@@ -13,7 +13,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	// Kuriamas visu sujungimu saraso saugykla
 	SocketToObjectContainer^ STOContainer = gcnew SocketToObjectContainer();
 	// Objektas augantis visu tuneliu informacija
-	//TunnelContainer^ tunnels = gcnew TunnelContainer();
+	TunnelContainer^ tunnels = gcnew TunnelContainer();
 
 	// 1s = 1000000 microsekundziu
 	timeval time;
@@ -33,7 +33,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	//Sukuria socketa jungtis prie pagrindinio serverio
 	ToServerSocket^ ToServer = gcnew ToServerSocket(settings->getSetting("serverAddress"),
-		settings->getSetting("serverPort"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket, STOContainer, settings);
+		settings->getSetting("serverPort"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket, STOContainer, settings, tunnels);
 	// Tikrinam ar pavyko uzmegsti rysi iki centrinio serverio
 	if(ToServer->GetSocket() == INVALID_SOCKET){
 		printf("Nepavyko sukurti objekto darbui su centriniu serveriu\n");

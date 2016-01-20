@@ -3,7 +3,9 @@
 
 using namespace GClientLib;
 
-GClientLib::OutboundSocket::OutboundSocket(string ip, string port, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket) :gNetSocket(ip, port, tag, skaitomiSocket, rasomiSocket, klaidingiSocket){
+GClientLib::OutboundSocket::OutboundSocket(string ip, string port, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket, ToServerSocket^ server) :gNetSocket(ip, port, tag, skaitomiSocket, rasomiSocket, klaidingiSocket){
+	this->server = server;
+
 	this->write = true;
 	this->name = "OutboundSocket";
 	this->Connect();
@@ -17,17 +19,14 @@ void GClientLib::OutboundSocket::Connect(){
 		// Tikrinam ar pavyko prijsungti
 		if(rConnect == SOCKET_ERROR) {
 			// Bandom tol, kol pavyks, delsiant viena minute
-			printf("Klaida jungiatis i %s:%s kodas: %d\n", this->IP, this->PORT, WSAGetLastError());
-			printf("Bandua jungtis prie %s:%s po minutes\n", this->IP, this->PORT);
-			// Miegu 1 min
-			Sleep(60000);
-			// Jungiuosi
-			this->Connect();
-} else {
-	printf("Prisjungiau prie %s:%s\n", this->IP->c_str(), this->PORT->c_str());
-	break;
-}
-}
+			printf("Klaida jungiantis i %s:%s kodas: %d\n", this->IP, this->PORT, WSAGetLastError());
+			this->server->CommandCloseTunnel(this->TAG);
+			return;
+		} else {
+			printf("Prisjungiau prie %s:%s\n", this->IP->c_str(), this->PORT->c_str());
+			break;
+		}
+	}
 }
 
 void GClientLib::OutboundSocket::Recive(SocketToObjectContainer^ container){
@@ -38,13 +37,14 @@ void GClientLib::OutboundSocket::Recive(SocketToObjectContainer^ container){
 		switch(rRecv){
 			case 0:{
 				printf("Klientas uzdare sujungima %d\n", this->Socket);
-				container->DeleteBySocket(this->Socket);
-				this->CloseSocket();
+				this->server->CommandCloseTunnel(this->TAG);
+				return;
 				break;
 			}
 			case SOCKET_ERROR:{
 				printf("Klaida: %d sujungime %d \n", WSAGetLastError(), this->Socket);
-				this->RemuveFromLists();
+				this->server->CommandCloseTunnel(this->TAG);
+				return;
 				break;
 			}
 			default:{
