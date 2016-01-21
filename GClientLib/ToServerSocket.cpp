@@ -452,6 +452,7 @@ void GClientLib::ToServerSocket::CommandJSONConnect(SocketToObjectContainer^ con
 	connect->source_port = ntohs(connect->source_port);
 	connect->tag = ntohs(connect->tag);
 	connect->tunnelID = ntohl(connect->tunnelID);
+	connect->client_id = ntohl(connect->client_id);
 	// Generuoju tag sujungimui
 	int status = INIT;
 	// Kuriu sujungima
@@ -472,6 +473,11 @@ void GClientLib::ToServerSocket::CommandJSONConnect(SocketToObjectContainer^ con
 		// Sukurus sujungima
 		status = CREATED;
 		container->Add(connectSocket);
+		// Pildau tunelio informacija
+		//int tag, int dport, int clientid, int sport, int serverSocket, int clientSocket
+		this->tunnels->Add(connect->tag, connect->destinatio_port, connect->client_id, connect->source_port, INVALID_SOCKET, connectSocket->GetSocket());
+		// Nustatau statusa i laukia programos
+		this->tunnels->ChangeStatus(connect->tag, LAUKIA_PROGRAMOS);
 	}
 	// CONNECT_ACK
 	// Formuoju atsaka serveriui
