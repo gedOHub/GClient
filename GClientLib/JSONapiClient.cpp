@@ -92,7 +92,7 @@ void GClientLib::JSONapiClient::ReciveJSONListAck(char* buffer, int dataSize, bo
 	// Tikrinu ar reikia ka nors persiusti klientui
 	if (!response.empty())
 	{
-		this->Send(buffer, dataSize);
+		this->Send(response);
 	}
 }
 // metodas skirtas issiusti duomenis i si socketa

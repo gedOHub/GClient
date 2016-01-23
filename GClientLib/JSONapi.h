@@ -31,6 +31,8 @@ namespace GClientLib {
 			void ConnectClientJSON(int clientID, int portNumber, SOCKET clientSocket);
 			// Metodas skirtas grazinti iseinanciu (mano inicijuotu) sujungimu sarasa JSOn formatu
 			void ReturnOutboundConnectionList(JSONapiClient^ clientSocket);
+			// Metodas skirtas grazinti ateinancius (prisjungta prie amnes) sujungimu sarasa JSON formatu
+			void ReturnInboundConnectionList(JSONapiClient^ client);
 		public:
 			JSONapi(SettingsReader^ settings, ToServerSocket^ toServer, TunnelContainer^ tunnels);
 			// Metodas skirtas nusaityti kokia komanda gauta ir ja ivygdyti
