@@ -32,6 +32,8 @@ namespace GClientLib {
 	private:
 		// Tuneliu sarasas
 		cliext::list<cliext::pair<int, Tunnel^>> sarasas;
+		// Iteratorius begti per tuneli
+		cliext::list<cliext::pair<int, Tunnel^>>::iterator i;
 	public:
 		// Konstruktorius
 		TunnelContainer();
@@ -49,6 +51,14 @@ namespace GClientLib {
 		bool isEmpty();
 		// Metodas, kuris i CMD langa issausdina ka turi
 		void Print();
+		// Metodas skirtas nustatyti iteratoriu i saraso pradzia
+		void ResetIterator();
+		// Metodas skirtas patikrinti ar nepasiektas saraso galas su iteratoriumi
+		bool IsIteratorAtEnd();
+		// Metodas skirtas gauti tunelio objekta
+		Tunnel^ GetTunnel();
+		// Metodas skirtas perstumti iteratoriu prie kito objekto
+		void SetIteratorToNext();
 	};
 };
 

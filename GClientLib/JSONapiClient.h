@@ -11,6 +11,9 @@
 #include "JSONapi.h"
 
 namespace GClientLib {
+
+	ref class JSONapi;
+
 	ref class JSONapiClient : public gNetSocket {
 		private:
 			// Objetas organizuojantis darba su JSON
@@ -35,6 +38,9 @@ namespace GClientLib {
 				success- ar gautas bent vienas irasas
 			*/
 			void ReciveJSONListAck(char* buffer, int dataSize, bool success);
+
+			// Metodas skirtas issiusti duomenis i si socketa
+			int GClientLib::JSONapiClient::Send(std::string buffer);
 
 	};
 };

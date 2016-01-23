@@ -72,7 +72,7 @@ void GClientLib::JSONapiClient::Recive(SocketToObjectContainer^ container){
 
 			// Manau, kad atëjo JSON komanda
 			// Formuoju uzklausa i serveri
-			string response = this->JSON->readCommand(RECIVE, this->Socket);
+			string response = this->JSON->readCommand(RECIVE, this);
 			// Tikrinu ar reikia ka nors persiusti klientui
 			if (!response.empty())
 			{
@@ -92,8 +92,19 @@ void GClientLib::JSONapiClient::ReciveJSONListAck(char* buffer, int dataSize, bo
 	// Tikrinu ar reikia ka nors persiusti klientui
 	if (!response.empty())
 	{
-		// Kazkas gauta, siusiu klientui
-		int rSend = send(this->Socket, response.c_str(), response.size(), 0);
+		this->Send(buffer, dataSize);
 	}
+}
+// metodas skirtas issiusti duomenis i si socketa
+int GClientLib::JSONapiClient::Send(std::string response)
+{
+	std::size_t rSend = 0;
+
+	while (response.size() > rSend)
+	{
+		rSend = rSend + send(this->Socket, response.c_str(), response.size(), 0);
+	}
+
+	return rSend;
 }
 
