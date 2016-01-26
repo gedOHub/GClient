@@ -536,6 +536,8 @@ void GClientLib::ToServerSocket::CommandInitConnectAck(){
 }
 
 void GClientLib::ToServerSocket::CommandJsonInitConnectAck(){
+	std::ostringstream responseStream;
+
 	jsonConnectInitAckCommand* ack = (struct jsonConnectInitAckCommand*) &this->buffer[sizeof(header)];
 	// Suvartau tinkama tvarka skacius
 	ack->status = ntohs(ack->status);
@@ -543,28 +545,31 @@ void GClientLib::ToServerSocket::CommandJsonInitConnectAck(){
 	ack->adm_port = ntohs(ack->adm_port);
 	ack->adm_tag = ntohs(ack->adm_tag);
 	ack->cln_port = ntohs(ack->cln_port);
+	ack->socketID = ntohl(ack->socketID);
 
 	// Spausdinu rezultataus
 	switch (ack->status){
-	case INIT: {
-		printf("Sujungimas per ilgai inicijuojamas, bandykite kurti sujungima is naujo\n");
-		Tunnel^ removedTunnel = tunnels->Remove(ack->adm_tag);
-		break;
+		case INIT: {
+			responseStream << "Sujungimas per ilgai inicijuojamas, bandykite kurti sujungima is naujo" << endl;
+			Tunnel^ removedTunnel = tunnels->Remove(ack->adm_tag);
+			break;
+		}
+		case CREATED:{
+			responseStream << "Sujungimas sekmingai sukurtas su " << ack->client_id << " klientu" << endl;
+			responseStream << "Pas Jus atverta " << ack->adm_port << " prievadas, kuri sujungta su kliento " << ack->adm_tag << " prievadu" << endl;
+			responseStream << "Jungimos duomenys: " << settings->getSetting("bindAddress") << ":" << ack->adm_port << endl;
+			tunnels->ChangeStatus(ack->adm_tag, LAUKIA_PROGRAMOS);
+			break;
+		}
+		case FAULT:{
+			responseStream << "Nepavyko sukurti sujungimo" << endl;
+			Tunnel^ removedTunnel = tunnels->Remove(ack->adm_tag);
+			break;
+		}
 	}
-	case CREATED:{
-		long int client_id = ack->client_id, adm_port = ack->adm_port, cln_port = ack->cln_port;
-		cout << "Sujungimas sekmingai sukurtas su " << client_id << " klientu" << endl;
-		cout << "Pas Jus atverta " << adm_port << " prievadas, kuri sujungta su kliento " << cln_port << " prievadu" << endl;
-		cout << "Jungimos duomenys: " << settings->getSetting("bindAddress") << ":" << adm_port << endl;
-		tunnels->ChangeStatus(ack->adm_tag, LAUKIA_PROGRAMOS);
-		break;
-	}
-	case FAULT:{
-		printf("Nepavyko sukurti sujungimo\n");
-		Tunnel^ removedTunnel = tunnels->Remove(ack->adm_tag);
-		break;
-	}
-	}
+	// Siunciu atsaka i JSON socketa
+	JSONapiClient^ client = (JSONapiClient^)STOC->FindBySocket(ack->socketID);
+	client->SendWithHTTPHeaders(responseStream.str());
 }
 
 void GClientLib::ToServerSocket::CommandBeginRead(SocketToObjectContainer^ container){

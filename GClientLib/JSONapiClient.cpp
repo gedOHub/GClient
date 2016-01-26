@@ -108,3 +108,8 @@ int GClientLib::JSONapiClient::Send(std::string response)
 	return rSend;
 }
 
+int GClientLib::JSONapiClient::SendWithHTTPHeaders(std::string buffer)
+{
+	return this->Send(this->JSON->putHTTPheaders(buffer));
+}
+

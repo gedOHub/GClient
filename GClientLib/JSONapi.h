@@ -23,8 +23,6 @@ namespace GClientLib {
 			ToServerSocket^ toServer;
 			// Tuneliu sarasas
 			TunnelContainer^ tunnels;
-			// Metodas skirtas uzdeti HTTP antrastes ant paruostu siusti JSON duomenu
-			std::string putHTTPheaders(string data);
 			// Formuoja uzklausa i serveri gauti klientu sarasui
 			void GetJSONClientList(int page, SOCKET clientSocket);
 			// Formuoja uzklausa i serveri inicijuoti sujungma prie kliento
@@ -39,6 +37,8 @@ namespace GClientLib {
 			std::string readCommand(string commandData, JSONapiClient^ client);
 			// Formuoja gautu klientu sarasa issiuntimui narsyklei
 			std::string FormatJSONListACK(char* buffer, int dataSize, bool success);
+			// Metodas skirtas uzdeti HTTP antrastes ant paruostu siusti JSON duomenu
+			std::string putHTTPheaders(string data);
 	};
 };
 

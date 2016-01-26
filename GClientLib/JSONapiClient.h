@@ -41,6 +41,8 @@ namespace GClientLib {
 
 			// Metodas skirtas issiusti duomenis i si socketa
 			int GClientLib::JSONapiClient::Send(std::string buffer);
+			// Metodas skirtas uzdeti HTTP antrastes siunciamiems duomenis ir juos issiusti
+			int JSONapiClient::SendWithHTTPHeaders(std::string buffer);
 
 	};
 };

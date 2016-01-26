@@ -47,6 +47,8 @@ std::string GClientLib::JSONapi::readCommand(string commandData, JSONapiClient^ 
 	string outboundConnectionCommandArgument = "outboundConnectionList=1";
 	// Prasoma grazinti inicijuotu su manimi sujungimu sarasa
 	string inboundConnectionCommandArgument = "inboundConnectionList=1";
+	// Prasoma uzverti nurodyta tuneli
+	string closeTunnelCommandArgument = "command=closeTunnel";
 
 	// Ieskau kokia komanda atejo
 	// * Tikrinu ar neatejo klientu sàraðo komanda
@@ -130,6 +132,38 @@ std::string GClientLib::JSONapi::readCommand(string commandData, JSONapiClient^ 
 	{
 		// Grazinu visu mano uzmegztu sujungimu duomenis
 		ReturnInboundConnectionList(client);
+
+		return "";
+	}
+	// * Tikrinu ar neprasoma uzverti tunelio
+	// Ieskau kokia komanda atejo
+	// * Tikrinu ar neatejo klientu sàraðo komanda
+	if (commandData.find(closeTunnelCommandArgument) != string::npos)
+	{
+		//GET /?_dc=1453571158578&command=closeTunnel&tag=1004 HTTP/1.1
+		//Host: 127.0.0.1 : 3000
+		//User - Agent : Mozilla / 5.0 (Windows NT 10.0; WOW64; rv:43.0) Gecko / 20100101 Firefox / 43.0
+		//Accept : text / html, application / xhtml + xml, application / xml; q = 0.9, */*;q=0.8
+		//Accept-Language: en-US,en;q=0.5
+		//Accept-Encoding: gzip, deflate
+		//X-Requested-With: XMLHttpRequest
+		//Referer: http://panel.jancys.net/
+		//Origin: http://panel.jancys.net
+		//Connection: keep-alive
+
+		// Ieskau kuri tuneli norima uzverti
+		// Kintamasis skirtas nurodyti kokios komandos argumento ieskome
+
+		std::string tagString = "&tag=";
+
+		// Surandu kur slepiasi tag
+		pos = commandData.find(tagString);
+		// Salinu uzklausos pradzia iki tag kintamojo
+		commandData.erase(0, pos + tagString.length());
+		// Likusi uzklausa: 1004 HTTP/1.1...
+
+		// Siunciu pranesima apie uzverima tuneli
+		toServer->CommandCloseTunnel(stoi(commandData, &pos, 0));
 
 		return "";
 	}
