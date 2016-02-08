@@ -5,17 +5,18 @@
 
 using namespace std;
 
-GClientLib::JSONapi::JSONapi(SettingsReader^ settings, ToServerSocket^ toServer){
+GClientLib::JSONapi::JSONapi(SettingsReader^ settings, ToServerSocket^ toServer, TunnelContainer^ tunnels){
 	this->settings = settings;
 	this->toServer = toServer;
+	this->tunnels = tunnels;
 }
 
 std::string GClientLib::JSONapi::putHTTPheaders(string data)
 {
 	std::ostringstream responseStream;
 	responseStream << "HTTP/1.1 200 OK\r\n";
-	responseStream << "Access-Control-Allow-Origin: ";
-	responseStream << this->settings->getSetting("webGUIAddress");
+	responseStream << "Access-Control-Allow-Origin: http://panel.jancys.net";
+	//responseStream << this->settings->getSetting("webGUIAddress");
 	responseStream << "\r\n";
 	responseStream << "Accept-Ranges:bytes\r\n";
 	responseStream << "Server: gNetClient\r\n";
@@ -30,7 +31,7 @@ std::string GClientLib::JSONapi::putHTTPheaders(string data)
 }
 
 // Metodas skirtas nauskaityti gauta komanda ir ja ivygdyti
-std::string GClientLib::JSONapi::readCommand(string commandData, SOCKET clientSocket)
+std::string GClientLib::JSONapi::readCommand(string commandData, JSONapiClient^ client)
 {
 	// Kintamasis skirtas nustatyti reikalinga pozicija
 	size_t pos;
@@ -38,8 +39,16 @@ std::string GClientLib::JSONapi::readCommand(string commandData, SOCKET clientSo
 	string tempString;
 
 	// Komanudi fragmentai kuriu ieskosiu
+	// Prasoma grazinti prisjungusiu klientu prie sistemos sarasa
 	string clientListCommandArgument = "clientList=";
+	// Komanda inicijuoja sujungima su nuroditu klientu
 	string connectCommandArgument = "command=connectClient";
+	// Prasoma grazinti mano inicijuotu sujungimu sarasa
+	string outboundConnectionCommandArgument = "outboundConnectionList=1";
+	// Prasoma grazinti inicijuotu su manimi sujungimu sarasa
+	string inboundConnectionCommandArgument = "inboundConnectionList=1";
+	// Prasoma uzverti nurodyta tuneli
+	string closeTunnelCommandArgument = "command=closeTunnel";
 
 	// Ieskau kokia komanda atejo
 	// * Tikrinu ar neatejo klientu sàraðo komanda
@@ -69,12 +78,12 @@ std::string GClientLib::JSONapi::readCommand(string commandData, SOCKET clientSo
 
 		// Siusiu JSON list komanda i serveri
 		// Isgaunu norimo puslapio numeri, placiau http://www.cplusplus.com/reference/string/stoi/
-		this->GetJSONClientList(stoi(commandData, &pos, 0), clientSocket);
+		this->GetJSONClientList(stoi(commandData, &pos, 0), client->GetSocket());
 		
 		return "";
 	}
 	// * Tikrinu ar neatejo sujungimo komanda
-	if (commandData.find(connectCommandArgument) != string::npos)
+	if (commandData.find(connectCommandArgument) != string::npos) 
 	{
 		// Uzklausos pavizdys
 		//GET /?_dc=1452918791392&command=connectClient&id=5&port=12313 HTTP/1.1
@@ -106,18 +115,59 @@ std::string GClientLib::JSONapi::readCommand(string commandData, SOCKET clientSo
 		// Nustatau prievado numeri
 		int remotePort = stoi(commandData, &pos, 0);
 		// Siunciu connect uzklausa i serveri
-		this->ConnectClientJSON(clientID, remotePort, clientSocket);
+		this->ConnectClientJSON(clientID, remotePort, client->GetSocket());
+
+		return "";
+	}
+	// * Tirkinu ar neatejo uzklausa del mano inicijuotu sujungimu saraso
+	if (commandData.find(outboundConnectionCommandArgument) != string::npos)
+	{
+		// Grazinu visu mano uzmegztu sujungimu duomenis
+		ReturnOutboundConnectionList(client);
+
+		return "";
+	}
+	// * Tirkinu ar neatejo uzklausa del su manim inicijuotu sujungimu saraso
+	if (commandData.find(inboundConnectionCommandArgument) != string::npos)
+	{
+		// Grazinu visu mano uzmegztu sujungimu duomenis
+		ReturnInboundConnectionList(client);
+
+		return "";
+	}
+	// * Tikrinu ar neprasoma uzverti tunelio
+	// Ieskau kokia komanda atejo
+	// * Tikrinu ar neatejo klientu sàraðo komanda
+	if (commandData.find(closeTunnelCommandArgument) != string::npos)
+	{
+		//GET /?_dc=1453571158578&command=closeTunnel&tag=1004 HTTP/1.1
+		//Host: 127.0.0.1 : 3000
+		//User - Agent : Mozilla / 5.0 (Windows NT 10.0; WOW64; rv:43.0) Gecko / 20100101 Firefox / 43.0
+		//Accept : text / html, application / xhtml + xml, application / xml; q = 0.9, */*;q=0.8
+		//Accept-Language: en-US,en;q=0.5
+		//Accept-Encoding: gzip, deflate
+		//X-Requested-With: XMLHttpRequest
+		//Referer: http://panel.jancys.net/
+		//Origin: http://panel.jancys.net
+		//Connection: keep-alive
+
+		// Ieskau kuri tuneli norima uzverti
+		// Kintamasis skirtas nurodyti kokios komandos argumento ieskome
+
+		std::string tagString = "&tag=";
+
+		// Surandu kur slepiasi tag
+		pos = commandData.find(tagString);
+		// Salinu uzklausos pradzia iki tag kintamojo
+		commandData.erase(0, pos + tagString.length());
+		// Likusi uzklausa: 1004 HTTP/1.1...
+
+		// Siunciu pranesima apie uzverima tuneli
+		toServer->CommandCloseTunnel(stoi(commandData, &pos, 0));
 
 		return "";
 	}
 
-	if (commandData.find("connectionList") != string::npos)
-	{
-		// Atëjo komanda praðanti klientø sàraðo
-		string data = "{ success:true, itemCount:0, items:[{ tag: 1, clientNumber : 1, connectedPort : 3389, localPort : 125476 }] }";
-
-		return this->putHTTPheaders(data);
-	}
 
 	return "";
 }
@@ -172,4 +222,115 @@ std::string GClientLib::JSONapi::FormatJSONListACK(char* buffer, int dataSize, b
 void GClientLib::JSONapi::ConnectClientJSON(int clientID, int portNumber, SOCKET clientSocket)
 {
 	toServer->CommandJsonInitConnect(clientID, portNumber, clientSocket);
+}
+
+// Metodas skirtas grazinti iseinanciu (mano inicijuotu) sujungimu sarasa JSOn formatu
+void GClientLib::JSONapi::ReturnOutboundConnectionList(JSONapiClient^ client)
+{
+	// Formuojamo srauto buferis
+	std::ostringstream json;
+	// Kintamasis suagantis irasu kieki
+	int recordCount = 0;
+	// Kintamasis skirtas apdoroti tuneli
+	Tunnel^ tunnel;
+
+	json << "{";
+	// Visada pranesame, kad pavyko suformuoti atsaka
+	json << "success:'true',";
+	// Pildau irasus
+	json << "items:[";
+	// Nustatau tuneliu saraso iteratoriu i pradzia
+	tunnels->ResetIterator();
+	// Kol nepasiekiau saraso pabaigos
+	while (tunnels->IsIteratorAtEnd())
+	{
+		// Begu per visus irasus
+		// Gaunu tuneli
+		tunnel = tunnels->GetTunnel();
+
+		// Tikrinu at tunelis yra mano inicijuotas tunelis
+		if (tunnel->serverSocket != -1)
+		{	
+			// Mano inicijuotas sujungimas
+			// Atspausdinu jo duomenis
+			json << "{tag:" << tunnel->tag
+				<< ",clientid:" << tunnel->clientid
+				<< ",dport:" << tunnel->dport
+				<< ",sport:" << tunnel->sport
+				<< ",serverSocket:" << tunnel->serverSocket
+				<< ",clientSocket:" << tunnel->clientSocket
+				<< ",status:" << tunnel->status
+				<< "},";
+
+			// Pildau irasu skaitliuka
+			recordCount++;
+		}
+
+		// Pereinu prie kito tunelio
+		tunnels->SetIteratorToNext();
+	}
+	// Biagiu irasu masyva
+	json << "],";
+	// Pranesu kiek irasu yra
+	json << "itemCount:" << recordCount << "}";
+
+	std::string data = this->putHTTPheaders(json.str());
+
+	// Siunciu suformuota srauta i nurodyta socketa
+	client->Send(data);
+}
+
+// Metodas skirtas grazinti ateinancius (prisjungta prie amnes) sujungimu sarasa JSON formatu
+void GClientLib::JSONapi::ReturnInboundConnectionList(JSONapiClient^ client)
+{
+	// Formuojamo srauto buferis
+	std::ostringstream json;
+	// Kintamasis suagantis irasu kieki
+	int recordCount = 0;
+	// Kintamasis skirtas apdoroti tuneli
+	Tunnel^ tunnel;
+
+	json << "{";
+	// Visada pranesame, kad pavyko suformuoti atsaka
+	json << "success:'true',";
+	// Pildau irasus
+	json << "items:[";
+	// Nustatau tuneliu saraso iteratoriu i pradzia
+	tunnels->ResetIterator();
+	// Kol nepasiekiau saraso pabaigos
+	while (tunnels->IsIteratorAtEnd())
+	{
+		// Begu per visus irasus
+		// Gaunu tuneli
+		tunnel = tunnels->GetTunnel();
+
+		// Tikrinu at tunelis yra mano inicijuotas tunelis
+		if (tunnel->serverSocket == -1)
+		{
+			// Mano inicijuotas sujungimas
+			// Atspausdinu jo duomenis
+			json << "{tag:" << tunnel->tag
+				<< ",clientid:" << tunnel->clientid
+				<< ",dport:" << tunnel->sport
+				<< ",sport:" << tunnel->dport
+				<< ",clientSocket:" << tunnel->clientSocket
+				<< ",status:" << tunnel->status
+				<< "},";
+
+			// Pildau irasu skaitliuka
+			recordCount++;
+		}
+
+		// Pereinu prie kito tunelio
+		tunnels->SetIteratorToNext();
+	}
+	// Biagiu irasu masyva
+	json << "],";
+	// Pranesu kiek irasu yra
+	json << "itemCount:" << recordCount << "}";
+
+	std::string data = this->putHTTPheaders(json.str());
+
+	// Siunciu suformuota srauta i nurodyta socketa
+	client->Send(data);
 }

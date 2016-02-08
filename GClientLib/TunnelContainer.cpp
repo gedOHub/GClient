@@ -31,8 +31,6 @@ Tunnel^ GClientLib::TunnelContainer::Add(int tag, int dport, int clientid, int s
 
 Tunnel^ GClientLib::TunnelContainer::Find(int tag)
 {
-	// Apsiskelbiu itearatoriu
-	cliext::list<cliext::pair<int, Tunnel^>>::iterator i;
 	// Begu per visa sarasa
 	for (i = this->sarasas.begin(); i != this->sarasas.end(); ++i){
 		// tirkinu ar atitinka tag'as
@@ -47,8 +45,6 @@ Tunnel^ GClientLib::TunnelContainer::Find(int tag)
 
 Tunnel^ GClientLib::TunnelContainer::Remove(int tag)
 {
-	// Nustatau iteratoriu
-	cliext::list<cliext::pair<int, Tunnel^>>::iterator i;
 	//Begu per visa sarasa
 	for (i = this->sarasas.begin(); i != this->sarasas.end(); ++i){
 		// Tirkinu ar yra toks tunelis
@@ -67,8 +63,6 @@ Tunnel^ GClientLib::TunnelContainer::Remove(int tag)
 // Keicia tunelio statusa
 void GClientLib::TunnelContainer::ChangeStatus(int tag, TunnelStatus status)
 {
-	// Nustatau iteratoriu
-	cliext::list<cliext::pair<int, Tunnel^>>::iterator i;
 	//Begu per visa sarasa
 	for (i = this->sarasas.begin(); i != this->sarasas.end(); ++i){
 		// Tirkinu ar yra toks tunelis
@@ -95,8 +89,6 @@ void GClientLib::TunnelContainer::Print()
 	{
 		// Sarasas ne tuscias
 		Tunnel^ tunelis;
-		// Nustatau iteratoriu
-		cliext::list<cliext::pair<int, Tunnel^>>::iterator i;
 		//Begu per visa sarasa
 		for (i = this->sarasas.begin(); i != this->sarasas.end(); ++i){
 			tunelis = i->second;
@@ -117,4 +109,25 @@ void GClientLib::TunnelContainer::Print()
 		System::Console::WriteLine("Jus nedalyvaujate jokiame sujungime");
 	}
 	System::Console::WriteLine();
+}
+
+// Metodas skirtas nustatyti iteratoriu i saraso pradzia
+void GClientLib::TunnelContainer::ResetIterator()
+{
+	i = this->sarasas.begin();
+}
+// Metodas skirtas patikrinti ar nepasiektas saraso galas su iteratoriumi
+bool GClientLib::TunnelContainer::IsIteratorAtEnd()
+{
+	return (i != this->sarasas.end());
+}
+// Metodas skirtas gauti tunelio objekta
+Tunnel^ GClientLib::TunnelContainer::GetTunnel()
+{
+	return i->second;
+}
+// Metodas skirtas perstumti iteratoriu prie kito objekto
+void GClientLib::TunnelContainer::SetIteratorToNext()
+{
+	i++;
 }

@@ -50,7 +50,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	consoleThread->Start();
 
 	// JSON API
-	JSONapi^ JSON_API = gcnew JSONapi(settings, ToServer);
+	JSONapi^ JSON_API = gcnew JSONapi(settings, ToServer, tunnels);
 	
 	// TODO: padaryti kad veiktu net ir tada kai nepavyksta uzkrauti JSON socketo
 	// WEB klientu socketas
