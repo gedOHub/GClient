@@ -36,8 +36,8 @@ GClientLib::gNetSocket::gNetSocket(string ip, string port, int tag, fd_set* skai
 	if (this->Socket != INVALID_SOCKET) {
 		// Pridedam socket prie sarasu
 		FD_SET(this->Socket, skaitomiSocket);
-		FD_SET(this->Socket, rasomiSocket);
-		FD_SET(this->Socket, klaidingiSocket);
+		//FD_SET(this->Socket, rasomiSocket);
+		//FD_SET(this->Socket, klaidingiSocket);
 	}
 }
 
