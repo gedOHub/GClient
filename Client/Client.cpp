@@ -32,8 +32,22 @@ int _tmain(int argc, _TCHAR* argv[])
 	FD_ZERO(&klaidingiSocket);
 	
 	//Sukuria socketa jungtis prie pagrindinio serverio
-	ToServerSocket^ ToServer = gcnew ToServerSocket(settings->getSetting("serverAddress"),
-		settings->getSetting("serverPort"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket, STOContainer, settings, tunnels);
+	ToServerSocket^ ToServer = nullptr;
+	// Tirkinu kuri protokola naudoti
+	if (settings->getSetting("protocol") == "TCP"){
+		ToServer = gcnew TCPToServerSocket(settings->getSetting("serverAddress"),
+			settings->getSetting("serverPort"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket, STOContainer, settings, tunnels);
+	}
+	else if (settings->getSetting("protocol") == "UDP"){
+		ToServer = gcnew UDPToServerSocket(settings->getSetting("serverAddress"),
+			settings->getSetting("serverPort"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket, STOContainer, settings, tunnels);
+	}
+	else {
+		printf("Gauta nezinoma protocol reiksme\n");
+		exit(999);
+	}
+		
+		
 	// Tikrinam ar pavyko uzmegsti rysi iki centrinio serverio
 	if(ToServer->GetSocket() == INVALID_SOCKET){
 		printf("Nepavyko sukurti objekto darbui su centriniu serveriu\n");

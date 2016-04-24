@@ -1,9 +1,11 @@
 #pragma once
 #include "ToServerSocket.h"
-ref class TCPToServerSocket :
-public ToServerSocket
-{
-public:
-	TCPToServerSocket();
-};
-
+namespace GClientLib {
+	ref class TCPToServerSocket :
+		public ToServerSocket
+	{
+	public:
+		TCPToServerSocket(string ip, string port, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket,
+			SocketToObjectContainer^ STOC, SettingsReader^ settings, TunnelContainer^ tunnel);
+	};
+}

@@ -161,8 +161,10 @@
     <ClInclude Include="Structures.h" />
     <ClInclude Include="TagGenerator.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TCPToServerSocket.h" />
     <ClInclude Include="ToServerSocket.h" />
     <ClInclude Include="TunnelContainer.h" />
+    <ClInclude Include="UDPToServerSocket.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
@@ -178,8 +180,10 @@
     <ClCompile Include="SocketToObjectContainer.cpp" />
     <ClCompile Include="SocketToSocketContainer.cpp" />
     <ClCompile Include="TagGenerator.cpp" />
+    <ClCompile Include="TCPToServerSocket.cpp" />
     <ClCompile Include="ToServerSocket.cpp" />
     <ClCompile Include="TunnelContainer.cpp" />
+    <ClCompile Include="UDPToServerSocket.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
