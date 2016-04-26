@@ -64,8 +64,8 @@ GClientLib::gNetSocket::gNetSocket(int socket, int tag, fd_set* skaitomiSocket, 
 	if (this->Socket != INVALID_SOCKET) {
 		// Pridedam socket prie sarasu
 		FD_SET(this->Socket, skaitomiSocket);
-		FD_SET(this->Socket, rasomiSocket);
-		FD_SET(this->Socket, klaidingiSocket);
+		//FD_SET(this->Socket, rasomiSocket);
+		//FD_SET(this->Socket, klaidingiSocket);
 	}
 }
 
@@ -162,11 +162,12 @@ void GClientLib::gNetSocket::CreateSocket(){
 		this->Socket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
 		//printf("Socket dekrptorius: %d\n", this->Socket);
 		// Sukurus socket iseinam is funkcijos
-		if (this->Socket != INVALID_SOCKET) {
+		if (this->Socket == INVALID_SOCKET) {
 			// Pranesam apie klaida kodel nepavyko sukurti socket
 			printf("Klaida kuriant socket: %ld\n", WSAGetLastError());
 			return;
 		}
+		else return;
 	}
 	// Jei nepavyko sukurti socketo
 	printf("Klaida kuriant socket: %d\n", WSAGetLastError());

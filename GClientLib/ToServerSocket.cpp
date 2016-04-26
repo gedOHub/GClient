@@ -22,9 +22,6 @@ GClientLib::ToServerSocket::ToServerSocket(string ip, string port, fd_set* skait
 }
 
 int GClientLib::ToServerSocket::Send(char* data, int lenght){
-	std::string sending(data, lenght);
-	cout << sending << endl;
-
 	int rSend = 0;
 	while (rSend != lenght){
 		rSend = rSend + send(this->Socket, &data[rSend], lenght, 0);
@@ -75,7 +72,7 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 		// Uzdarau sujungima
 		printf("Serveris uzdare sujungima :(\n");
 		// Bandau jungti sprie serverio is naujo
-		this->Reconnect();
+		this->ShutdownSocket();
 	}
 	else if (rRecv < 0){ // Sujungime ivyko klaida
 		printf("Klaida sujungime %d\n", this->Socket);
