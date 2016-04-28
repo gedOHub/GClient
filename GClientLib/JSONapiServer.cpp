@@ -35,9 +35,9 @@ void GClientLib::JSONapiServer::Bind(){
 			// salinu socketa is skaitomu saraso
 			FD_CLR(this->Socket, skaitomi);
 			// Salinu sokceta is rasomu saraso
-			FD_CLR(this->Socket, rasomi);
+			//FD_CLR(this->Socket, rasomi);
 			// Salinu socketa is klaidingu saraso
-			FD_CLR(this->Socket, klaidingi);
+			//FD_CLR(this->Socket, klaidingi);
 		}
 		else break;
 	}

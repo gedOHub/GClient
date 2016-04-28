@@ -80,7 +80,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -115,7 +115,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -161,8 +161,10 @@
     <ClInclude Include="Structures.h" />
     <ClInclude Include="TagGenerator.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TCPToServerSocket.h" />
     <ClInclude Include="ToServerSocket.h" />
     <ClInclude Include="TunnelContainer.h" />
+    <ClInclude Include="UDPToServerSocket.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
@@ -178,8 +180,10 @@
     <ClCompile Include="SocketToObjectContainer.cpp" />
     <ClCompile Include="SocketToSocketContainer.cpp" />
     <ClCompile Include="TagGenerator.cpp" />
+    <ClCompile Include="TCPToServerSocket.cpp" />
     <ClCompile Include="ToServerSocket.cpp" />
     <ClCompile Include="TunnelContainer.cpp" />
+    <ClCompile Include="UDPToServerSocket.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

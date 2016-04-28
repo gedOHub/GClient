@@ -27,7 +27,7 @@ namespace GClientLib {
 	ref class SocketToObjectContainer;
 
 	ref class gNetSocket {
-		protected:
+	protected:
 		fd_set* skaitomi;
 		fd_set* rasomi;
 		fd_set* klaidingi;
@@ -48,18 +48,18 @@ namespace GClientLib {
 		// Salina socketa is skaitomu, rasomu ir kalidingu sokcetu saras
 		void RemuveFromLists();
 
-		public:
+	public:
 		// Konstruktorius
 		gNetSocket(string ip, string port, int tag,
 			fd_set* skaitomiSocket,
 			fd_set* rasomiSocket,
 			fd_set* klaidingiSocket
-		);
+			);
 		gNetSocket(int socket, int tag,
 			fd_set* skaitomiSocket,
 			fd_set* rasomiSocket,
 			fd_set* klaidingiSocket
-		);
+			);
 		// Destruktorius
 		~gNetSocket();
 		// Graziname socket

@@ -19,6 +19,7 @@ void CLI::Start(){
 
 		// Komanda quit ir exit
 		if(zodis == "quit" || zodis == "exit"){
+
 			break;
 		}
 

@@ -37,6 +37,12 @@
     <Filter Include="Source Files\Sujungimai\Darbiniai">
       <UniqueIdentifier>{4816c7e1-28a7-43af-9b66-2d7367f25fc1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Sujungimai\Darbiniai\ToServerSocket">
+      <UniqueIdentifier>{f77e4203-ca3c-4e59-990c-c72ae3c12ead}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Sujungimai\Darbiniai\ToServerSocket">
+      <UniqueIdentifier>{7073329e-fe67-4ed1-9e8f-951501f0c120}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -87,14 +93,20 @@
     <ClInclude Include="ServerSocket.h">
       <Filter>Header Files\Sujungimai\Darbiniai</Filter>
     </ClInclude>
-    <ClInclude Include="ToServerSocket.h">
-      <Filter>Header Files\Sujungimai\Darbiniai</Filter>
-    </ClInclude>
     <ClInclude Include="JSONapi.h">
       <Filter>Header Files\JSON</Filter>
     </ClInclude>
     <ClInclude Include="TunnelContainer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ToServerSocket.h">
+      <Filter>Header Files\Sujungimai\Darbiniai\ToServerSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="TCPToServerSocket.h">
+      <Filter>Header Files\Sujungimai\Darbiniai\ToServerSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="UDPToServerSocket.h">
+      <Filter>Header Files\Sujungimai\Darbiniai\ToServerSocket</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -137,11 +149,17 @@
     <ClCompile Include="ServerSocket.cpp">
       <Filter>Source Files\Sujungimai\Darbiniai</Filter>
     </ClCompile>
-    <ClCompile Include="ToServerSocket.cpp">
-      <Filter>Source Files\Sujungimai\Darbiniai</Filter>
-    </ClCompile>
     <ClCompile Include="TunnelContainer.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ToServerSocket.cpp">
+      <Filter>Source Files\Sujungimai\Darbiniai\ToServerSocket</Filter>
+    </ClCompile>
+    <ClCompile Include="TCPToServerSocket.cpp">
+      <Filter>Source Files\Sujungimai\Darbiniai\ToServerSocket</Filter>
+    </ClCompile>
+    <ClCompile Include="UDPToServerSocket.cpp">
+      <Filter>Source Files\Sujungimai\Darbiniai\ToServerSocket</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
