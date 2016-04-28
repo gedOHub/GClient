@@ -66,8 +66,8 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 	using namespace std;
 	// Bandau gauti duoemis
 	// Nusiskaitau paketo antraste
-	int head_dydis = sizeof header;
-	int rRecv = recv(this->Socket, &buffer[0], head_dydis, 0);
+	int rRecv = this->Recive();
+	//int rRecv = ;
 	if (rRecv == 0){ // Klientas uzdare sujungima
 		// Uzdarau sujungima
 		printf("Serveris uzdare sujungima :(\n");
@@ -76,23 +76,16 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 	}
 	else if (rRecv < 0){ // Sujungime ivyko klaida
 		printf("Klaida sujungime %d\n", this->Socket);
+		wprintf(L"Klaidos pranesimas: %d\n", WSAGetLastError());
 	}
 	else { // Gauti duomenis, persiusiu i serveri
-		//printf("Gauta duomenu %d\n", rRecv);
+
+		printf("Gautas duomenu kiekis is serverio %d\n", rRecv);
 
 		this->head = (struct header*) &this->buffer[0];
 		// Atstatau zyme ir ilgi i tinkama pavidala
 		this->head->tag = ntohs(this->head->tag);
 		this->head->lenght = ntohl(this->head->lenght);
-
-		// Nusiskaitau pilna paketa
-		//cout << "[" << this->name << "]Laukiama " << this->head->lenght << endl;
-		int paketo_ilgis = this->head->lenght + sizeof(header);
-		while (rRecv != paketo_ilgis){
-			rRecv = rRecv + recv(this->Socket, &buffer[rRecv], paketo_ilgis - rRecv, 0);
-			//cout << "[" << this->name << "]Siuo metu turiu " << rRecv << endl;
-		}
-		//cout << "[" << this->name << "]Gavau " << rRecv << endl;
 
 		switch (this->head->tag){
 			// Atejo komanda is serverio
@@ -215,12 +208,12 @@ void GClientLib::ToServerSocket::CommandJsonList(int page, SOCKET destinationSoc
 
 void GClientLib::ToServerSocket::CommandListAck(int rRecv){
 	// Nustatau ar pavyko gauti klientu sarasa
-	listAckCommand* list = (struct listAckCommand*) &this->buffer[sizeof header];
+	listAckCommand* list = (struct listAckCommand*) &this->buffer[sizeof(header)];
 	if (list->success){
 
 		// Spausidnu klientu duomenis
 		Client* client;
-		int position = sizeof header + sizeof listAckCommand;
+		int position = sizeof (header) + sizeof (listAckCommand);
 		printf("-----------------------------------------------------------------------\n");
 		printf("| %10s | %16s | %16s | %16s |\n", "ID", "Sritis", "Kompiuteris", " Naudotojas ");
 		printf("-----------------------------------------------------------------------\n");
@@ -735,4 +728,9 @@ void GClientLib::ToServerSocket::PrintTunnelList()
 {
 	// Saukiu tuneliu saraso spausdinima
 	this->tunnels->Print();
+}
+
+int GClientLib::ToServerSocket::Recive(){
+	System::Console::WriteLine("Neigyvendintas metodas");
+	return -1;
 }

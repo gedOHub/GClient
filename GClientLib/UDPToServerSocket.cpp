@@ -6,6 +6,20 @@ GClientLib::UDPToServerSocket::UDPToServerSocket(string ip, string port, fd_set*
 	GClientLib::ToServerSocket(ip, port, skaitomiSocket, rasomiSocket, klaidingiSocket, STOC, settings, tunnel)
 {
 	this->name = "UDPToServerSocket";
+
+	sockaddr_in service;
+	service.sin_family = AF_INET;
+	service.sin_addr.s_addr = inet_addr(INADDR_ANY);
+	service.sin_port = htons(0);
+
+	bind(this->Socket, (SOCKADDR *)&service, sizeof(service));
+
+	// Pradedu keep alive gyja
+	this->StartAckThread();
+}
+
+GClientLib::UDPToServerSocket::~UDPToServerSocket(){
+	this->StopAckThread();
 }
 
 void GClientLib::UDPToServerSocket::CreateSocket(){
@@ -27,13 +41,82 @@ int GClientLib::UDPToServerSocket::Send( char* data, int lenght ){
 	// Pildau serverio adreso struktura
 	sockaddr_in serverAddress;
 	serverAddress.sin_family = AF_INET;
-	//int p = System::Convert::ToInt32(this->PORT->c_str());
-	serverAddress.sin_port = htons(1300);
-	serverAddress.sin_addr.s_addr = inet_addr("79.98.30.72");
+	serverAddress.sin_port = htons(this->GetPort());
+	serverAddress.sin_addr.s_addr = inet_addr(this->IP->c_str());
 
 	int rSend = 0;
-	while (rSend != lenght && rSend != -1 ){
-		rSend = rSend + sendto(this->Socket, &data[rSend], lenght, 0, (SOCKADDR *)&serverAddress, sizeof(serverAddress));
+
+
+	// Uzrakinu siuntimui objekta
+	// Kol negaliu uzrakinti
+	while (!this->LockSending()){
+		// Laukiu 10mili sekundziu
+		Sleep(10);
 	}
+
+	while (rSend != lenght && rSend != -1 ){
+		rSend = sendto(this->Socket, &data[rSend], lenght, 0, (SOCKADDR *)&serverAddress, sizeof(serverAddress));
+	}
+
+	// Atrakinu siuntima
+	this->UnlockSending();
+
 	return rSend;
+}
+
+void GClientLib::UDPToServerSocket::SendKeepAlive(){
+	while (this->live){
+		// Siunciu live paketa
+		this->Send(this->buffer, 1);
+		// Laukiu 1s
+		Thread::Sleep(1000);
+	}
+	System::Console::WriteLine("SendKeepAlive baigia darba");
+}
+
+bool GClientLib::UDPToServerSocket::LockSending(){
+	// Grazina uzrakto busena
+	// Tirkinu ar uzrakinta
+	if (this->locked == false)
+	{
+		// Uzrakinu
+		this->locked = true;
+	}
+	return this->locked;
+}
+
+bool GClientLib::UDPToServerSocket::UnlockSending(){
+	// Grazina uzrakto busena
+	// Atrakinu siuntimo uzrakta
+	this->locked = false;
+
+	return this->locked;
+}
+
+int GClientLib::UDPToServerSocket::GetPort(){
+	return std::atoi(this->PORT->c_str());
+}
+
+int GClientLib::UDPToServerSocket::Recive(){
+
+	sockaddr_in clientAddress;
+	int AddrSize = sizeof(clientAddress);
+
+	return recvfrom(this->Socket, &this->buffer[0], TenMBofChar, 0, (SOCKADDR *)& clientAddress, &AddrSize);
+}
+
+void GClientLib::UDPToServerSocket::StartAckThread(){
+	// Sukuriu thread aprasa
+	this->ackThreadDelegate = gcnew ThreadStart(this, &UDPToServerSocket::SendKeepAlive);
+	// Kuriu pacia gyja
+	this->ackThread = gcnew Thread(ackThreadDelegate);
+	
+	System::Console::WriteLine("Gyja pradeda darba");
+	
+	// Pradedu gyjos darba
+	this->ackThread->Start();
+}
+
+void GClientLib::UDPToServerSocket::StopAckThread(){
+	this->live = false;
 }

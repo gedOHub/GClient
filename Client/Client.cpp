@@ -139,5 +139,12 @@ int _tmain(int argc, _TCHAR* argv[])
 			} // if (FD_ISSET(i, &read_fds)) { pabaiga
 		} // for(int i = minD; i <= maxD; i++){ pabaiga
 	}
+
+	// Naikinu visus duomenis
+	delete settings;
+	delete STOContainer;
+	delete tunnels;
+	delete ToServer;
+
 	return 0;
 }

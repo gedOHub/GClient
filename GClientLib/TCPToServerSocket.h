@@ -7,5 +7,7 @@ namespace GClientLib {
 	public:
 		TCPToServerSocket(string ip, string port, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket,
 			SocketToObjectContainer^ STOC, SettingsReader^ settings, TunnelContainer^ tunnel);
+	protected:
+		virtual int Recive() override;
 	};
 }
