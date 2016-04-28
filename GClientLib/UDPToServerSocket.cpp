@@ -71,7 +71,7 @@ void GClientLib::UDPToServerSocket::SendKeepAlive(){
 		// Laukiu 1s
 		Thread::Sleep(1000);
 	}
-	System::Console::WriteLine("SendKeepAlive baigia darba");
+	//System::Console::WriteLine("SendKeepAlive baigia darba");
 }
 
 bool GClientLib::UDPToServerSocket::LockSending(){
@@ -111,7 +111,7 @@ void GClientLib::UDPToServerSocket::StartAckThread(){
 	// Kuriu pacia gyja
 	this->ackThread = gcnew Thread(ackThreadDelegate);
 	
-	System::Console::WriteLine("Gyja pradeda darba");
+	//System::Console::WriteLine("Gyja pradeda darba");
 	
 	// Pradedu gyjos darba
 	this->ackThread->Start();

@@ -80,7 +80,7 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 	}
 	else { // Gauti duomenis, persiusiu i serveri
 
-		printf("Gautas duomenu kiekis is serverio %d\n", rRecv);
+		//printf("Gautas duomenu kiekis is serverio %d\n", rRecv);
 
 		this->head = (struct header*) &this->buffer[0];
 		// Atstatau zyme ir ilgi i tinkama pavidala
