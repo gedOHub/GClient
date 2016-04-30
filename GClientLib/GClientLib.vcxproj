@@ -154,6 +154,7 @@
     <ClInclude Include="JSONapiServer.h" />
     <ClInclude Include="OutboundSocket.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SCTPToServerSocket.h" />
     <ClInclude Include="ServerSocket.h" />
     <ClInclude Include="SettingsReader.h" />
     <ClInclude Include="SocketToObjectContainer.h" />
@@ -175,6 +176,7 @@
     <ClCompile Include="JSONapiClient.cpp" />
     <ClCompile Include="JSONapiServer.cpp" />
     <ClCompile Include="OutboundSocket.cpp" />
+    <ClCompile Include="SCTPToServerSocket.cpp" />
     <ClCompile Include="ServerSocket.cpp" />
     <ClCompile Include="SettingsReader.cpp" />
     <ClCompile Include="SocketToObjectContainer.cpp" />
