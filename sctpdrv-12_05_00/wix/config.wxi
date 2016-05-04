@@ -1,0 +1,26 @@
+<Include>
+	<?define VersionMajor = 13 ?>
+	<?define VersionMinor = 1 ?>
+	<?define VersionRev   = 0 ?>
+  
+  <?if locale=ja-jp?>
+  <?define Language = 1042 ?>
+  <?define Codepage = 932 ?>
+  <?else?>
+  <?define Language = 1033 ?>
+  <?define Codepage = 1252 ?>
+  <?endif?>
+  
+	<?if $(var.TargetArch)=amd64 ?>
+	<?define ProductId="25127825-BB04-413F-BF0B-3339D327E8D9"?>
+	<?define UpgradeCode="5AC22676-703E-4B34-9789-1BBA695329A1"?>
+  <?define TargetArchIntel=x64 ?>
+	<?else?>
+	<?define ProductId="B8FB40C5-9314-47CA-93F4-8FF10A7BAA0E"?>
+	<?define UpgradeCode="CCDEDCA2-CC58-449D-80AB-86655678C4CE"?>
+  <?define TargetArchIntel=x86 ?>
+  <?endif?>
+
+  <?define StageDir   = ..\stage\$(var.OS)_$(var.TargetArch)?>
+  <?define StageDir32 = ..\stage\$(var.OS)_x86?>
+</Include>

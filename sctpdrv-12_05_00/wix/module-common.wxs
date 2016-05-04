@@ -1,0 +1,221 @@
+<?xml version='1.0'?>
+<!--
+/*
+ * Copyright (c) 2008 CO-CONV, Corp.
+ * Copyright (C) 2010-2013 Bruce Cran.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+-->
+
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'
+	xmlns:difx='http://schemas.microsoft.com/wix/DifxAppExtension'>
+  <Fragment>
+    <?include config.wxi ?>
+
+    <ComponentGroup Id='root'>
+      <ComponentRef Id='README.txt'/>
+      <ComponentRef Id='CHANGES.txt'/>
+      <ComponentRef Id='SctpDrv.chm'/>
+    </ComponentGroup>
+
+    <ComponentGroup Id='bin'>
+      <ComponentRef Id='spinstall.exe'/>
+      <ComponentRef Id='echo_client.exe'/>
+      <ComponentRef Id='echo_server.exe'/>
+      <ComponentRef Id='sctpsp.dll'/>
+      <ComponentRef Id='libsctp.a'/>
+      <ComponentRef Id='SctpDrv.SctpSocket.dll'/>
+      <?if $(var.TargetArch)=amd64 ?>
+      <ComponentRef Id='sctpsp32.dll'/>
+      <ComponentRef Id='libsctp32.a'/>
+      <ComponentRef Id='SctpDrv.SctpSocket32.dll'/>
+      <?endif ?>
+      <ComponentRef Id='sctpmon.dll'/>
+      <ComponentRef Id='sctpdrv.sys'/>
+    </ComponentGroup>
+
+    <ComponentGroup Id='inc'>
+      <ComponentRef Id='ws2sctp.h'/>
+      <ComponentRef Id="sctp.h"/>
+      <ComponentRef Id="sctp_uio.h"/>
+    </ComponentGroup>
+
+    <ComponentGroup Id='lib'>
+      <ComponentRef Id='sctpsp.lib'/>
+      <?if $(var.TargetArch)=amd64 ?>
+      <ComponentRef Id='sctpsp32.lib'/>
+      <?endif ?>
+    </ComponentGroup>
+
+    <ComponentGroup Id='src'>
+      <ComponentRef Id='echo_client.c'/>
+      <ComponentRef Id='echo_server.c'/>
+      <ComponentRef Id='echo_server2.c'/>
+    </ComponentGroup>
+
+    <DirectoryRef Id='inc'>
+      <Component Id="ws2sctp.h">
+        <File Source="..\apps\inc\ws2sctp.h" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='netinet'>
+      <Component Id="sctp.h">
+        <File Source="..\netinet\sctp.h"/>
+      </Component>
+
+      <Component Id="sctp_uio.h">
+        <File Source="..\netinet\sctp_uio.h"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='src'>
+      <Component Id="echo_client.c">
+        <File Source="..\apps\echo_client\echo_client.c" />
+      </Component>
+
+      <Component Id="echo_server.c">
+        <File Source="..\apps\echo_server\echo_server.c" />
+      </Component>
+
+      <Component Id="echo_server2.c">
+        <File Source="..\apps\echo_server2\echo_server2.c" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='bin'>
+      <Component Id="spinstall.exe">
+        <File Checksum="yes" Source="$(var.StageDir)\spinstall.exe" />
+      </Component>
+      <Component Id="echo_client.exe">
+        <File Checksum="yes" Source="$(var.StageDir)\echo_client.exe" />
+      </Component>
+      <Component Id="echo_server.exe">
+        <File Checksum="yes" Source="$(var.StageDir)\echo_server.exe" />
+      </Component>
+      <Component Id="sctpmon.dll">
+        <File KeyPath="yes" Checksum="yes" Source="$(var.StageDir)\sctpmon.dll" />
+
+        <RegistryKey Root='HKLM' Key='SOFTWARE\Microsoft\NetSh'>
+          <RegistryValue Type='string' Name='sctpmon' Value='[!sctpmon.dll]'/>
+        </RegistryKey>
+      </Component>
+
+      <Component Id="sctpsp.dll">
+        <File Source="$(var.StageDir)\sctpsp.dll" Checksum="yes"/>
+      </Component>
+
+      <?if $(var.TargetArch)=amd64?>
+      <Component Id="SctpDrv.SctpSocket.dll">
+        <File Source="$(var.StageDir)\SctpDrv.SctpSocket.dll" Checksum="yes" KeyPath="yes"/>
+        <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\[ProductName] x64" Value="[$SctpDrv.SctpSocket.dll]" Type="string"/>
+      </Component>
+      <?else?>
+      <Component Id="SctpDrv.SctpSocket.dll" Win64="no">
+        <File Id="SctpDrv.SctpSocket.dll" Source="$(var.StageDir)\SctpDrv.SctpSocket.dll" Checksum="yes"/>
+        <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\[ProductName] x86" Value="[$SctpDrv.SctpSocket.dll]" Type="string"/>
+      </Component>
+      <?endif?>
+      
+      <Component Id="sctpdrv.sys">
+        <?if $(var.OS)=xp?>
+        <File Name="sctpdrv.inf" Source="sctpdrv-winxp.inf" Checksum="yes" />
+        <?else?>
+        <File Name="sctpdrv.inf" Source="sctpdrv.inf"/>
+        <?endif?>
+
+        <File Source="$(var.StageDir)\sctpdrv.cat" />
+        <File Source="$(var.StageDir)\sctpdrv.sys" Checksum="yes" KeyPath="yes" />
+
+        <RegistryKey Root='HKLM' Key='System\CurrentControlSet\Services\Eventlog\System\sctpdrv'>
+          <RegistryValue Name='EventMessageFile' Type='expandable' Value='%SystemRoot%\System32\drivers\sctpdrv.sys'/>
+          <RegistryValue Name='TypesSupported' Type='integer' Value='7'/>
+        </RegistryKey>
+
+        <difx:Driver AddRemovePrograms='no' DeleteFiles='yes' ForceInstall='yes' Legacy='yes'/>
+      </Component>
+    </DirectoryRef>
+
+    <?if $(var.TargetArch)=amd64?>
+    <DirectoryRef Id="bin32">
+      <Component Id="sctpsp32.dll" Win64="no">
+        <File Id="sctpsp32.dll" Source="$(var.StageDir32)\sctpsp.dll" Checksum="yes"/>
+      </Component>
+      <Component Id="SctpDrv.SctpSocket32.dll" Win64="no" Guid="B290F62F-7E2D-4F38-B4FD-C45FC4E5099D">
+        <File Id="SctpDrv.SctpSocket32.dll" Source="$(var.StageDir32)\SctpDrv.SctpSocket.dll" Checksum="yes" KeyPath="yes"/>
+        <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework\v4.0.30319\AssemblyFoldersEx\[ProductName] x86" Value="[$SctpDrv.SctpSocket32.dll]" Type="string"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="lib32">
+      <Component Id="sctpsp32.lib" Win64="no">
+        <File Id="sctpsp32.lib" Source="$(var.StageDir32)\sctpsp.lib" />
+      </Component>
+      <Component Id="libsctp32.a" Win64="no">
+        <File Id="libsctp32.a" Name="libsctp.a" KeyPath="yes"
+          Source="$(var.StageDir32)\sctpsp.lib" />
+      </Component>
+    </DirectoryRef>
+    <?endif?>
+    
+
+    <DirectoryRef Id="lib">
+      <Component Id="sctpsp.lib">
+        <File Source="$(var.StageDir)\sctpsp.lib" />
+      </Component>
+      <Component Id="libsctp.a">
+        <File Id="libsctp.a" Name="libsctp64.a" Source="$(var.StageDir)\sctpsp.lib" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id='SctpDrv'>
+      <Component Id="README.txt">
+        <File Source="README.txt"/>
+      </Component>
+      <Component Id="CHANGES.txt">
+        <File Source="..\CHANGES.txt"/>
+      </Component>
+      <Component Id="SctpDrv.chm">
+        <File Source="..\doc\SctpDrv.chm"/>
+      </Component>
+    </DirectoryRef>
+
+    <InstallExecuteSequence>
+      <?if $(var.TargetArch)=amd64 ?>
+      <Custom Action="SctpInstallProvider" After="MsiProcessDrivers">NOT (REMOVE="ALL")</Custom>
+      <Custom Action="SctpInstallProviderSysWow64" After="MsiProcessDrivers">NOT (REMOVE="ALL")</Custom>
+      <Custom Action="SctpUninstallProvider" Before="MsiProcessDrivers">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+      <Custom Action="SctpUninstallProviderSysWow64" Before="MsiProcessDrivers">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+      <?endif ?>
+      <?if $(var.TargetArch)=x86 ?>
+      <Custom Action="SctpInstallProvider" After="MsiProcessDrivers">NOT (REMOVE="ALL")</Custom>
+      <Custom Action="SctpUninstallProvider" Before="MsiProcessDrivers">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+      <?endif ?>
+
+      <?if $(var.OS)!=xp ?>
+      <Custom Action="SctpAddFirewallRule" After="MsiProcessDrivers">NOT (REMOVE="ALL")</Custom>
+      <?endif ?>
+    </InstallExecuteSequence>
+  </Fragment>
+</Wix>

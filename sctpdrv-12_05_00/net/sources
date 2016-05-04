@@ -1,0 +1,18 @@
+!include ..\sources.inc
+
+TARGETNAME=net
+TARGETTYPE=LIBRARY
+
+INCLUDES= \
+    ..; \
+    ..\algrthms; \
+    ..\subr; \
+    ..\net; \
+    ..\netinet; \
+    $(DDK_INC_PATH)
+
+SOURCES= \
+    if.c \
+    radix.c \
+    radix_mpath.c \
+    route.c

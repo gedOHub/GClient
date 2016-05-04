@@ -1,0 +1,65 @@
+; SctpDrv driver setup file
+; Copyright (c) 2010-2013 Bruce Cran
+
+[Version]
+Signature      = "$WINDOWS NT$"
+Class          = NetTrans
+ClassGUID      = {4D36E975-E325-11CE-BFC1-08002BE10318}
+Provider       = %BruceCran%
+DriverVer      = 01/05/2013,13.1.0
+DriverPackageType        = KernelService
+DriverPackageDisplayName = %SctpDesc%
+CatalogFile    = sctpdrv.cat
+
+[Manufacturer]
+%BruceCran%      = sctpdrv,NTx86,NTamd64
+
+[SctpDrv.NTx86]
+%SctpDesc%     = DefaultInstall, BruceCran_SctpDrv
+
+[SctpDrv.NTamd64]
+%SctpDesc%     = DefaultInstall, BruceCran_SctpDrv
+
+[DestinationDirs]
+DefaultDestDir = 11
+Sctp.DriverFile= 12
+
+[SourceDisksNames]
+1              = %Disk1%
+
+[SourceDisksFiles]
+sctpdrv.sys       = 1
+
+[DefaultInstall]
+OptionDesc     = %SctpDesc%
+CopyFiles      = Sctp.DriverFile
+
+[Sctp.DriverFile]
+sctpdrv.sys,,,2
+
+[DefaultInstall.Services]
+AddService     = sctpdrv,0x800,DriverService
+
+; Driver specification for NT > 6 (Vista and newer)
+; Use AutoStart StartType because BFE isn't a boot-time service
+[DriverService]
+DisplayName    = %SctpDesc%
+Description    = %SctpDesc%
+ServiceBinary  = %12%\sctpdrv.sys
+ServiceType    = 1 ; SERVICE_KERNEL_DRIVER
+StartType      = 2 ; SERVICE_AUTO_START
+ErrorControl   = 1 ; SERVICE_ERROR_NORMAL
+LoadOrderGroup = NetworkProvider
+Dependencies   = Tcpip,BFE,Afd
+
+[DefaultUninstall]
+DelFiles       = Sctp.DriverFile
+
+[DefaultUninstall.Services]
+DelService     = sctpdrv,0x200
+
+[Strings]
+BruceCran      = "Bruce Cran"
+SctpDesc       = "SCTP Driver"
+SctpDrv        = "sctpdrv"
+Disk1          = "sctpdrv source media"

@@ -109,6 +109,9 @@
       <Filter>Header Files\Sujungimai\Darbiniai\ToServerSocket</Filter>
     </ClInclude>
     <ClInclude Include="SCTPToServerSocket.h">
+      <Filter>Header Files\Sujungimai\Darbiniai\ToServerSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="usrsctp\usrsctp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -165,7 +168,7 @@
       <Filter>Source Files\Sujungimai\Darbiniai\ToServerSocket</Filter>
     </ClCompile>
     <ClCompile Include="SCTPToServerSocket.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Sujungimai\Darbiniai\ToServerSocket</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr" lang="en">
+<head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+  <title>Getting the source and building SctpDrv</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <meta content="Bruce Cran" name="author">
+  <meta content="Instructions for getting the SctpDrv source from the Subversion repository and
+    building the code" name="description">
+  <meta content="sctpdrv, sctp, compiling, subversion, building, source" name="keywords">
+  <meta content="Copyright &copy; 2010 Bruce Cran">
+</head>
+<body>
+<div id="wrap">
+<!-- Navigation menu -->
+<div id="nav">
+<h3>Navigation</h3>
+<ul>
+  <li><a href="http://www.bluestop.org/SctpDrv/">Home</a></li>
+</ul>
+
+<h4>Documentation</h4>
+<ul>
+  <li><a href="index.html">Introduction</a></li>
+  <li><a href="sctp.4.html">SCTP stack overview</a></li>
+  <li><a href="development.html">Development using SctpDrv</a></li>
+  <li>Source code and building</li>
+  <li><a href="debugging.html">Debugging SctpDrv</a></li>
+</ul>
+
+<h4>SCTP API</h4>
+<ul>
+  <li><a href="sctp_bindx.3.html">sctp_bindx</a></li>
+  <li><a href="sctp_connectx.3.html">sctp_connectx</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freepaddrs</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freeladdrs</a></li>
+  <li><a href="sctp_getaddrlen.3.html">sctp_getaddrlen</a></li>
+  <li><a href="sctp_getassocid.3.html">sctp_getassocid</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getpaddrs</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getladdrs</a></li>
+  <li><a href="sctp_opt_info.3.html">sctp_opt_info</a></li>
+  <li><a href="sctp_peeloff.2.html">sctp_peeloff</a></li>
+  <li><a href="sctp_recvmsg.3.html">sctp_recvmsg</a></li>
+  <li><a href="sctp_send.3.html">sctp_send</a></li>
+  <li><a href="sctp_send.3.html">sctp_sendx</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsg</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsgx</a></li>
+</ul>
+</div>
+
+
+<div id="main">
+<h2>Getting and building the code</h2>
+<span style="font-weight: bold;">Getting the source code</span>
+<p>
+The latest source code is available from the <a href="http://mercurial.selenic.com/">Mercurial</a> server at
+<a href="http://code.bluestop.org/sctpdrv/">http://code.bluestop.org/sctpdrv/</a> :<br><br>
+<code>hg clone https://code.bluestop.org/sctpdrv</code>
+<br><br>
+On Windows, <a href="http://tortoisehg.bitbucket.org/">TortoiseHG</a>
+provides a much more user-friendly interface to Mercurial repositories
+than using the command line.
+</p><p>
+Weekly source snapshots from HG tip can be found in <a href="http://www.bluestop.org/SctpDrv/weekly/">http://www.bluestop.org/SctpDrv/weekly/</a>.
+</p><p>
+A web interface is also available which allows you to browse the files,
+see the history etc. without installing a Mercurial client. It
+can be found at <a href="http://code.bluestop.org/sctpdrv/src">http://code.bluestop.org/sctpdrv/src</a>.
+</p>
+
+<h3>Building SctpDrv</h3>
+<h4>Prerequisites</h4>
+<ul>
+  <li>Microsoft WDK (Windows Driver Kit) 7.1. It can be downloaded from
+    <a href="http://www.microsoft.com/whdc/DevTools/WDK/WDKpkg.mspx">http://www.microsoft.com/whdc/DevTools/WDK/WDKpkg.mspx</a></li>
+  <li><a href="http://wix.sourceforge.net/">WiX</a> (Windows Installer
+XML) 3.5. It can be downloaded from <a href="http://wix.sourceforge.net/downloadv3.html">http://wix.sourceforge.net/downloadv35.html</a>.
+  </li>
+</ul>
+
+<h4>Building</h4>
+<p>
+To build the driver and
+userland library, you'll need to run the <em>Command Prompt</em>.<br>
+'cd' into the top-level directory (the one containing the README file)
+and run the command:
+<br><br>
+<code>dobuild.cmd</code>
+</p><p>
+To install the driver on 64-bit Windows (Vista or newer) the driver
+must be digitally signed. For testing and development it's
+possible to test-sign the driver and enable Windows to load drivers
+which have been self-signed.
+</p>
+<p>
+SctpDrv is signed with a test certificate by default, so all that is required is to enable Windows to load test-signed drivers. To do so, follow the instructions at
+<a href="http://msdn.microsoft.com/en-us/library/dd419901.aspx">http://msdn.microsoft.com/en-us/library/dd419901.aspx</a>.
+</p><p>
+Once the build has completed successfully, there should be 5 MSI
+files in the <code>wix\en-us and wix\jp-jp</code> directories
+named <code>SctpDrv-WinXP_x86.msi</code>, <code>SctpDrv-WinLH_x86.msi</code>, <code>SctpDrv-WinLH_x64.msi</code>, <code>SctpDrv-Win7_x86</code> and <code>SctpDrv-Win7_x64.msi</code>.
+Run the WinXP_x86 version on 32-bit Windows XP/2003, WinLH on Vista/2008 and the Win7 version on Windows 7/2008R2. The x86 version should be used for 32-bit Windows and the x64 MSI for 64-bit Windows. Note that IA64 aka Itanium isn't supported.
+</p>
+
+</div>
+
+<div id="footer">
+<hr style="width: 100%; height: 2px;">
+Copyright (C) 2010 Bruce Cran.
+</div>
+</div>
+
+</body>
+</html>

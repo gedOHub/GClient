@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr" lang="en">
+<head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+  <title>Man page of SCTP_GETADDRLEN</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <meta content="Bruce Cran" name="author">
+  <meta content="The manual page for sctp_getaddrlen - return the address length
+    of an address family" name="description">
+  <meta content="sctpdrv, sctp, sctp_getaddrlen, sctp api" name="keywords">
+</head>
+<body>
+<div id="wrap">
+<!-- Navigation menu -->
+<div id="nav">
+<h3>Navigation</h3>
+<ul>
+  <li><a href="http://www.bluestop.org/SctpDrv/">Home</a></li>
+</ul>
+
+<h4>Documentation</h4>
+<ul>
+  <li><a href="index.html">Introduction</a></li>
+  <li><a href="sctp.4.html">SCTP stack overview</a></li>
+  <li><a href="development.html">Development using SctpDrv</a></li>
+  <li><a href="building.html">Source code and building</a></li>
+  <li><a href="debugging.html">Debugging SctpDrv</a></li>
+</ul>
+
+<h4>SCTP API</h4>
+<ul>
+  <li><a href="sctp_bindx.3.html">sctp_bindx</a></li>
+  <li><a href="sctp_connectx.3.html">sctp_connectx</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freepaddrs</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freeladdrs</a></li>
+  <li>sctp_getaddrlen</li>
+  <li><a href="sctp_getassocid.3.html">sctp_getassocid</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getpaddrs</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getladdrs</a></li>
+  <li><a href="sctp_opt_info.3.html">sctp_opt_info</a></li>
+  <li><a href="sctp_peeloff.2.html">sctp_peeloff</a></li>
+  <li><a href="sctp_recvmsg.3.html">sctp_recvmsg</a></li>
+  <li><a href="sctp_send.3.html">sctp_send</a></li>
+  <li><a href="sctp_send.3.html">sctp_sendx</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsg</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsgx</a></li>
+</ul>
+</div>
+
+
+<div id="main">
+
+<h1>SCTP_GETADDRLEN</h1>
+<hr>
+<h2>NAME</h2>
+<b>sctp_getaddrlen</b> - return the address length of an address family
+
+<h2>LIBRARY</h2>
+sctpsp.dll (sctpsp.lib)
+
+<h2>SYNOPSIS</h2>
+
+<b>#include &lt;winsock2.h&gt;<br>
+#include &lt;ws2tcpip.h&gt;<br>
+#include &lt;ws2sctp.h&gt;</b><br>
+<br>
+<span class="param">int</span><br>
+<b>sctp_getaddrlen</b>(<span class="param">int family</span>);
+
+<h2>DESCRIPTION</h2>
+The <b>sctp_getaddrlen()</b> function returns the size of a specific address family.
+This function is provided for application binary compatability since it
+provides the application with the size the operating system
+thinks the specific address family is. Note that the function
+will actually create an SCTP socket and then gather the
+information via a <b>getsockopt()</b> system calls.
+If for some reason a SCTP socket cannot be created or the <b>getsockopt()</b>
+call fails, an error will be returned with <i>errno</i>
+set as specified in the <b>socket()</b> or <b>getsockopt()</b>
+system call.
+
+<h2>RETURN VALUES</h2>
+The call returns the number of bytes that the operating
+system expects for the specific address family or SOCKET_ERROR (-1).
+
+<h2>ERRORS</h2>
+The <b>sctp_getaddrlen()</b> function can return the following errors:
+
+<dl>
+  <dt>[WSAEINVAL]</dt>
+  <dd>The address family specified does NOT exist.</dd>
+</dl>
+
+<h2>SEE ALSO</h2>
+<a href="http://msdn.microsoft.com/en-us/library/ms738544%28VS.85%29.aspx">getsockopt(msdn)</a>,
+<a href="http://msdn.microsoft.com/en-us/library/ms740506%28VS.85%29.aspx">socket(msdn)</a>,
+<a href="sctp.4.html">sctp(4)</a><br>
+<hr>
+Time: 11:22:30 GMT, January 31, 2010<br><br>
+<em>Adapted for SctpDrv from the FreeBSD manual page <a href="http://www.freebsd.org/cgi/man.cgi?query=sctp_getaddrlen&amp;manpath=FreeBSD+8.0-RELEASE">sctp_getaddrlen(3)</a><br>
+<a href="http://www.freebsd.org/copyright/">Legal Notices</a> | © 1995-2010 The FreeBSD Project. All rights reserved.</em>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr" lang="en">
+<head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+  <title>Developing SCTP applications using SctpDrv</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <meta content="Bruce Cran" name="author">
+  <meta content="Copyright &copy; 2010 Bruce Cran" name="copyright">
+  <meta content="How to start developing applications using SctpDrv - where to find the
+    headers and libraries" name="description">
+  <meta content="sctpdrv, sctp, developing, headers" name="keywords">
+</head>
+<body>
+<div id="wrap">
+<!-- Navigation menu -->
+<div id="nav">
+<h3>Navigation</h3>
+<ul>
+  <li><a href="http://www.bluestop.org/SctpDrv/">Home</a></li>
+</ul>
+
+<h4>Documentation</h4>
+<ul>
+  <li><a href="index.html">Introduction</a></li>
+  <li><a href="sctp.4.html">SCTP stack overview</a></li>
+  <li>Development using SctpDrv</li>
+  <li><a href="building.html">Source code and building</a></li>
+  <li><a href="debugging.html">Debugging SctpDrv</a></li>
+</ul>
+
+<h4>SCTP API</h4>
+<ul>
+  <li><a href="sctp_bindx.3.html">sctp_bindx</a></li>
+  <li><a href="sctp_connectx.3.html">sctp_connectx</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freepaddrs</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freeladdrs</a></li>
+  <li><a href="sctp_getaddrlen.3.html">sctp_getaddrlen</a></li>
+  <li><a href="sctp_getassocid.3.html">sctp_getassocid</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getpaddrs</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getladdrs</a></li>
+  <li><a href="sctp_opt_info.3.html">sctp_opt_info</a></li>
+  <li><a href="sctp_peeloff.2.html">sctp_peeloff</a></li>
+  <li><a href="sctp_recvmsg.3.html">sctp_recvmsg</a></li>
+  <li><a href="sctp_send.3.html">sctp_send</a></li>
+  <li><a href="sctp_send.3.html">sctp_sendx</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsg</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsgx</a></li>
+</ul>
+</div>
+
+
+<div id="main">
+<h2>Developing SCTP applications using SctpDrv<br>
+</h2>
+
+<hr>
+
+The SctpDrv installer adds libraries and headers during a standard installation which can be used to develop SCTP applications.<br>
+<br>
+SctpDrv installs its files to C:\Program Files\SctpDrv: an import library can be found in lib\sctpsp.lib<br>
+<br>
+The DLL which applications which use SCTP specific functionality (as
+opposed to using nothing but the standard Winsock/BSD socket calls)
+need to link against is sctpsp.dll and can be found in C:\Program
+Files\SctpDrv\bin; on 64-bit systems, a 32-bit version of sctpsp.dll is
+installed to C:\Program Files (x86)\SctpDrv\bin .<br>
+<br>
+To use the SCPI API or the SCTP specific structures, include ws2sctp.h from C:\Program Files\SctpDrv\inc\ws2sctp.h .<br>
+<br>
+
+
+<hr>Time: 13:16:10 GMT, June 29, 2010
+</div>
+</div></body></html>

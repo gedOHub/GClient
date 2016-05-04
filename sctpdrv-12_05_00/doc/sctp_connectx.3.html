@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr" lang="en">
+<head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+  <title>Man page of SCTP_CONNECTX</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <meta content="Bruce Cran" name="author">
+  <meta content="The manual page for sctp_connectx - connect an SCTP socket with multiple
+    destination addresses." name="description">
+  <meta content="sctpdrv, sctp, stp_connectx, sctp api" name="keywords">
+</head>
+<body>
+<div id="wrap">
+<!-- Navigation menu -->
+<div id="nav">
+<h3>Navigation</h3>
+<ul>
+  <li><a href="http://www.bluestop.org/SctpDrv/">Home</a></li>
+</ul>
+
+<h4>Documentation</h4>
+<ul>
+  <li><a href="index.html">Introduction</a></li>
+  <li><a href="sctp.4.html">SCTP stack overview</a></li>
+  <li><a href="development.html">Development using SctpDrv</a></li>
+  <li><a href="building.html">Source code and building</a></li>
+  <li><a href="debugging.html">Debugging SctpDrv</a></li>
+</ul>
+
+<h4>SCTP API</h4>
+<ul>
+  <li><a href="sctp_bindx.3.html">sctp_bindx</a></li>
+  <li>sctp_connectx</li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freepaddrs</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freeladdrs</a></li>
+  <li><a href="sctp_getaddrlen.3.html">sctp_getaddrlen</a></li>
+  <li><a href="sctp_getassocid.3.html">sctp_getassocid</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getpaddrs</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getladdrs</a></li>
+  <li><a href="sctp_opt_info.3.html">sctp_opt_info</a></li>
+  <li><a href="sctp_peeloff.2.html">sctp_peeloff</a></li>
+  <li><a href="sctp_recvmsg.3.html">sctp_recvmsg</a></li>
+  <li><a href="sctp_send.3.html">sctp_send</a></li>
+  <li><a href="sctp_send.3.html">sctp_sendx</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsg</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsgx</a></li>
+</ul>
+</div>
+
+
+<div id="main">
+
+<h1>SCTP_CONNECTX</h1><hr>
+
+<h2>NAME</h2>
+
+<b>sctp_connectx</b> - connect an SCTP socket with multiple destination addresses.
+
+<h2>LIBRARY</h2>sctpsp.dll (sctpsp.lib)
+<h2>SYNOPSIS</h2>
+
+<b>#include &lt;winsock2.h&gt;<br>
+#include &lt;ws2tcpip.h&gt;<br>
+#include &lt;ws2sctp.h&gt;</b><br>
+<br>
+<span class="param">int</span><br>
+<b>sctp_connectx</b>(<span class="param">int s</span>, <span class="param">const struct sockaddr *</span>, <span class="param">int addrcnt</span>, <span class="param">sctp_assoc_t *</span>);
+
+<h2>DESCRIPTION</h2>
+<p>
+The <b>sctp_connectx()</b> call attempts to initiate an association to a peer SCTP endpoint.
+The call operates similarly to <b>connect()</b> but it also provides the ability to specify multiple destination
+addresses for the peer. This allows a fault tolerant method of initiating an association. When one of the peers addresses
+is unreachable, the subsequent listed addresses will also be used to set up the association with the peer.
+</p><p>
+The user also needs to consider that any address listed in an <b>sctp_connectx()</b> call is also considered "confirmed".
+A confirmed address is one in which the SCTP transport will trust is a part of the association
+and it will not send a confirmation heartbeat to it with a random nonce.
+</p><p>
+If the peer SCTP stack does not list one or more of the provided addresses in its response message then
+the extra addresses sent in the <b>sctp_connectx()</b> call will be silently discarded from the association.
+On successful completion the provided <span class="param">sctp_assoc_t *</span> will be
+filled in with the association identification of the newly forming association.
+</p>
+
+<h2>RETURN VALUES</h2>
+
+The call returns 0 on success and SOCKET_ERROR (-1) upon failure.
+
+<h2>ERRORS</h2>
+
+The <b>sctp_connectx()</b> function can return the following errors:
+<dl>
+  <dt>[WSAEINVAL]</dt>
+  <dd>An address listed has an invalid family or no addresses were provided.</dd>
+  <dt>[WSAEFAULT]</dt>
+  <dd>The size of the address list exceeds the amount of data provided.</dd>
+  <dt>[WSAEBADF]</dt>
+  <dd>The argument <span class="param">s</span> is not a valid descriptor.</dd>
+  <dt>[WSAENOTSOCK]</dt>
+  <dd>The argument <span class="param">s</span> is not a socket.</dd>
+</dl>
+
+<h2>SEE ALSO</h2>
+
+<a href="http://msdn.microsoft.com/en-us/library/ms737625%28VS.85%29.aspx">connect(msdn)</a>,
+<a href="sctp.4.html">sctp(4)</a><br>
+
+<hr>
+Time: 11:22:30 GMT, January 31, 2010<br><br>
+<em>Adapted for SctpDrv from the FreeBSD manual page <a href="http://www.freebsd.org/cgi/man.cgi?query=sctp_connectx&amp;manpath=FreeBSD+8.0-RELEASE">sctp_connectx(3)</a><br>
+<a href="http://www.freebsd.org/copyright/">Legal Notices</a> | © 1995-2010 The FreeBSD Project. All rights reserved.</em>
+</div>
+</div>
+</body>
+</html>

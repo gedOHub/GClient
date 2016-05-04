@@ -22,9 +22,15 @@
 #pragma comment (lib, "Ws2_32.lib")
 #using <mscorlib.dll>
 
-#include <windows.h>
 #include <winsock2.h>
-#include <ws2tcpip.h>
+#include <mswsock.h>
+#include <WS2tcpip.h>
+//#include <WS2sctp.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include <iphlpapi.h>
 #include <stdio.h>
 #include <process.h>

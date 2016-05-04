@@ -1,0 +1,32 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=SctpDrv.chm
+Contents file=SctpDrv.hhc
+Default topic=index.html
+Display compile progress=No
+Full-text search=Yes
+Index file=SctpDrv.hhk
+Language=0x409 English (United States)
+Title=SctpDrv Help
+
+
+[FILES]
+sctp.4.html
+sctp_bindx.3.html
+sctp_connectx.3.html
+sctp_freepaddrs.3.html
+sctp_getaddrlen.3.html
+sctp_getassocid.3.html
+sctp_getpaddrs.3.html
+sctp_opt_info.3.html
+sctp_recvmsg.3.html
+sctp_send.3.html
+sctp_sendmsg.3.html
+sctp_peeloff.2.html
+development.html
+index.html
+debugging.html
+building.html
+
+[INFOTYPES]
+

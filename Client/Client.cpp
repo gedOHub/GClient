@@ -42,6 +42,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		ToServer = gcnew UDPToServerSocket(settings->getSetting("serverAddress"),
 			settings->getSetting("serverPort"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket, STOContainer, settings, tunnels);
 	}
+	else if (settings->getSetting("protocol") == "SCTP"){
+		ToServer = gcnew SCTPToServerSocket(settings->getSetting("serverAddress"),
+			settings->getSetting("serverPort"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket, STOContainer, settings, tunnels);
+	}
 	else {
 		printf("Gauta nezinoma protocol reiksme\n");
 		exit(999);

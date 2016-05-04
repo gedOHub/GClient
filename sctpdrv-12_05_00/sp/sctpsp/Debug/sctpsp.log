@@ -1,0 +1,9 @@
+﻿Build started 2016-05-04 23:12:26.
+     1>Project "D:\git\GClient\sctpdrv-12_05_00\sp\sctpsp\sctpsp.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         sctpsp.vcxproj -> D:\git\GClient\Debug\sctpsp.dll
+     1>Done Building Project "D:\git\GClient\sctpdrv-12_05_00\sp\sctpsp\sctpsp.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.09
