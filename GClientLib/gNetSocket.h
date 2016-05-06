@@ -41,13 +41,14 @@ namespace GClientLib {
 		bool read, write;
 		char* name;
 		// ---Funkcijos---
-		// Gaunam galimus adresu varaintus
-		void GetAddressInfo();
+		
 		// Sukuriamas socketas
 		virtual void CreateSocket();
 		// Salina socketa is skaitomu, rasomu ir kalidingu sokcetu saras
 		void RemuveFromLists();
-
+	protected:
+		// Gaunam galimus adresu varaintus
+		virtual void GetAddressInfo();
 	public:
 		// Konstruktorius
 		gNetSocket(string ip, string port, int tag,

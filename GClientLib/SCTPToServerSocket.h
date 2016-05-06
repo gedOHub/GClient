@@ -18,26 +18,15 @@ namespace GClientLib{
 		virtual bool CloseSocket()override{ return false; }
 		// Naikiname sujungima
 		virtual void ShutdownSocket()override{}
-		// Jungaimies prie nurodito prievado
-		//virtual void Connect()override{}
-		// bando inicijuoti nauja sujungima
-		virtual void Reconnect()override{}
-		// Klausomes nurodito prievado
-		virtual void Listen()override{}
-		// TODO: Kaip turetu buti igyvendinti sie metodai
-		// Naujo kliento priemimas
-		virtual int Accept(SocketToObjectContainer^ container)override{ return -1; };
 		// Duomenu siuntimas
 		virtual int Send(char* data, int lenght) override;
-		// Duomenu gavimas
-		virtual void Recive(SocketToObjectContainer^ container)override{}
-
-
+		// Metodas sksirtas priimti duomenis
+		virtual int Recive() override;
 
 	protected:
-		// Sukuriamas socketas
-		virtual void CreateSocket()override;
+		void GetAddressInfo() override;
 	private:
+		
 	};
 }
 

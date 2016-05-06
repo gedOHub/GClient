@@ -98,7 +98,6 @@ int GClientLib::UDPToServerSocket::GetPort(){
 }
 
 int GClientLib::UDPToServerSocket::Recive(){
-
 	sockaddr_in clientAddress;
 	int AddrSize = sizeof(clientAddress);
 

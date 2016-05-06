@@ -16,15 +16,6 @@ GClientLib::SCTPToServerSocket::~SCTPToServerSocket()
 	printf("Obejktas %s baigia darba\n", this->name);
 }
 
-void GClientLib::SCTPToServerSocket::CreateSocket(){
-	// Nustatau rezultato protokola
-	this->addrResult->ai_protocol = IPPROTO_SCTP;
-	// Kuriu socketa
-	GClientLib::gNetSocket::CreateSocket();
-	// Isvalom adreso informacija
-	freeaddrinfo(this->addrResult);
-}
-
 int GClientLib::SCTPToServerSocket::Send(char* data, int lenght){
 	int returnValue = 0;
 	returnValue = sctp_send(this->Socket, data, lenght, NULL, 0);
@@ -34,4 +25,36 @@ int GClientLib::SCTPToServerSocket::Send(char* data, int lenght){
 	return returnValue;
 }
 
+// Gaunam galimus adresu varaintus
+void GClientLib::SCTPToServerSocket::GetAddressInfo(){
+	// Laikinieji kintamieji
+	struct addrinfo *result, hints;
+	// Nustatom paieskos parametrus
+	ZeroMemory(&hints, sizeof hints);
+	// Pildoma pagal http://msdn.microsoft.com/en-us/library/windows/desktop/ms737530(v=vs.85).aspx
+	// Ieskomp adreso tipas (IPv4, IPv6 ar kitas)
+	hints.ai_family = AF_UNSPEC;
+	// Sujungimo tipas
+	hints.ai_socktype = SOCK_STREAM;
+	// Transporto protokolas
+	hints.ai_protocol = IPPROTO_SCTP;
+	this->addrHints = &hints;
+	// Gaunam adreso duomenis
+	LPCSTR ip = this->IP->c_str();
+	LPCSTR port = this->PORT->c_str();
+	int rGetAddrInfo = getaddrinfo(ip, port, &hints, &result);
+	if (rGetAddrInfo != 0){
+		// Nepavyko gauti adreso duomenu
+		printf("Nepavyko gauti adreso duomenu: %d\n", rGetAddrInfo);
+		// Naikinam objekta
+		freeaddrinfo(result);
+	}
+	this->addrResult = result;
+}
 
+int GClientLib::SCTPToServerSocket::Recive(){
+	sockaddr_in clientAddress;
+	int AddrSize = sizeof(clientAddress);
+
+	return recvfrom(this->Socket, &this->buffer[0], TenMBofChar, 0, (SOCKADDR *)& clientAddress, &AddrSize);
+}
