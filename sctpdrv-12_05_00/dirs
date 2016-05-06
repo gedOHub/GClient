@@ -1,0 +1,7 @@
+DIRS= \
+	subr \
+	kern \
+	net \
+	netinet \
+	netinet6 \
+	drv

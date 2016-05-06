@@ -1,0 +1,38 @@
+body, html {
+  margin: 0;
+  padding: 0;
+}
+ul {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 1em;
+  text-indent: -1em;
+}
+div#wrap {
+  margin: 0 auto;
+  max-width: 1200px;
+  position: relative;
+}
+div#main {
+  margin: auto;
+  padding-right: 190px;
+}
+div#nav {
+  background-color: #cccccc;
+  width: 180px;
+  position: relative;
+  float: right;
+}
+div#footer {
+  clear: both;
+}
+.function {
+  color: #FFCC33;
+}
+.param {
+  color: #006600;
+  font-style: italic;
+}
+b {
+  color: #DD9933;
+}

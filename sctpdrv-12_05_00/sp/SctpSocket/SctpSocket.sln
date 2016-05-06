@@ -1,0 +1,72 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A31C07DD-60D1-4B85-A40F-E61BE44F0AC7}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+		SctpSocket.vsmdi = SctpSocket.vsmdi
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SctpDrv.SctpSocket", "SctpSocket\SctpSocket.vcxproj", "{3D67D92C-5C72-442A-8C57-51E6054763A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SctpDrv.SctpTest", "SctpDrv.SctpTest\SctpDrv.SctpTest.csproj", "{583F9C56-D6B1-4C61-86FA-9436B1FD66E5}"
+EndProject
+Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = SctpSocket.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Debug|Any CPU.Build.0 = Debug|x64
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Debug|Win32.Build.0 = Debug|Win32
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Debug|x64.ActiveCfg = Debug|x64
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Debug|x64.Build.0 = Debug|x64
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Debug|x86.ActiveCfg = Debug|Win32
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Release|Any CPU.ActiveCfg = Release|x64
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Release|Win32.ActiveCfg = Release|Win32
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Release|Win32.Build.0 = Release|Win32
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Release|x64.ActiveCfg = Release|x64
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Release|x64.Build.0 = Release|x64
+		{3D67D92C-5C72-442A-8C57-51E6054763A5}.Release|x86.ActiveCfg = Release|x64
+		{583F9C56-D6B1-4C61-86FA-9436B1FD66E5}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{583F9C56-D6B1-4C61-86FA-9436B1FD66E5}.Debug|Any CPU.Build.0 = Debug|x64
+		{583F9C56-D6B1-4C61-86FA-9436B1FD66E5}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{583F9C56-D6B1-4C61-86FA-9436B1FD66E5}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{583F9C56-D6B1-4C61-86FA-9436B1FD66E5}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{583F9C56-D6B1-4C61-86FA-9436B1FD66E5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{583F9C56-D6B1-4C61-86FA-9436B1FD66E5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{583F9C56-D6B1-4C61-86FA-9436B1FD66E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{583F9C56-D6B1-4C61-86FA-9436B1FD66E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{583F9C56-D6B1-4C61-86FA-9436B1FD66E5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{583F9C56-D6B1-4C61-86FA-9436B1FD66E5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{583F9C56-D6B1-4C61-86FA-9436B1FD66E5}.Release|Win32.ActiveCfg = Release|Any CPU
+		{583F9C56-D6B1-4C61-86FA-9436B1FD66E5}.Release|x64.ActiveCfg = Release|Any CPU
+		{583F9C56-D6B1-4C61-86FA-9436B1FD66E5}.Release|x86.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		AMDCaProjectFile = C:\Users\Bruce\Documents\sctpDrv\sp\SctpSocket\CodeAnalyst\SctpSocket.caw
+		AMDCaPersistentStartup = ConsoleApplication1
+		AMDCaPersistentConfig = Debug|Mixed Platforms
+	EndGlobalSection
+EndGlobal

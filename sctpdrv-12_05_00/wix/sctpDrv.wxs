@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * Copyright (c) 2008 CO-CONV, Corp.
+ * Copyright (C) 2010-2013 Bruce Cran.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:difx='http://schemas.microsoft.com/wix/DifxAppExtension'>
+
+  <?include config.wxi ?>
+
+  <Product Id="$(var.ProductId)"
+           UpgradeCode="$(var.UpgradeCode)"
+           Name="SctpDrv"
+           Version="$(var.VersionMajor).$(var.VersionMinor).$(var.VersionRev)"
+           Manufacturer="Bruce Cran"
+           Language="$(var.Language)"
+           Codepage="$(var.Codepage)">
+
+    <Package
+      Description="SctpDrv"
+      InstallPrivileges="elevated"
+      InstallScope="perMachine"
+      Comments="SCTP Driver"
+      InstallerVersion="301"
+      Platform="$(var.TargetArchIntel)"
+      Manufacturer="Bruce Cran"
+      Languages="$(var.Language)"
+      SummaryCodepage="$(var.Codepage)"
+      Compressed="yes" />
+
+    <Condition Message='SctpDrv runs only on Windows XP SP2 and newer'>
+      <![CDATA[
+			(VersionNT = 501 AND ServicePackLevel >= "2") OR
+			(VersionNT   AND (VersionNT   >  "501")) OR
+			(VersionNT64 AND (VersionNT64 > "501"))
+			]]>
+    </Condition>
+
+    <?if $(var.OS)=xp ?>
+    <Condition Message="This installer is for Windows XP and Windows 2003. You can find installers for other versions of Windows on the SctpDrv web site.">
+      <![CDATA[
+			(VersionNT > "500") AND (VersionNT < "600")
+			]]>
+    </Condition>
+    <?endif ?>
+
+    <?if $(var.OS)=xp ?>
+    <Condition Message="This installer is for Windows Vista and newer. You can find installers for other versions of Windows on the SctpDrv web site.">
+      <![CDATA[
+			(VersionNT >= 600)
+			]]>
+    </Condition>
+    <?endif ?>
+
+    <?if $(var.TargetArch)=x86 ?>
+    <CustomAction Id="CA_Err32BitMsiOn64BitOS" Error="This installer is for 32-bit Windows, but the computer is running 64-bit Windows. You can find installers for 64-bit Windows on the SctpDrv web site."/>
+    <?endif ?>
+
+    <Media Id="1" Cabinet="Product.cab" EmbedCab="yes" />
+    <UIRef Id="WixUI_Minimal" />
+    <Property Id='ARPCONTACT'>sctpdrv@bluestop.org</Property>
+    <Property Id='ARPHELPLINK'>http://www.bluestop.org/SctpDrv/doc/</Property>
+    <Property Id='ARPURLINFOABOUT'>http://www.bluestop.org/SctpDrv/</Property>
+    <Property Id='ARPURLUPDATEINFO'>http://www.bluestop.org/SctpDrv/releases/</Property>
+
+    <WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of this product is already installed. Please remove it before downgrading."/>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <?if $(var.TargetArch)=x86?>
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="SctpDrv" Name="SctpDrv">
+          <Directory Id="bin" Name="bin"/>
+          <Directory Id='lib' Name='lib'/>
+          <Directory Id='src' Name='src'/>
+          <Directory Id='inc' Name='inc'>
+            <Directory Id='netinet' Name='netinet'/>
+          </Directory>
+        </Directory>
+      </Directory>
+      <?endif?>
+
+      <?if $(var.TargetArch)=amd64?>
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="SctpDrv32" Name="SctpDrv">
+          <Directory Id="bin32" Name="bin"/>
+          <Directory Id='lib32' Name='lib'/>
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="SctpDrv" Name="SctpDrv">
+          <Directory Id="bin" Name="bin"/>
+          <Directory Id="lib" Name="lib"/>
+          <Directory Id='inc' Name='inc'>
+            <Directory Id='netinet' Name='netinet'/>
+          </Directory>
+          <Directory Id='src' Name='src'/>
+        </Directory>
+      </Directory>
+      <?endif?>
+    </Directory>
+
+    <Feature Id="Complete" Title='SctpDrv' Description='The complete package.' Display='expand' Level='1'>
+
+      <ComponentGroupRef Id="root"/>
+      <ComponentGroupRef Id="inc"/>
+      <ComponentGroupRef Id="lib"/>
+      <ComponentGroupRef Id="bin"/>
+      <ComponentGroupRef Id="src"/>
+    </Feature>
+
+    <Property Id="VCREDIST_X64">
+      <RegistrySearch Id="VCREDIST_X64" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\10.0\VC\VCRedist\x64" Name="Installed" Type="raw" Win64="no"/>
+    </Property>
+    <Property Id="VCREDIST_X86">
+      <RegistrySearch Id="VCREDIST_X86" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\10.0\VC\VCRedist\x86" Name="Installed" Type="raw" Win64="no"/>
+    </Property>
+    <Property Id="DOTNET_40">
+      <RegistrySearch Id="DOTNET_40" Root="HKLM" Key="SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Client" Name="Install" Type="raw" Win64="no"/>
+    </Property>
+
+    <?if $(var.TargetArch)=amd64?>
+    <Condition Message="Microsoft Visual C++ 2010 Redistributable Package (x64) must be installed before installation can continue.">VCREDIST_X64</Condition>
+    <?endif?>
+
+    <Condition Message="Microsoft Visual C++ 2010 Redistributable Package (x86) must be installed before installation can continue.">VCREDIST_X86</Condition>
+    <Condition Message="Microsoft .NET Framework 4.0 must be installed before installation can continue.">DOTNET_40</Condition>
+    
+    <InstallExecuteSequence>
+      <?if $(var.TargetArch)=x86 ?>
+      <Custom Action="CA_Err32BitMsiOn64BitOS" After="LaunchConditions">
+        <![CDATA[MsiAMD64 OR Intel64]]>
+      </Custom>
+      <?endif ?>
+    </InstallExecuteSequence>
+
+    <InstallUISequence>
+      <!-- Only schedule this custom action for the 32-bit MSI.-->
+      <?if $(var.TargetArch)=x86 ?>
+      <Custom Action="CA_Err32BitMsiOn64BitOS" After="LaunchConditions">
+        <![CDATA[MsiAMD64 OR Intel64]]>
+      </Custom>
+      <?endif ?>
+    </InstallUISequence>
+  </Product>
+</Wix>

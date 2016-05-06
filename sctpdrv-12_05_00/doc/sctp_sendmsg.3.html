@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr" lang="en">
+<head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+  <title>Man page of SCTP_SENDMSG</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <meta content="Bruce Cran" name="author">
+  <meta content="The manual page for sctp_sendmsg and sctp_sendmsgx - send a message from an SCTP socket" name="description">
+  <meta content="sctpdrv, sctp, sctp_sendmsg, sctp_sendmsgx, sctp api" name="keywords">
+</head>
+<body>
+<div id="wrap">
+<!-- Navigation menu -->
+<div id="nav">
+<h3>Navigation</h3>
+<ul>
+  <li><a href="http://www.bluestop.org/SctpDrv/">Home</a></li>
+</ul>
+
+<h4>Documentation</h4>
+<ul>
+  <li><a href="index.html">Introduction</a></li>
+  <li><a href="sctp.4.html">SCTP stack overview</a></li>
+  <li><a href="development.html">Development using SctpDrv</a></li>
+  <li><a href="building.html">Source code and building</a></li>
+  <li><a href="debugging.html">Debugging SctpDrv</a></li>
+</ul>
+
+<h4>SCTP API</h4>
+<ul>
+  <li><a href="sctp_bindx.3.html">sctp_bindx</a></li>
+  <li><a href="sctp_connectx.3.html">sctp_connectx</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freepaddrs</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freeladdrs</a></li>
+  <li><a href="sctp_getaddrlen.3.html">sctp_getaddrlen</a></li>
+  <li><a href="sctp_getassocid.3.html">sctp_getassocid</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getpaddrs</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getladdrs</a></li>
+  <li><a href="sctp_opt_info.3.html">sctp_opt_info</a></li>
+  <li><a href="sctp_peeloff.2.html">sctp_peeloff</a></li>
+  <li><a href="sctp_recvmsg.3.html">sctp_recvmsg</a></li>
+  <li><a href="sctp_send.3.html">sctp_send</a></li>
+  <li><a href="sctp_send.3.html">sctp_sendx</a></li>
+  <li>sctp_sendmsg</li>
+  <li>sctp_sendmsgx</li>
+</ul>
+</div>
+
+
+<div id="main">
+
+<h1>SCTP_SENDMSG</h1><hr>
+
+<h2>NAME</h2>
+
+<b>sctp_sendmsg</b>, <b>sctp_sendmsgx</b> - send a message from an SCTP socket
+
+<h2>LIBRARY</h2>sctpsp.dll (sctpsp.lib)
+<h2>SYNOPSIS</h2>
+
+<b>#include &lt;winsock2.h&gt;<br>
+#include &lt;ws2tcpip.h&gt;<br>
+#include &lt;ws2sctp.h&gt;</b><br>
+<br>
+<span class="param">ssize_t</span><br>
+<b>sctp_sendmsg</b>(<span class="param">SOCKET s</span>, <span class="param">const void *msg</span>, <span class="param">size_t len</span>, <span class="param">const struct sockaddr *to</span>, <span class="param">socklen_t tolen</span>, <span class="param">unsigned long ppid</span>, <span class="param">unsigned long flags</span>, <span class="param">unsigned short stream_no</span>, <span class="param">unsigned long timetolive</span>, <span class="param">unsigned long
+context</span>);<br>
+<br>
+<span class="param">ssize_t</span><br>
+<b>sctp_sendmsgx</b>(<span class="param">SOCKET s</span>, <span class="param">const void *msg</span>, <span class="param">size_t len</span>, <span class="param">const struct sockaddr *to</span>, <span class="param">int addrcnt</span>, <span class="param">unsigned long ppid</span>, <span class="param">unsigned long flags</span>, <span class="param">unsigned short stream_no</span>, <span class="param">unsigned long timetolive</span>, <span class="param">unsigned long
+context</span>);
+
+
+<h2>DESCRIPTION</h2>
+<p>
+The <b>sctp_sendmsg()</b> system call is used to transmit a message to another SCTP endpoint.
+The <b>sctp_sendmsg()</b> may be used at any time. If the socket is a one-to-many type (SOCK_SEQPACKET)
+socket then an attempt to send to an address that no association exists to will
+implicitly create a new association. Data sent in such an instance will result in
+the data being sent on the third leg of the SCTP four-way handshake. Note that if
+the socket is a one-to-one type (SOCK_STREAM) socket then an association must
+be in existance (by use of the <a href="http://msdn.microsoft.com/en-us/library/ms737625%28VS.85%29.aspx">connect(msdn)</a> system call).
+Calling <b>sctp_sendmsg()</b> or <b>sctp_sendmsgx()</b> on a non-connected one-to-one socket will result in <i>errno</i>
+being set to [ENOTCONN], -1 being returned, and the message not being transmitted.
+</p><p>
+The address of the target is given by <span class="param">to</span> with <span class="param">tolen</span>
+specifying its size. The length of the message <span style="text-decoration: underline; font-style: italic;">msg</span>
+is given by <span style="text-decoration: underline; font-style: italic;">len</span> .
+If the message is too long to pass atomically through the underlying protocol, <i>errno</i> is set to [EMSGSIZE],
+-1 is returned, and the message is not transmitted.
+</p><p>
+No indication of failure to deliver is implicit in a <a href="sctp_sendmsg.3.html">sctp_sendmsg(2)</a>
+call. Locally detected errors are indicated by a return value of -1.
+</p><p>
+If no space is available at the socket to hold the message to be transmitted, then
+<a href="sctp_sendmsg.3.html">sctp_sendmsg(3)</a> normally blocks, unless the socket has been placed in
+non-blocking I/O mode. The <a href="http://msdn.microsoft.com/en-us/library/ms740141%28VS.85%29.aspx">select(msdn)</a>
+system call may be used to determine when it is possible to send more data on one-to-one type (SOCK_STREAM) sockets.
+</p><p>
+The <span class="param">ppid</span> argument is an opaque 32 bit value that is passed transparently
+through the stack to the peer endpoint. It will be available on reception of a message (see <a href="sctp_recvmsg.3.html">sctp_recvmsg(3)</a>).
+Note that the stack passes this value without regard to byte order.
+</p><p>
+The <span class="param">flags</span> argument may include one or more of the following:
+</p>
+<pre>
+#define SCTP_EOF          0x0100        /* Start a shutdown procedures */
+#define SCTP_ABORT        0x0200        /* Send an ABORT to peer */
+#define SCTP_UNORDERED    0x0400        /* Message is un-ordered */
+#define SCTP_ADDR_OVER    0x0800        /* Override the primary-address */
+#define SCTP_SENDALL      0x1000        /* Send this on all associations */
+                                        /* for the endpoint */
+                                        /* The lower byte is an enumeration of PR-SCTP policies */
+#define SCTP_PR_SCTP_TTL  0x0001        /* Time based PR-SCTP */
+#define SCTP_PR_SCTP_BUF  0x0002        /* Buffer based PR-SCTP */
+#define SCTP_PR_SCTP_RTX  0x0003        /* Number of retransmissions based PR-SCTP */
+</pre>
+<p>
+
+The flag SCTP_EOF is used to instruct the SCTP stack to queue this message
+and then start a graceful shutdown of the association. All
+remaining data in queue will be sent after which the association will be shut down.
+</p><p>
+SCTP_ABORT is used to immediately terminate an association. An abort is sent to the peer and the local TCB is destroyed.
+</p><p>
+SCTP_UNORDERED is used to specify that the message being sent has no
+specific order and should be delivered to the peer application
+as soon as possible. When this flag is absent messages
+are delivered in order within the stream they are sent, but without
+respect to order to peer streams.
+</p><p>
+The flag SCTP_ADDR_OVER is used to specify that an specific address should be used.
+Normally SCTP will use only one of a multi-homed peers addresses as the primary
+address to send to. By default, no matter what the <span class="param">to</span>
+argument is, this primary address is used to send data. By specifying
+this flag, the user is asking the stack to ignore the primary address
+and instead use the specified address not only as a lookup mechanism
+to find the association but also as the actual address to send to.
+</p><p>
+For a one-to-many type (SOCK_SEQPACKET) socket the flag SCTP_SENDALL
+can be used as a convient way to make one send call and have
+all associations that are under the socket get a copy of the message.
+Note that this mechanism is quite efficent and makes only one actual
+copy of the data which is shared by all the associations for sending.
+</p><p>
+
+The remaining flags are used for the partial reliability extension (RFC3758)
+and will only be effective if the peer endpoint supports this extension.
+This option specifies what local policy the local endpoint should use
+in skipping data. If none of these options are set, then data is
+never skipped over.
+</p><p>
+
+SCTP_PR_SCTP_TTL is used to indicate that a time based lifetime is being applied
+to the data. The <span class="param">timetolive</span>
+argument is then a number of milliseconds for which the data is
+attempted to be transmitted. If that many milliseconds ellapse
+and the peer has not acknowledged the data, the data will be
+skipped and no longer transmitted. Note that this policy does
+not even assure that the data will ever be sent. In times of a congestion
+with large amounts of data being queued, the <span class="param">timetolive</span>
+may expire before the first transmission is ever made.
+</p><p>
+The SCTP_PR_SCTP_BUF based policy transforms the <span class="param">timetolive</span>
+field into a total number of bytes allowed on the outbound
+send queue. If that number or more bytes are in queue, then
+other buffer based sends are looked to be removed and skipped.
+Note that this policy may also result in the data
+never being sent if no buffer based sends are in queue and
+the maximum specified by <span class="param">timetolive</span> bytes is in queue.
+</p><p>
+The SCTP_PR_SCTP_RTX policy transforms the <span class="param">timetolive</span>
+into a number of retransmissions to allow. This policy always assures that at a minimum one send attempt is
+made of the data. After which no more than <span class="param">timetolive</span>
+retransmissions will be made before the data is skipped.
+</p><p>
+<span class="param">stream_no</span> is the SCTP stream that you wish to send the
+message on. Streams in SCTP are reliable (or partially reliable) flows of ordered
+messages. The <span class="param">context</span> field is used only in the event the message cannot be sent.
+This is an opaque value that the stack retains and will give to the user when a failed send
+is given if that notification is enabled (see <a href="sctp.4.html">sctp(4)</a>).
+Normally a user process can use this value to index some application
+specific data structure when a send cannot be fulfilled. <b>sctp_sendmsgx()</b> is identical to <b>sctp_sendmsg()</b>
+with the exception that it takes an array of sockaddr structures in the argument <span class="param">to</span>
+and adds the additional argument <span class="param">addrcnt</span> which specifies how many addresses are in the array.
+This allows a caller to implicitly set up an association passing multiple addresses
+as if <b>sctp_connectx()</b> had been called to set up the association.
+
+</p><h2>RETURN VALUES</h2>
+
+The call returns the number of characters sent, or -1
+if an error occurred.
+
+<h2>ERRORS</h2>
+
+The <b>sctp_sendmsg()</b> system call fails if:
+<dl>
+  <dt>[WSAEBADF]</dt>
+  <dd>An invalid descriptor was specified.</dd>
+  <dt>[WSAENOTSOCK]</dt>
+  <dd>The argument <span class="param">s</span> is not a socket.</dd>
+  <dt>[WSAEFAULT]</dt>
+  <dd>An invalid user space address was specified for an argument.</dd>
+  <dt>[WSAEMSGSIZE]</dt>
+  <dd>The socket requires that message be sent atomically,
+and the size of the message to be sent made this impossible.</dd>
+  <dt>[WSAEWOULDBLOCK]</dt>
+  <dd>The socket is marked non-blocking and the requested operation would block.</dd>
+  <dt>[WSAENOBUFS]</dt>
+  <dd>
+The system was unable to allocate an internal buffer.
+The operation may succeed when buffers become available.</dd>
+  <dt>[WSAENOBUFS]</dt>
+  <dd>The output queue for a network interface was full.
+This generally indicates that the interface has stopped sending,
+but may be caused by transient congestion.</dd>
+  <dt>[WSAEHOSTUNREACH]</dt>
+  <dd>The remote host was unreachable.</dd>
+  <dt>[WSAENOTCONN]</dt>
+  <dd>On a one-to-one style socket no association exists.</dd>
+  <dt>[WSAECONNRESET]</dt>
+  <dd>An abort was received by the stack while the user was
+attempting to send data to the peer.</dd>
+  <dt>[WSANO_DATA]</dt>
+  <dd>On a one-to-many style socket no address is specified
+so that the association cannot be located or the SCTP_ABORT
+flag was specified on a non-existing association.</dd>
+  <dt>[WSAEMSGSIZE]</dt>
+  <dd>The socket is unable to send anymore data (SBS_CANTSENDMORE has been set on the socket).
+This typically means that the socket is not connected and is a one-to-one style socket.</dd>
+</dl>
+
+<h2>SEE ALSO</h2>
+
+<a href="http://msdn.microsoft.com/en-us/library/ms737625%28VS.85%29.aspx">connect(msdn)</a>,
+<a href="http://msdn.microsoft.com/en-us/library/ms738544%28VS.85%29.aspx">getsockopt(msdn)</a>,
+<a href="http://msdn.microsoft.com/en-us/library/ms740121%28VS.85%29.aspx">recv(msdn)</a>,
+<a href="http://msdn.microsoft.com/en-us/library/ms740141%28VS.85%29.aspx">select(msdn)</a>,
+<a href="http://msdn.microsoft.com/en-us/library/ms740506%28VS.85%29.aspx">socket(msdn)</a>,
+<a href="http://msdn.microsoft.com/en-us/library/1570wh78.aspx">_write(msdn)</a>,
+<a href="sctp_connectx.3.html">sctp_connectx(3)</a>,
+<a href="http://www.opengroup.org/onlinepubs/000095399/functions/sendmsg.html">sendmsg(opengroup)</a>,
+<a href="sctp.4.html">sctp(4)</a>
+
+<h2>BUGS</h2>
+
+Because in the one-to-many style socket the <b>sctp_sendmsg()</b> or <b>sctp_sendmsgx()</b>
+may have multiple associations under one endpoint, a
+select on write will only work for a one-to-one style socket.<br>
+
+<hr>
+Time: 11:22:30 GMT, January 31, 2010<br><br>
+<em>Adapted for SctpDrv from the FreeBSD manual page <a href="http://www.freebsd.org/cgi/man.cgi?query=sctp_sendmsg&amp;manpath=FreeBSD+8.0-RELEASE">sctp_sendmsg(3)</a><br>
+<a href="http://www.freebsd.org/copyright/">Legal Notices</a> | © 1995-2010 The FreeBSD Project. All rights reserved.</em>
+</div>
+</div>
+</body>
+</html>

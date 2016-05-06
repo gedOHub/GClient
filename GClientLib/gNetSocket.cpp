@@ -31,6 +31,8 @@ GClientLib::gNetSocket::gNetSocket(string ip, string port, int tag, fd_set* skai
 	this->skaitomi = skaitomiSocket;
 	this->rasomi = rasomiSocket;
 	this->klaidingi = klaidingiSocket;
+	// Gaunam adreso duomenis
+	this->GetAddressInfo();
 	// Kuriam SOCKET
 	this->CreateSocket();
 	if (this->Socket != INVALID_SOCKET) {
@@ -73,6 +75,7 @@ GClientLib::gNetSocket::gNetSocket(int socket, int tag, fd_set* skaitomiSocket, 
 GClientLib::gNetSocket::~gNetSocket(){
 	this->RemuveFromLists();
 	this->CloseSocket();
+	WSACleanup();
 }
 
 // Grazina tag reiksme
@@ -154,8 +157,6 @@ void GClientLib::gNetSocket::ShutdownSocket(){
 // Kuriam SOCKET
 void GClientLib::gNetSocket::CreateSocket(){
 	struct addrinfo *ptr;
-	// Gaunam adreso duomenis
-	this->GetAddressInfo();
 	// Einam per visus gautus rezultatus
 	for (ptr = this->addrResult; ptr != NULL; ptr = ptr->ai_next){
 		// Bandom kurti socket

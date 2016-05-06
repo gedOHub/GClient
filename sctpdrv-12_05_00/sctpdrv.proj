@@ -1,0 +1,253 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+         ToolsVersion="4.0" DefaultTargets="Build">
+  
+  <PropertyGroup>
+    <ProjectRoot>$(MSBuildProjectDirectory)</ProjectRoot>
+    <WDKPath Condition=" '$(WDKPath)' == '' ">C:\WinDDK\7600.16385.1</WDKPath>
+    <WINDOWSSDKDIR Condition=" '$(WINDOWSSDKDIR)' == '' ">C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A</WINDOWSSDKDIR>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <DriverTargetType Condition=" '$(Configuration)' == 'Release' ">fre</DriverTargetType>
+    <DriverTargetType Condition=" '$(Configuration)' == 'Debug' ">chk</DriverTargetType>
+    <WDK>cmd /c "$(WDKPATH)\bin\setenv.bat $(WDKPATH) $(DriverTargetType)</WDK>
+    <Timestamp Condition=" '$(NO_TIMESTAMP)' == '' ">/t http://timestamp.globalsign.com/scripts/timstamp.dll</Timestamp>
+  </PropertyGroup>
+
+  <Target Name="ReadVersion">
+    <PropertyGroup>
+      <VersionFile>$(ProjectRoot)\version.txt</VersionFile>
+    </PropertyGroup>
+    <ReadLinesFromFile File="$(VersionFile)">
+      <Output PropertyName="Version" TaskParameter="Lines"/>
+    </ReadLinesFromFile>
+  </Target>
+
+  <Target Name="SetXP32Target">
+    <CreateProperty Value="wxp">
+      <Output TaskParameter="Value" PropertyName="TargetWdkWinVer"/>
+    </CreateProperty>
+    <CreateProperty Value="xp">
+      <Output TaskParameter="Value" PropertyName="TargetWinVer"/>
+    </CreateProperty>
+    <CreateProperty Value="x86">
+      <Output TaskParameter="Value" PropertyName="TargetArch"/>
+    </CreateProperty>
+    <CreateProperty Value="i386">
+      <Output TaskParameter="Value" PropertyName="TargetArch2"/>
+    </CreateProperty>
+  </Target>
+
+  <Target Name="SetVista32Target">
+    <CreateProperty Value="wlh">
+      <Output TaskParameter="Value" PropertyName="TargetWdkWinVer"/>
+    </CreateProperty>
+    <CreateProperty Value="vista">
+      <Output TaskParameter="Value" PropertyName="TargetWinVer"/>
+    </CreateProperty>
+    <CreateProperty Value="x86">
+      <Output TaskParameter="Value" PropertyName="TargetArch"/>
+    </CreateProperty>
+    <CreateProperty Value="i386">
+      <Output TaskParameter="Value" PropertyName="TargetArch2"/>
+    </CreateProperty>
+  </Target>
+
+  <Target Name="SetVista64Target">
+    <CreateProperty Value="wlh">
+      <Output TaskParameter="Value" PropertyName="TargetWdkWinVer"/>
+    </CreateProperty>
+    <CreateProperty Value="vista">
+      <Output TaskParameter="Value" PropertyName="TargetWinVer"/>
+    </CreateProperty>
+    <CreateProperty Value="amd64">
+      <Output TaskParameter="Value" PropertyName="TargetArch"/>
+    </CreateProperty>
+    <CreateProperty Value="amd64">
+      <Output TaskParameter="Value" PropertyName="TargetArch2"/>
+    </CreateProperty>
+  </Target>
+
+  <Target Name="SetDriverFiles">
+
+    <CreateItem Include="$(ProjectRoot)\drv\obj$(DriverTargetType)_$(TargetWdkWinVer)_$(TargetArch)\$(TargetArch2)\sctpdrv.sys">
+      <Output TaskParameter="Include" ItemName="DriverBinaries"/>
+    </CreateItem>
+
+    <CreateItem Condition=" '$(TargetWinVer)' != 'xp' " Include="$(ProjectRoot)\wix\sctpdrv.inf">
+      <Output TaskParameter="Include" ItemName="DriverBinaries"/>
+    </CreateItem>
+
+    <CreateItem Condition=" '$(TargetWinVer)' == 'xp' " Include="$(ProjectRoot)\wix\sctpdrv-winxp.inf">
+      <Output TaskParameter="Include" ItemName="DriverBinaries"/>
+    </CreateItem>
+  </Target>
+
+  <Target Name="CopyDriverFiles">
+    <Copy SourceFiles="@(DriverBinaries)" DestinationFolder="stage\$(TargetWinVer)_$(TargetArch)"/>
+  </Target>
+
+  <Target Name="GetDependentFiles">
+
+    <ItemGroup>
+      <IncFile Include="$(WIX)SDK\VS2010\inc\wcautil.h"/>
+      <IncFile Include="$(WIX)SDK\VS2010\inc\dutil.h"/>
+      <IncFile Include="$(WINDOWSSDKDIR)\Include\netsh.h"/>
+      <IncFile Include="$(WINDOWSSDKDIR)\Include\netfw.h"/>
+      <IncFile Include="$(WINDOWSSDKDIR)\Include\icftypes.h"/>
+      <IncFile Include="$(WINDOWSSDKDIR)\Include\msi.h"/>
+      <IncFile Include="$(WINDOWSSDKDIR)\Include\msiquery.h"/>
+      <IncFile Include="$(WINDOWSSDKDIR)\Include\netsh.h"/>
+    </ItemGroup>
+    <ItemGroup>
+      <LibFileX64 Include="$(WIX)SDK\VS2010\lib\x64\wcautil.lib"/>
+      <LibFileX64 Include="$(WIX)SDK\VS2010\lib\x64\dutil.lib"/>
+      <LibFileX64 Include="$(WINDOWSSDKDIR)\Lib\x64\netfw.tlb"/>
+      <LibFileX64 Include="$(WINDOWSSDKDIR)\Lib\x64\netsh.lib"/>
+    </ItemGroup>
+    <ItemGroup>
+      <LibFileX86 Include="$(WIX)SDK\VS2010\lib\x86\wcautil.lib"/>
+      <LibFileX86 Include="$(WIX)SDK\VS2010\lib\x86\dutil.lib"/>
+      <LibFileX86 Include="$(WINDOWSSDKDIR)\lib\netfw.tlb"/>
+      <LibFileX86 Include="$(WINDOWSSDKDIR)\lib\netsh.lib"/>
+    </ItemGroup>
+    <Copy SourceFiles="%(IncFile.Identity)" DestinationFolder="$(ProjectRoot)\inc"/>
+    <Copy SourceFiles="%(LibFileX86.Identity)" DestinationFolder="$(ProjectRoot)\lib"/>
+    <Copy SourceFiles="%(LibFileX64.Identity)" DestinationFolder="$(ProjectRoot)\lib\x64"/>
+  </Target>
+
+  <Target Name="xp">
+    <RemoveDir Directories="stage\xp_x86"/>
+
+    <Exec Command="$(WDK) x86 wxp no_oacr &amp;&amp; CD /D $(ProjectRoot) &amp;&amp; build/ceZ"/>
+    <!-- CD /D wix &amp;&amp; set MSICULTURE=en-us&amp;&amp; nmake -f Makefile.wix -->
+    <CallTarget Targets="SetXP32Target"/>
+    <CallTarget Targets="SetDriverFiles"/>
+    <CallTarget Targets="CopyDriverFiles"/>
+    <Move SourceFiles="stage\xp_x86\sctpdrv-winxp.inf" DestinationFiles="stage\xp_x86\sctpdrv.inf"/>
+    <Exec Command="$(WDK) x86 wxp no_oacr &amp;&amp; CD /D $(ProjectRoot) &amp;&amp; inf2cat /driver:$(ProjectRoot)\stage\xp_x86 /os:XP_X86,Server2003_X86"/>
+    <Exec Condition=" '$(RELEASE_SIGN)' != '' " Command="signtool sign /ac drv\MSCV-GlobalSign.cer /d &quot;SctpDrv&quot; /s my /n &quot;Bruce Cran&quot; $(Timestamp) $(ProjectRoot)\stage\xp_x86\sctpdrv.cat $(ProjectRoot)\stage\xp_x86\sctpdrv.sys"/>
+  </Target>
+
+  <Target Name="vista32">
+
+    <RemoveDir Directories="stage\vista_x86"/>
+
+    <Exec Command="$(WDK) x86 wlh no_oacr &amp;&amp; CD /D $(ProjectRoot) &amp;&amp; build/ceZ &amp;&amp; CD /D wix"/>
+    <!-- set MSICULTURE=en-us&amp;&amp; nmake -f Makefile.wix -->
+    <CallTarget Targets="SetVista32Target"/>
+    <CallTarget Targets="SetDriverFiles"/>
+    <CallTarget Targets="CopyDriverFiles"/>
+    <Exec Command="$(WDK) x86 wlh no_oacr &amp;&amp; CD /D $(ProjectRoot) &amp;&amp; inf2cat /driver:$(ProjectRoot)\stage\vista_x86 /os:Vista_X86,Server2008_X86,7_X86"/>
+    <Exec Condition=" '$(RELEASE_SIGN)' != '' " Command="signtool sign /ac drv\MSCV-GlobalSign.cer /d &quot;SctpDrv&quot; /s my /n &quot;Bruce Cran&quot; $(Timestamp) $(ProjectRoot)\stage\vista_x86\sctpdrv.cat $(ProjectRoot)\stage\vista_x86\sctpdrv.sys"/>
+  </Target>
+
+  <Target Name="vista64">
+    <RemoveDir Directories="stage\vista_x64"/>
+    <Exec Command="$(WDK) x64 wlh no_oacr &amp;&amp; CD /D $(ProjectRoot) &amp;&amp; build/ceZ"/>
+    <!-- CD /D wix &amp;&amp; set MSICULTURE=en-us&amp;&amp; nmake -f Makefile.wix -->
+    <CallTarget Targets="SetVista64Target"/>
+    <CallTarget Targets="SetDriverFiles"/>
+    <CallTarget Targets="CopyDriverFiles"/>
+    <Exec Command="$(WDK) x64 wlh no_oacr &amp;&amp; CD /D $(ProjectRoot) &amp;&amp; inf2cat /driver:$(ProjectRoot)\stage\vista_amd64 /os:Vista_X64,Server2008_X64,7_X64,Server2008R2_X64"/>
+    <Exec Condition=" '$(RELEASE_SIGN)' != '' " Command="signtool sign /ac drv\MSCV-GlobalSign.cer /d &quot;SctpDrv&quot; /s my /n &quot;Bruce Cran&quot; $(Timestamp) $(ProjectRoot)\stage\vista_amd64\sctpdrv.cat $(ProjectRoot)\stage\vista_amd64\sctpdrv.sys"/>
+  </Target>
+
+  <Target Name="en_installer" DependsOnTargets="ReadVersion">
+
+    <MSBuild Projects="wix\Installer.sln" Targets="custom_actions" Properties="Configuration=$(Configuration);Platform=x86"/>
+    <Copy SourceFiles="$(ProjectRoot)\wix\bin\Win32\$(Configuration)\custom_actions.dll" DestinationFolder="stage\xp_x86"/>
+    <Copy SourceFiles="$(ProjectRoot)\wix\bin\Win32\$(Configuration)\custom_actions.dll" DestinationFolder="stage\vista_x86"/>
+    <MSBuild Projects="wix\Installer.sln" Targets="custom_actions" Properties="Configuration=$(Configuration);Platform=x64"/>
+    <Copy SourceFiles="$(ProjectRoot)\wix\bin\x64\$(Configuration)\custom_actions.dll" DestinationFolder="stage\vista_amd64"/>
+    <MSBuild Projects="wix\Installer.sln" Properties="Configuration=$(Configuration);Platform=x86;locale=en-us"/>
+
+    <Copy SourceFiles="wix\bin\x86\$(Configuration)\SctpDrv_XP_x86.msi" DestinationFiles="stage\installer\SctpDrv_XP_x86-$(Version)-en.msi"/>
+    <Copy SourceFiles="wix\bin\x86\$(Configuration)\SctpDrv_Vista_x86.msi" DestinationFiles="stage\installer\SctpDrv_Vista_x86-$(Version)-en.msi"/>
+    <Copy SourceFiles="wix\bin\x64\$(Configuration)\SctpDrv_Vista_x64.msi" DestinationFiles="stage\installer\SctpDrv_Vista_x64-$(Version)-en.msi"/>
+    <Copy SourceFiles="wix\bin\x86\$(Configuration)\SctpDrv.exe" DestinationFiles="stage\installer\SctpDrv-$(Version)-en.exe"/>
+  </Target>
+
+  <Target Name="jp_installer" DependsOnTargets="ReadVersion">
+    <MSBuild Projects="wix\Installer.sln" Targets="custom_actions" Properties="Configuration=$(Configuration);Platform=x86"/>
+    <Copy SourceFiles="$(ProjectRoot)\wix\bin\Win32\$(Configuration)\custom_actions.dll" DestinationFolder="stage\xp_x86"/>
+    <Copy SourceFiles="$(ProjectRoot)\wix\bin\Win32\$(Configuration)\custom_actions.dll" DestinationFolder="stage\vista_x86"/>
+    <MSBuild Projects="wix\Installer.sln" Targets="custom_actions" Properties="Configuration=$(Configuration);Platform=x64"/>
+    <Copy SourceFiles="$(ProjectRoot)\wix\bin\x64\$(Configuration)\custom_actions.dll" DestinationFolder="stage\vista_amd64"/>
+    <MSBuild Projects="wix\Installer.sln" Properties="Configuration=$(Configuration);Platform=x86;locale=ja-jp"/>
+
+    <Copy SourceFiles="wix\bin\x86\$(Configuration)\SctpDrv_XP_x86.msi" DestinationFiles="stage\installer\SctpDrv_XP_x86-$(Version)-jp.msi"/>
+    <Copy SourceFiles="wix\bin\x86\$(Configuration)\SctpDrv_Vista_x86.msi" DestinationFiles="stage\installer\SctpDrv_Vista_x86-$(Version)-jp.msi"/>
+    <Copy SourceFiles="wix\bin\x64\$(Configuration)\SctpDrv_Vista_x64.msi" DestinationFiles="stage\installer\SctpDrv_Vista_x64-$(Version)-jp.msi"/>
+    <Copy SourceFiles="wix\bin\x86\$(Configuration)\SctpDrv.exe" DestinationFiles="stage\installer\SctpDrv-$(Version)-jp.exe"/>
+  </Target>
+
+  <Target Name="BuildSpDLLs">
+
+    <ItemGroup>
+      <SpDLLs32 Include="$(ProjectRoot)\sp\$(Configuration)\Win32\SctpDrv.SctpSocket.dll"/>
+      <SpDLLs32 Include="$(ProjectRoot)\sp\Win32\$(Configuration)\sctpmon.dll"/>
+      <SpDLLs32 Include="$(ProjectRoot)\sp\Win32\$(Configuration)\sctpsp.dll"/>
+      <SpDLLs32 Include="$(ProjectRoot)\sp\Win32\$(Configuration)\sctpsp.lib"/>
+      <SpDLLs32 Include="$(ProjectRoot)\sp\Win32\$(Configuration)\sctpsp.pdb"/>
+      <SpDLLs32 Include="$(ProjectRoot)\sp\Win32\$(Configuration)\spinstall.exe"/>
+    </ItemGroup>
+    <ItemGroup>
+      <SpDLLs64 Include="$(ProjectRoot)\sp\$(Configuration)\x64\SctpDrv.SctpSocket.dll"/>
+      <SpDLLs64 Include="$(ProjectRoot)\sp\x64\$(Configuration)\sctpmon.dll"/>
+      <SpDLLs64 Include="$(ProjectRoot)\sp\x64\$(Configuration)\sctpsp.dll"/>
+      <SpDLLs64 Include="$(ProjectRoot)\sp\x64\$(Configuration)\sctpsp.lib"/>
+      <SpDLLs64 Include="$(ProjectRoot)\sp\x64\$(Configuration)\sctpsp.pdb"/>
+      <SpDLLs64 Include="$(ProjectRoot)\sp\x64\$(Configuration)\spinstall.exe"/>
+    </ItemGroup>
+    
+    <MSBuild Projects="sp/sp.sln" Properties="Configuration=$(Configuration);Platform=Win32;AssemblyLinkResource=sctpsp.dll"/>
+    <MSBuild Projects="sp/sp.sln" Properties="Configuration=$(Configuration);Platform=x64;AssemblyLinkResource=sctpsp.dll"/>
+
+    <Copy SourceFiles="@(SpDLLs32)" DestinationFolder="stage\xp_x86"/>
+    <Copy SourceFiles="@(SpDLLs32)" DestinationFolder="stage\vista_x86"/>
+    <Copy SourceFiles="@(SpDLLs64)" DestinationFolder="stage\vista_amd64"/>    
+  </Target>
+
+  <Target Name="BuildApps">
+    <ItemGroup>
+      <Apps32 Include="$(ProjectRoot)\apps\Win32\$(Configuration)\echo_client.exe"/>
+      <Apps32 Include="$(ProjectRoot)\apps\Win32\$(Configuration)\echo_server.exe"/>
+      <Apps32 Include="$(ProjectRoot)\apps\Win32\$(Configuration)\file_receiver.exe"/>
+      <Apps32 Include="$(ProjectRoot)\apps\Win32\$(Configuration)\file_sender.exe"/>
+      <Apps32 Include="$(ProjectRoot)\apps\Win32\$(Configuration)\api_tests.exe"/>
+      <Apps32 Include="$(ProjectRoot)\apps\Win32\$(Configuration)\echo_server2.exe"/>
+    </ItemGroup>
+    <ItemGroup>
+      <Apps64 Include="$(ProjectRoot)\apps\x64\$(Configuration)\echo_client.exe"/>
+      <Apps64 Include="$(ProjectRoot)\apps\x64\$(Configuration)\echo_server.exe"/>
+      <Apps64 Include="$(ProjectRoot)\apps\x64\$(Configuration)\file_receiver.exe"/>
+      <Apps64 Include="$(ProjectRoot)\apps\x64\$(Configuration)\file_sender.exe"/>
+      <Apps64 Include="$(ProjectRoot)\apps\x64\$(Configuration)\api_tests.exe"/>
+      <Apps64 Include="$(ProjectRoot)\apps\x64\$(Configuration)\echo_server2.exe"/>
+    </ItemGroup>
+
+    <MSBuild Projects="apps\apps.sln" Properties="Configuration=$(Configuration);Platform=Win32"/>
+    <MSBuild Projects="apps\apps.sln" Properties="Configuration=$(Configuration);Platform=x64"/>
+
+    <Copy SourceFiles="@(Apps32)" DestinationFolder="stage\xp_x86"/>
+    <Copy SourceFiles="@(Apps32)" DestinationFolder="stage\vista_x86"/>
+    <Copy SourceFiles="@(Apps64)" DestinationFolder="stage\vista_amd64"/>
+  </Target>
+
+  <Target Name="Build">
+    <RemoveDir Directories="$(ProjectRoot)\stage"/>
+    <CallTarget Targets="GetDependentFiles"/>
+    <MSBuild Projects="$(MSBuildProjectFile)"
+             Targets="xp"
+             Properties="Rerun=xp"/>
+    <MSBuild Projects="$(MSBuildProjectFile)"
+         Targets="vista32"
+         Properties="Rerun=vista32"/>
+    <MSBuild Projects="$(MSBuildProjectFile)"
+         Targets="vista64"
+         Properties="Rerun=vista64"/>
+    <CallTarget Targets="BuildSpDLLs"/>
+    <CallTarget Targets="BuildApps"/>
+    <CallTarget Targets="en_installer"/>
+    <CallTarget Targets="jp_installer"/>
+  </Target>
+</Project>

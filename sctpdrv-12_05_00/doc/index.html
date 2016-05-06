@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr" lang="en">
+<head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+  <title>Introduction to SctpDrv</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <meta content="Bruce Cran" name="author">
+  <meta content="Copyright &copy; 2010 Bruce Cran" name="copyright">
+  <meta content="An overview of SctpDrv - the history of project, system requirements, how to use the netsh helper
+    and which SCTP API functions have been implemented" name="description">
+  <meta content="sctpdrv, sctp, history, sctpcvs, freebsd, sctp api" name="keywords">
+</head>
+<body>
+<div id="wrap">
+<!-- Navigation menu -->
+<div id="nav">
+<h3>Navigation</h3>
+<ul>
+  <li><a href="http://www.bluestop.org/SctpDrv/">Home</a></li>
+</ul>
+
+<h4>Documentation</h4>
+<ul>
+  <li>Introduction</li>
+  <li><a href="sctp.4.html">SCTP stack overview</a></li>
+  <li><a href="development.html">Development using SctpDrv</a></li>
+  <li><a href="building.html">Source code and building</a></li>
+  <li><a href="debugging.html">Debugging SctpDrv</a></li>
+</ul>
+
+<h4>SCTP API</h4>
+<ul>
+  <li><a href="sctp_bindx.3.html">sctp_bindx</a></li>
+  <li><a href="sctp_connectx.3.html">sctp_connectx</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freepaddrs</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freeladdrs</a></li>
+  <li><a href="sctp_getaddrlen.3.html">sctp_getaddrlen</a></li>
+  <li><a href="sctp_getassocid.3.html">sctp_getassocid</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getpaddrs</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getladdrs</a></li>
+  <li><a href="sctp_opt_info.3.html">sctp_opt_info</a></li>
+  <li><a href="sctp_peeloff.2.html">sctp_peeloff</a></li>
+  <li><a href="sctp_recvmsg.3.html">sctp_recvmsg</a></li>
+  <li><a href="sctp_send.3.html">sctp_send</a></li>
+  <li><a href="sctp_send.3.html">sctp_sendx</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsg</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsgx</a></li>
+</ul>
+</div>
+
+
+<div id="main">
+<h1>SctpDrv</h1>
+<hr>
+<h2>History</h2>
+<p>
+The SCTP stack upon which SctpDrv is based was originally released for
+FreeBSD, OpenBSD and NetBSD as a set of patches in April 2002. In
+November 2006 it was merged to FreeBSD -CURRENT (CVS HEAD). The
+authoritative location for the code is in the <em>sctpCVS</em> repository; changes are
+taken from there and committed to FreeBSD SVN, as well as for other
+platforms including OS X, NetBSD, OpenBSD and Windows.
+</p><p>
+The Windows port of the FreeBSD SCTP stack was originally
+developed by co-research between CO-CONV, Corp. and
+WIDE Project.&nbsp; The first release was made in March 2008, and was
+made available on the CO-CONV site <a href="http://www.co-conv.jp/en/product/sctpDrv/20080313/">here</a>. In
+December 2008 another release was created which added the SCTP API. It
+can be found <a href="http://www.co-conv.jp/en/product/sctpDrv/20081224/">here</a>.
+At that time the Windows SCTP code was held in a repository at http://trac.sctp.jp but unfortunately
+due to time constraints the <em>sctp.jp</em>
+site was discontinued in ealy-mid 2009. In late 2009 I decided to
+take a snapshot of code I had obtained while sctp.jp was still active
+and re-host it on <em>bluestop.org</em>.
+In the following months I attempted to take it from beta into a production-ready state.
+</p><p>
+All of the SCTP API documentation and a lot of the other documentation
+has been adapted from the FreeBSD manual pages which can be viewed online at <a href="http://www.freebsd.org/cgi/man.cgi">http://www.freebsd.org/cgi/man.cgi</a>
+</p>
+<h2>Installing</h2>
+<p>
+To use SctpDrv you must be running Windows XP, Windows Vista or
+Windows 7 (it should also work on Windows Server 2003 and Windows
+Server 2008, but is untested).
+</p><p>
+Download the latest version from <a href="http://www.bluestop.org/SctpDrv/releases/">http://www.bluestop.org/SctpDrv/releases/</a>
+and double-click the MSI file.
+</p><p>
+If the installation finds a copy of Vista or newer and the Windows
+Firewall is running, a new rule will be added to allow SCTP traffic to
+pass inbound through the firewall. If Windows XP is running or a
+3rd-party firewall is installed, no firewall configuration will be done
+and you must allow <em>protocol 132</em> to pass through the firewall in order for remote communications to work.
+</p><p>
+Once installed, you can verifiy
+the installation by runnning the <em>echo_client.exe
+</em>and <em>echo_server.exe</em>
+progams in C:\Program Files\SctpDrv\bin . These verify that loopback SCTP
+communication is working.
+</p>
+
+<h2>Tuning</h2>
+<p>
+You can modify stack parameters at runtime by using <a href="http://technet.microsoft.com/en-us/library/bb490939.aspx">netsh</a>;
+this provides a similar interface to <a href="http://www.freebsd.org/doc/en/books/handbook/configtuning-sysctl.html">sysctl</a>
+on BSD and Linux. For example, to change the UDP tunneling port to 10000:
+</p>
+<pre>
+netsh sctp set sysctl udp_tunneling_port 10000
+</pre>
+<p>
+To see the current values, use <i>netsh sctp show sysctl</i>, to see descriptions of the sysctl nodes, use
+<i>netsh sysctl show sysctl_desc</i> and to see information about active associations, run
+<i>netsh sysctl show association</i>. For more information, just type <i>netsh sctp</i>.
+</p><p>
+Note that in order to use
+the sctp netsh interface you must have Administrator privileges - i.e. you need to run the commands in an
+<a href="http://windows.microsoft.com/en-US/windows-vista/Command-Prompt-frequently-asked-questions">elevated command prompt</a>.
+</p>
+<h2>Status</h2>
+<p>
+The following SCTP API functions have been implemented:<br>
+<a href="sctp_peeloff.2.html">sctp_peeloff</a>, <a href="sctp_sendmsg.3.html">sctp_sendmsgx</a>,
+<a href="sctp_send.3.html">sctp_sendx</a>, <a href="sctp_sendmsg.3.html">sctp_sendmsg</a>,
+<a href="sctp_send.3.html">sctp_send</a>, <a href="sctp_recvmsg.3.html">sctp_recvmsg</a>,
+<a href="sctp_opt_info.3.html">sctp_opt_info</a>, <a href="sctp_getpaddrs.3.html">sctp_getpaddrs</a>,
+<a href="sctp_getpaddrs.3.html">sctp_getladdrs,</a> <a href="sctp_getassocid.3.html">sctp_getassocid</a>,
+<a href="sctp_getaddrlen.3.html">sctp_getaddrlen</a>, <a href="sctp_freepaddrs.3.html">sctp_freepaddrs</a>,
+<a href="sctp_freepaddrs.3.html">sctp_freeladdrs</a>, <a href="sctp_connectx.3.html">sctp_connectx</a>
+and <a href="sctp_bindx.3.html">sctp_bindx</a> .
+</p><p>
+Information about the features supported by the SCTP stack can be found <a href="sctp.4.html">here</a>.
+
+<h2>Developing SCTP applications using SctpDrv</h2>
+<p>
+SctpDrv is provided as a
+kernel driver which contains the SCTP stack.&nbsp; A Winsock provider
+dll is registered with Windows and gets called
+whenever an application wants to send data over SCTP. This way,
+the functionality is provided transparently to applications: <code>IPPROTO_SCTP</code>
+is just another protocol available in the <code>socket</code> (<code>WSASocket</code>)
+function call. The SCTP specific functions such as <code>sctp_send</code>
+are provided by linking to <code>sctpsp.lib</code>.
+</p><p>
+For information about using SctpDrv as a developer as opposed to
+an end-user, please see <a href="development.html">this page</a>.<br>
+
+<hr>
+Time: 13:16:10 GMT, June 29, 2010<br>
+<i>Windows is a registered trademark of Microsoft Corporation in
+the United States and other countries.</i><br>
+
+</div>
+</div>
+</body>
+</html>

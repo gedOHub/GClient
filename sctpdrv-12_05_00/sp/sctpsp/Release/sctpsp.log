@@ -1,0 +1,21 @@
+﻿Build started 2016-05-05 01:58:19.
+     1>Project "D:\git\GClient\sctpdrv-12_05_00\sp\sctpsp\sctpsp.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I.. /I..\.. /I..\..\apps\inc /Zi /nologo /W3 /WX /O2 /Oi /Oy- /GL /D NT /D __Windows__ /D HAVE_SCTP_PEELOFF_SOCKOPT /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D SCTPSP_EXPORTS /D _USING_V110_SDK71_ /D _WINDLL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt sctpsp.c sctp_sys_calls.c
+         sctpsp.c
+         sctp_sys_calls.c
+       ResourceCompile:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\bin\rc.exe /D _USING_V110_SDK71_ /l"0x0409" /I..\..\drv /nologo /fo"Release\sctpsp.res" sctpsp.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\git\GClient\Release\sctpsp.dll" /INCREMENTAL:NO /NOLOGO ws2_32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /DEF:"sctpsp.def" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\git\GClient\Release\sctpsp.pdb" /SUBSYSTEM:WINDOWS,"5.01" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\git\GClient\Release\sctpsp.lib" /MACHINE:X86 /SAFESEH /DLL Release\sctpsp.res
+         Release\sctpsp.obj
+         Release\sctp_sys_calls.obj
+            Creating library D:\git\GClient\Release\sctpsp.lib and object D:\git\GClient\Release\sctpsp.exp
+         Generating code
+         Finished generating code
+         sctpsp.vcxproj -> D:\git\GClient\Release\sctpsp.dll
+     1>Done Building Project "D:\git\GClient\sctpdrv-12_05_00\sp\sctpsp\sctpsp.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:03.04

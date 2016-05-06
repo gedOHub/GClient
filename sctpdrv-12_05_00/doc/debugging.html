@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr" lang="en">
+<head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+  <title>Debugging SctpDrv</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <meta content="Bruce Cran" name="author">
+  <meta content="Copyright &copy; 2010 Bruce Cran" name="copyright">
+  <meta content="How to build a checked (debug) version of SctpDrv and get debug output to appear in WinDBG
+  from the core SCTP stack and the Windows driver" name="description">
+  <meta content="sctpdrv, sctp, debugging, checked, windbg" name="keywords">
+</head>
+<body>
+<div id="wrap">
+<!-- Navigation menu -->
+<div id="nav">
+<h3>Navigation</h3>
+<ul>
+  <li><a href="http://www.bluestop.org/SctpDrv/">Home</a></li>
+</ul>
+
+<h4>Documentation</h4>
+<ul>
+  <li><a href="index.html">Introduction</a></li>
+  <li><a href="sctp.4.html">SCTP stack overview</a></li>
+  <li><a href="development.html">Development using SctpDrv</a></li>
+  <li><a href="building.html">Source code and building</a></li>
+  <li>Debugging SctpDrv</li>
+</ul>
+
+<h4>SCTP API</h4>
+<ul>
+  <li><a href="sctp_bindx.3.html">sctp_bindx</a></li>
+  <li><a href="sctp_connectx.3.html">sctp_connectx</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freepaddrs</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freeladdrs</a></li>
+  <li><a href="sctp_getaddrlen.3.html">sctp_getaddrlen</a></li>
+  <li><a href="sctp_getassocid.3.html">sctp_getassocid</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getpaddrs</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getladdrs</a></li>
+  <li><a href="sctp_opt_info.3.html">sctp_opt_info</a></li>
+  <li><a href="sctp_peeloff.2.html">sctp_peeloff</a></li>
+  <li><a href="sctp_recvmsg.3.html">sctp_recvmsg</a></li>
+  <li><a href="sctp_send.3.html">sctp_send</a></li>
+  <li><a href="sctp_send.3.html">sctp_sendx</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsg</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsgx</a></li>
+</ul>
+</div>
+
+
+<div id="main">
+<h2>Debugging SctpDrv<br>
+</h2>
+<hr>SctpDrv has lots of debugging output that can be enabled to track
+down problems. The first step is to build a <span style="font-style: italic;">checked</span> version of the driver,
+sctp.sys.&nbsp; You can do this by setting the <code>DEBUG</code> environment
+variable to 1 and then doing a build:<br>
+<br>
+<code>&gt; set DEBUG=1<br>
+&gt; dobuild.cmd<br>
+</code>
+<br>
+Doing that will build debug symbols and enable you to step through the
+code using WinDBG.&nbsp; To enable debug output for the Windows
+specific SCTP code, edit drv\sctp.c and add flags from <span style="font-style: italic;">sys\systm.h</span> to
+the <code>debug_on</code> variable around line 189.&nbsp; To obtain debug
+output for the protocol code (incl. routing etc.) you need to build SctpDrv with -DSCTP_DEBUG (add it in sources.inc in the root of the source hierarchy) and add flags from
+<span style="font-style: italic;">netinet\sctp_constants.h</span> to the <code>debug</code> sysctl via netsh.<br>
+<br>
+For example, to see which driver functions are called, use
+<code>DEBUG_GENERIC_VERBOSE</code>.<br>
+See the sources for the meaning of the other flags.<br>
+<br>
+<hr>Time: 17:55:00 GMT, November 5, 2010
+</div>
+</div>
+
+</body>
+</html>

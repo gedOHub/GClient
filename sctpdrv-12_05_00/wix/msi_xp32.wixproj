@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectRoot>$(MSBuildProjectDirectory)\..</ProjectRoot>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.7</ProductVersion>
+    <ProjectGuid>{04a28eb0-1e26-4475-bcfa-b91f98b07341}</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>SctpDrv_XP_x86</OutputName>
+    <OutputType>Package</OutputType>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <Locale Condition=" '$(Locale)' == '' ">en-us</Locale>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug;OS=xp;TargetArch=x86;Locale=$(Locale)</DefineConstants>
+    <SuppressAllWarnings>False</SuppressAllWarnings>
+    <Pedantic>True</Pedantic>
+    <SuppressSpecificWarnings>1076</SuppressSpecificWarnings>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <Cultures>$(Locale)</Cultures>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>OS=xp;TargetArch=x86;Locale=$(Locale)</DefineConstants>
+    <SuppressAllWarnings>False</SuppressAllWarnings>
+    <Pedantic>True</Pedantic>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <SuppressSpecificWarnings>1076</SuppressSpecificWarnings>
+    <Cultures>$(Locale)</Cultures>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DefineConstants>Debug;OS=xp;TargetArch=x86;Locale=$(Locale)</DefineConstants>
+    <SuppressAllWarnings>False</SuppressAllWarnings>
+    <Pedantic>True</Pedantic>
+    <SuppressSpecificWarnings>1076</SuppressSpecificWarnings>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <Cultures>$(Locale)</Cultures>
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DefineConstants>OS=xp;TargetArch=x86;Locale=$(Locale)</DefineConstants>
+    <SuppressAllWarnings>False</SuppressAllWarnings>
+    <Pedantic>True</Pedantic>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <SuppressSpecificWarnings>1076</SuppressSpecificWarnings>
+    <Cultures>$(Locale)</Cultures>
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="config.wxi">
+      <Link>config.wxi</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="custom_actions.wxs">
+      <Link>custom_actions.wxs</Link>
+    </Compile>
+    <Compile Include="module-common.wxs">
+      <Link>module-common.wxs</Link>
+    </Compile>
+    <Compile Include="sctpDrv.wxs">
+      <Link>sctpDrv.wxs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <WixLibrary Include="difxapp_x86">
+      <HintPath>..\..\..\..\..\Program Files (x86)\WiX Toolset v3.7\bin\difxapp_x86.wixlib</HintPath>
+      <Name>difxapp_x86</Name>
+    </WixLibrary>
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixDifxAppExtension">
+      <HintPath>$(WixExtDir)\WixDifxAppExtension.dll</HintPath>
+      <Name>WixDifxAppExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+</Project>

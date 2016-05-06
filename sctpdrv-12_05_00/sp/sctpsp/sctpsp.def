@@ -1,0 +1,19 @@
+LIBRARY sctpsp.dll
+EXPORTS
+WSPStartup                    @1
+internal_sctp_bindx           @2
+internal_sctp_connectx        @3
+internal_sctp_freeladdrs      @4
+internal_sctp_freepaddrs      @5
+internal_sctp_getaddrlen      @6
+internal_sctp_getassocid      @7
+internal_sctp_getladdrs       @8
+internal_sctp_getpaddrs       @9
+internal_sctp_opt_info        @10
+internal_sctp_peeloff         @11
+internal_sctp_recvmsg         @12
+internal_sctp_send            @13
+internal_sctp_sendmsg         @14
+internal_sctp_sendmsgx        @15
+internal_sctp_sendx           @16
+sctp_generic_recvmsg          @17

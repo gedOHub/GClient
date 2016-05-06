@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * Copyright (C) 2013 Bruce Cran.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <?include config.wxi ?>
+	<Bundle Name="SctpDrv" Version="$(var.VersionMajor).$(var.VersionMinor).$(var.VersionRev)"
+          Manufacturer="Bruce Cran"
+          UpgradeCode="383A987B-4527-48B8-A6DB-326F6386B40D"
+          Copyright="Copyright (c) 2008-2013">
+		<BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense" />
+    <WixVariable Id="WixStdbaLicenseRtf" Value="License.rtf" />
+
+    <Variable Name="InstallFolder" Type="string" Value="[ProgramFiles6432Folder][WixBundleName]"/>
+
+    <Chain>
+      <PackageGroupRef Id="vcredist"/>
+      <PackageGroupRef Id="NetFx40Web"/>
+      <MsiPackage Id="SctpDrv32_XP"
+                  SourceFile="bin\x86\$(var.Configuration)\SctpDrv_XP_x86.msi"
+                  ForcePerMachine="yes"
+                  Vital="yes"
+                  Cache="yes"
+                  InstallCondition="VersionNT &lt; v6.0 AND (NOT VersionNT64)">
+        <MsiProperty Name="APPLICATIONFOLDER" Value="[InstallFolder]"/>
+      </MsiPackage>
+      <MsiPackage Id="SctpDrv32_Vista"
+                  SourceFile="bin\x86\$(var.Configuration)\SctpDrv_Vista_x86.msi"
+                  ForcePerMachine="yes"
+                  Vital="yes"
+                  Cache="yes"
+                  InstallCondition="NOT VersionNT64 AND VersionNT &gt;= v6.0">
+        <MsiProperty Name="APPLICATIONFOLDER" Value="[InstallFolder]"/>
+      </MsiPackage>
+      <MsiPackage Id="SctpDrv64_Vista"
+                  SourceFile="bin\x64\$(var.Configuration)\SctpDrv_Vista_x64.msi"
+                  ForcePerMachine="yes"
+                  Vital="yes"
+                  Cache="yes"
+                  InstallCondition="VersionNT64 &gt;= v6.0">
+        <MsiProperty Name="APPLICATIONFOLDER" Value="[InstallFolder]"/>
+      </MsiPackage>
+		</Chain>
+	</Bundle>
+</Wix>

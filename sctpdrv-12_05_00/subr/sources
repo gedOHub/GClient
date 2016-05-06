@@ -1,0 +1,14 @@
+!include ..\sources.inc
+
+TARGETNAME=subr
+TARGETTYPE=LIBRARY
+
+TARGETLIBS=
+
+INCLUDES= \
+    ..; \
+    $(DDK_INC_PATH)
+
+SOURCES= \
+    md5.c \
+    random.c

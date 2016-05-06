@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr" lang="en">
+<head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+  <title>Man page of SCTP_RECVMSG</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <meta content="Bruce Cran" name="author">
+  <meta content="The manual page for sctp_recvmsg - receive a message from an SCTP socket" name="description">
+  <meta content="sctpdrv, sctp, sctp_recvmsg, sctp api" name="keywords">
+</head>
+<body>
+<div id="wrap">
+<!-- Navigation menu -->
+<div id="nav">
+<h3>Navigation</h3>
+<ul>
+  <li><a href="http://www.bluestop.org/SctpDrv/">Home</a></li>
+</ul>
+
+<h4>Documentation</h4>
+<ul>
+  <li><a href="index.html">Introduction</a></li>
+  <li><a href="sctp.4.html">SCTP stack overview</a></li>
+  <li><a href="development.html">Development using SctpDrv</a></li>
+  <li><a href="building.html">Source code and building</a></li>
+  <li><a href="debugging.html">Debugging SctpDrv</a></li>
+</ul>
+
+<h4>SCTP API</h4>
+<ul>
+  <li><a href="sctp_bindx.3.html">sctp_bindx</a></li>
+  <li><a href="sctp_connectx.3.html">sctp_connectx</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freepaddrs</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freeladdrs</a></li>
+  <li><a href="sctp_getaddrlen.3.html">sctp_getaddrlen</a></li>
+  <li><a href="sctp_getassocid.3.html">sctp_getassocid</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getpaddrs</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getladdrs</a></li>
+  <li><a href="sctp_opt_info.3.html">sctp_opt_info</a></li>
+  <li><a href="sctp_peeloff.2.html">sctp_peeloff</a></li>
+  <li>sctp_recvmsg</li>
+  <li><a href="sctp_send.3.html">sctp_send</a></li>
+  <li><a href="sctp_send.3.html">sctp_sendx</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsg</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsgx</a></li>
+</ul>
+</div>
+
+
+<div id="main">
+
+<h1>SCTP_RECVMSG</h1><hr>
+
+<h2>NAME</h2>
+
+<b>sctp_recvmsg</b> - receive a message from an SCTP socket
+
+<h2>LIBRARY</h2>sctpsp.dll (sctpsp.lib)
+
+<h2>SYNOPSIS</h2>
+
+<b>#include &lt;winsock2.h&gt;<br>
+#include &lt;ws2tcpip.h&gt;<br>
+#include &lt;ws2sctp.h&gt;</b><br>
+<br>
+<span class="param">ssize_t</span><br>
+<b>sctp_recvmsg</b>(<span class="param">SOCKET s</span>, <span class="param">void *msg</span>, <span class="param">size_t len</span>, <span class="param">struct sockaddr *from</span>, <span class="param">socklen_t *fromlen</span>, <span class="param">struct sctp_sndrcvinfo *sinfo</span>, <span class="param">int *flags</span>);
+
+
+<h2>DESCRIPTION</h2>
+<p>
+The <b>sctp_recvmsg()</b> system call is used to receive a message from another SCTP endpoint.
+The <b>sctp_recvmsg()</b> call is used by one-to-one (SOCK_STREAM) type sockets after a successful <b>connect()</b>
+call or after the application has performed a <b>listen()</b> followed by a successful <b>accept()</b> .
+For a one-to-many (SOCK_SEQPACKET) type socket, an endpoint may call <b>sctp_recvmsg()</b> after having implicitly started an association via one
+of the send calls including <b>sctp_sendmsg()</b> <b>sendto()</b> and <b>sendmsg()</b> .
+Or, an application may also receive a message after having called <b>listen()</b>
+with a positive backlog to enable the reception of new associations.
+</p><p>
+The address of the sender is held in the <span class="param">from</span> argument with <span class="param">fromlen</span>
+specifying its size. At the completion of a successful <b>sctp_recvmsg()</b> call <span class="param">from</span>
+will hold the address of the peer and <span class="param">fromlen</span> will hold the length of that address.
+Note that the address is bounded by the inital value of <span class="param">fromlen</span> which is used as an in/out variable.
+</p><p>
+The length of the message <span class="param">msg</span> to be received is bounded by <span class="param">len</span> .
+If the message is too long to fit in the users receive buffer, then the <span class="param">flags</span> argument will
+<i>not</i> have the MSG_EOF flag applied. If the message is a complete message then the <span class="param">flags</span>
+argument will have MSG_EOF set. Locally detected errors are indicated by a return value of -1 with <i>errno</i>
+set accordingly. The <span class="param">flags</span> argument may also hold the value MSG_NOTIFICATION
+When this occurs it indicates that the message received is <i>not</i> from the peer endpoint, but instead is a notification from the
+SCTP stack (see <a href="sctp.4.html">sctp(4)</a> for more details).
+Note that no notifications are ever given unless the user subscribes to such notifications using
+the SCTP_EVENTS socket option.
+</p><p>
+If no messages are available at the socket then <b>sctp_recvmsg()</b>
+normally blocks on the reception of a message or NOTIFICATION, unless the socket has been placed in non-blocking I/O mode.
+The <a href="http://msdn.microsoft.com/en-us/library/ms740141%28VS.85%29.aspx">select(msdn)</a>
+system call may be used to determine when it is possible to receive a message.
+</p><p>
+The <span class="param">sinfo</span> argument is defined as follows:
+
+</p>
+<pre>
+struct sctp_sndrcvinfo {
+        uint16_t sinfo_stream;  /* Stream arriving on */
+        uint16_t sinfo_ssn;     /* Stream Sequence Number */
+        uint16_t sinfo_flags;   /* Flags on the incoming message */
+        uint32_t sinfo_ppid;    /* The ppid field */
+        uint32_t sinfo_context; /* context field */
+        uint32_t sinfo_timetolive; /* not used by sctp_recvmsg */
+        uint32_t sinfo_tsn;        /* The transport sequence number */
+        uint32_t sinfo_cumtsn;     /* The cumulative acknowledgment point  */
+        sctp_assoc_t sinfo_assoc_id; /* The association id of the peer */
+};
+</pre>
+<p>
+The <span class="param">sinfo-&gt;sinfo_ppid</span> is an opaque 32 bit value that is passed transparently
+through the stack from the peer endpoint. Note that the stack passes this value without regard to byte order.
+</p><p>
+The <span class="param">sinfo-&gt;sinfo_flags</span> field may include the following:
+</p>
+<pre>#define SCTP_UNORDERED    0x0400        /* Message is un-ordered */<br></pre>
+<p>
+The SCTP_UNORDERED flag is used to specify that the message arrived with no
+specific order and was delivered to the peer application as soon as possible.
+When this flag is absent the message was delivered in order within the stream it was received.
+</p><p><span class="param">info-&gt;sinfo_stream</span> is the SCTP stream that the message was received on.
+Streams in SCTP are reliable (or partially reliable) flows of ordered messages.
+</p><p>
+The <span class="param">sinfo-&gt;sinfo_context</span> field is used only if the local application set an association level
+context with the SCTP_CONTEXT socket option. Optionally a user process can use this value to index some application
+specific data structure for all data coming from a specific association.
+</p><p>
+
+The <span class="param">sinfo-&gt;sinfo_ssn</span> will hold the stream sequence number assigned
+by the peer endpoint if the message is <i>not</i> unordered. For unordered messages this field holds an undefined value.
+</p><p>
+
+The <span class="param">sinfo-&gt;sinfo_tsn</span> holds a transport sequence number (TSN) that was assigned
+to this message by the peer endpoint. For messages that fit in or less than the path MTU this will be the only TSN assigned.
+Note that for messages that span multiple TSNs this value will be one of the TSNs that was used on the message.
+</p><p>
+<span class="param">info-&gt;sinfo_cumtsn</span> holds the current cumulative acknowledgment point of the transport association.
+Note that this may be larger or smaller than the TSN assigned to the message itself.
+</p><p><span class="param">info-&gt;sinfo_assoc_id</span> is the unique association identification that was assigned
+to the association. For one-to-many (SOCK_SEQPACKET) type sockets this value can be used to send data to the peer without
+the use of an address field. It is also quite useful in setting various socket options on the specific association
+(see <a href="sctp.4.html">sctp(4)</a>).
+</p><p>
+
+<span class="param">sinfo-&gt;info_timetolive</span> is not used by <b>sctp_recvmsg()</b> .
+
+
+</p><h2>RETURN VALUES</h2>
+
+The call returns the number of bytes received, or -1 if an error occurred.
+
+<h2>ERRORS</h2>
+
+The <b>sctp_recvmsg()</b> system call fails if:
+<dl>
+  <dt>[WSAEBADF]</dt>
+  <dd>An invalid descriptor was specified.</dd>
+  <dt>[WSAENOTSOCK]</dt>
+  <dd>The argument <span class="param">s</span> is not a socket.</dd>
+  <dt>[WSAEFAULT]</dt>
+  <dd>An invalid user space address was specified for an argument.</dd>
+  <dt>[WSAEMSGSIZE]</dt>
+  <dd>The socket requires that message be sent atomically, and the size of the message to be sent made this impossible.</dd>
+  <dt>[WSAEWOULDBLOCK]</dt>
+  <dd>The socket is marked non-blocking and the requested operation would block.</dd>
+  <dt>[WSAENOBUFS]</dt>
+  <dd>The system was unable to allocate an internal buffer. The operation may succeed when buffers become available.</dd>
+  <dt>[WSAENOBUFS]</dt>
+  <dd>The output queue for a network interface was full. This generally indicates that the interface has stopped sending,
+but may be caused by transient congestion.</dd>
+  <dt>[WSAEHOSTUNREACH]</dt>
+  <dd>The remote host was unreachable.</dd>
+  <dt>[WSAENOTCONN]</dt>
+  <dd>On a one-to-one style socket no association exists.</dd>
+  <dt>[WSAECONNRESET]</dt>
+  <dd>An abort was received by the stack while the user was attempting to send data to the peer.</dd>
+  <dt>[WSANO_DATA]</dt>
+  <dd>On a one to many style socket no address is specified so that the association cannot be located or the
+SCTP_ABORT flag was specified on a non-existing association.</dd>
+  <dt>[WSAEMSGSIZE]</dt>
+  <dd>The socket is unable to send anymore data (SBS_CANTSENDMORE has been set on the socket).
+This typically means that the socket is not connected and is a one-to-one style socket.</dd>
+</dl>
+
+<h2>SEE ALSO</h2>
+
+<a href="http://msdn.microsoft.com/en-us/library/ms740121%28VS.85%29.aspx">recv(msdn)</a>,
+<a href="http://msdn.microsoft.com/en-us/library/ms740141%28VS.85%29.aspx">select(msdn)</a>,
+<a href="http://msdn.microsoft.com/en-us/library/ms740506%28VS.85%29.aspx">socket(msdn)</a>, <a href="http://msdn.microsoft.com/en-us/library/1570wh78.aspx">_write(msdn)</a>,
+<a href="http://msdn.microsoft.com/en-us/library/ms738544%28VS.85%29.aspx">getsockopt(msdn)</a>,
+<a href="http://msdn.microsoft.com/en-us/library/ms740476%28VS.85%29.aspx">setsockopt(msdn)</a>,
+<a href="sctp_send.3.html">sctp_send(3)</a>,
+<a href="sctp_sendmsg.3.html">sctp_sendmsg(3)</a>, <a href="http://www.opengroup.org/onlinepubs/000095399/functions/sendmsg.html">sendmsg(opengroup)</a>,
+<a href="sctp.4.html">sctp(4)</a><br>
+
+<hr>
+Time: 11:22:30 GMT, January 31, 2010<br><br>
+<em>Adapted for SctpDrv from the FreeBSD manual page <a href="http://www.freebsd.org/cgi/man.cgi?query=sctp_recvmsg&amp;manpath=FreeBSD+8.0-RELEASE">sctp_recvmsg(3)</a><br>
+<a href="http://www.freebsd.org/copyright/">Legal Notices</a> | © 1995-2010 The FreeBSD Project. All rights reserved.</em>
+</div>
+</div>
+</body>
+</html>

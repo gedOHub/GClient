@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr" lang="en"><head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+  <title>Man page of SCTP_GETPADDRS</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <meta content="Bruce Cran" name="author">
+  <meta content="The manual page for sctp_getpaddrs and sctp_getladdrs - return a list of addresses
+    to the caller" name="description">
+  <meta content="sctpdrv, sctp, sctp_getpaddrs, sctp_getladdrs, sctp api" name="keywords">
+</head>
+<body>
+<div id="wrap">
+<!-- Navigation menu -->
+<div id="nav">
+<h3>Navigation</h3>
+<ul>
+  <li><a href="http://www.bluestop.org/SctpDrv/">Home</a></li>
+</ul>
+
+<h4>Documentation</h4>
+<ul>
+  <li><a href="index.html">Introduction</a></li>
+  <li><a href="sctp.4.html">SCTP stack overview</a></li>
+  <li><a href="development.html">Development using SctpDrv</a></li>
+  <li><a href="building.html">Source code and building</a></li>
+  <li><a href="debugging.html">Debugging SctpDrv</a></li>
+</ul>
+
+<h4>SCTP API</h4>
+<ul>
+  <li><a href="sctp_bindx.3.html">sctp_bindx</a></li>
+  <li><a href="sctp_connectx.3.html">sctp_connectx</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freepaddrs</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freeladdrs</a></li>
+  <li><a href="sctp_getaddrlen.3.html">sctp_getaddrlen</a></li>
+  <li><a href="sctp_getassocid.3.html">sctp_getassocid</a></li>
+  <li>sctp_getpaddrs</li>
+  <li>sctp_getladdrs</li>
+  <li><a href="sctp_opt_info.3.html">sctp_opt_info</a></li>
+  <li><a href="sctp_peeloff.2.html">sctp_peeloff</a></li>
+  <li><a href="sctp_recvmsg.3.html">sctp_recvmsg</a></li>
+  <li><a href="sctp_send.3.html">sctp_send</a></li>
+  <li><a href="sctp_send.3.html">sctp_sendx</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsg</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsgx</a></li>
+</ul>
+</div>
+
+
+<div id="main">
+
+<h1>SCTP_GETPADDRS</h1>
+<hr>
+<h2>NAME</h2>
+<b>sctp_getpaddrs</b>,
+<b>sctp_getladdrs</b> - return a list of addresses to the caller
+
+<h2>LIBRARY</h2>
+sctpsp.dll (sctpsp.lib)
+<h2>SYNOPSIS</h2>
+<b>#include &lt;winsock2.h&gt;<br>
+#include &lt;ws2tcpip.h&gt;<br>
+#include &lt;ws2sctp.h&gt;</b><br>
+<br>
+<span class="param">int</span><br>
+<b>sctp_getpaddrs</b>(<span class="param">int s</span>, <span class="param">sctp_assoc_t asocid</span>, <span class="param">struct
+sockaddr **addrs</span>);<br>
+<br>
+<span class="param">int</span><br>
+<b>sctp_getladdrs</b>(<span class="param">int s</span>, <span class="param">sctp_assoc_t asocid</span>, <span class="param">struct
+sockaddr **addrs</span>);
+
+<h2>DESCRIPTION</h2>
+The <b>sctp_getpaddrs()</b> function is used to get the list of the peers addresses.
+The <b>sctp_getladdr()</b> function is used to get the list of the local addresses.
+The association of interest is identified by the <span class="param">asocid</span> argument.
+The addresses are returned in a newly allocated array of socket addresses returned in the argument <span class="param">addrs</span>
+upon success. <p>After the caller is finished, the function <b>sctp_freepaddrs()</b> or <b>sctp_freeladdrs()</b>
+should be used to release the memory allocated by these calls.
+
+<h2>RETURN VALUES</h2>
+The call returns SOCKET_ERROR (-1) upon failure and a count of the number of addresses returned in
+<span class="param">addrs</span> upon success.
+
+<h2>ERRORS</h2>
+The functions can return the following errors.
+<dl>
+  <dt>[WSAEINVAL]</dt>
+  <dd>An address listed has an invalid family or no addresses were provided.</dd>
+  <dt>[WSAENOBUFS]</dt>
+  <dd>The call cannot allocate memory to hold the socket addresses.</dd>
+  <dt>[WSAEBADF]</dt>
+  <dd>The argument <span class="param">s</span> is not a valid descriptor.</dd>
+  <dt>[WSAENOTSOCK]</dt>
+  <dd>The argument <span class="param">s</span> is not a socket.</dd>
+</dl>
+
+<h2>SEE ALSO</h2>
+<a href="http://msdn.microsoft.com/en-us/library/ms738544%28VS.85%29.aspx">getsockopt(msdn)</a>,
+<a href="sctp_freepaddrs.3.html">sctp_freeladdrs(3)</a>,
+<a href="sctp_freepaddrs.3.html">sctp_freepaddrs(3)</a>,
+<a href="sctp.4.html">sctp(4)</a><br>
+<hr>
+Time: 11:22:30 GMT, January 31, 2010<br><br>
+<em>Adapted for SctpDrv from the FreeBSD manual page <a href="http://www.freebsd.org/cgi/man.cgi?query=sctp_getpaddrs&amp;manpath=FreeBSD+8.0-RELEASE">sctp_getpaddrs(3)</a><br>
+<a href="http://www.freebsd.org/copyright/">Legal Notices</a> | © 1995-2010 The FreeBSD Project. All rights reserved.</em>
+</div>
+</div>
+
+</body>
+</html>

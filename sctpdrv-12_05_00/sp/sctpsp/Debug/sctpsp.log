@@ -1,0 +1,13 @@
+﻿Build started 2016-05-05 01:45:36.
+     1>Project "D:\git\GClient\sctpdrv-12_05_00\sp\sctpsp\sctpsp.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\git\GClient\sctpdrv-12_05_00\apps\Debug\sctpsp.dll" /INCREMENTAL /NOLOGO ws2_32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /DEF:"sctpsp.def" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\git\GClient\sctpdrv-12_05_00\apps\Debug\sctpsp.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\git\GClient\sctpdrv-12_05_00\apps\Debug\sctpsp.lib" /MACHINE:X86 /DLL Debug\sctpsp.res
+         Debug\sctpsp.obj
+         Debug\sctp_sys_calls.obj
+            Creating library D:\git\GClient\sctpdrv-12_05_00\apps\Debug\sctpsp.lib and object D:\git\GClient\sctpdrv-12_05_00\apps\Debug\sctpsp.exp
+         sctpsp.vcxproj -> D:\git\GClient\sctpdrv-12_05_00\apps\Debug\sctpsp.dll
+     1>Done Building Project "D:\git\GClient\sctpdrv-12_05_00\sp\sctpsp\sctpsp.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.46

@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr" lang="en">
+<head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+  <title>Man page of SCTP</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <meta content="Bruce Cran" name="author">
+  <meta content="An overview of the SCTP stack in SctpDrv, including available features and extension" name="description">
+  <meta content="sctpdrv, sctp" name="keywords">
+</head>
+<body>
+<div id="wrap">
+<!-- Navigation menu -->
+<div id="nav">
+<h3>Navigation</h3>
+<ul>
+  <li><a href="http://www.bluestop.org/SctpDrv/">Home</a></li>
+</ul>
+
+<h4>Documentation</h4>
+<ul>
+  <li><a href="index.html">Introduction</a></li>
+  <li>SCTP stack overview</li>
+  <li><a href="development.html">Development using SctpDrv</a></li>
+  <li><a href="building.html">Source code and building</a></li>
+  <li><a href="debugging.html">Debugging SctpDrv</a></li>
+</ul>
+
+<h4>SCTP API</h4>
+<ul>
+  <li><a href="sctp_bindx.3.html">sctp_bindx</a></li>
+  <li><a href="sctp_connectx.3.html">sctp_connectx</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freepaddrs</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freeladdrs</a></li>
+  <li><a href="sctp_getaddrlen.3.html">sctp_getaddrlen</a></li>
+  <li><a href="sctp_getassocid.3.html">sctp_getassocid</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getpaddrs</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getladdrs</a></li>
+  <li><a href="sctp_opt_info.3.html">sctp_opt_info</a></li>
+  <li><a href="sctp_peeloff.2.html">sctp_peeloff</a></li>
+  <li><a href="sctp_recvmsg.3.html">sctp_recvmsg</a></li>
+  <li><a href="sctp_send.3.html">sctp_send</a></li>
+  <li><a href="sctp_send.3.html">sctp_sendx</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsg</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsgx</a></li>
+</ul>
+</div>
+
+
+<div id="main">
+
+<h1>SCTP</h1>
+<hr>
+<h2>NAME</h2>
+<b>sctp</b> - Internet Stream Control Transmission Protocol
+<h2>SYNOPSIS</h2>
+<b>#include &lt;winsock2.h&gt;<br>
+#include &lt;ws2tcpip.h&gt;<br>
+#include &lt;ws2sctp.h&gt;</b><br><br>
+<span class="param">int</span><br>
+<b>socket </b>(<span class="param">AF_INET</span>, <span class="param">SOCK_STREAM</span>,<span class="param">IPPROTO_SCTP</span>);<br><br>
+
+<span class="param">int</span><br>
+<b>socket</b>(<span class="param">AF_INET</span>, <span class="param">SOCK_SEQPACKET</span>, <span class="param">IPPROTO_SCTP</span>);
+
+<h2>DESCRIPTION</h2>
+<p>
+The SCTP protocol provides reliable, flow-controlled, two-way transmission of data. It is a message oriented protocol and can
+support the SOCK_STREAM and SOCK_SEQPACKET abstractions. SCTP uses the standard Internet address format and, in addition, provides a per-host
+collection of ``port addresses''. Thus, each address is composed of an Internet address specifying the host and network, with a specific
+SCTP port on the host identifying the peer entity.
+</p><p>
+There are two models of programming in SCTP. The first uses the SOCK_STREAM abstraction. In this abstraction sockets utilizing the
+SCTP protocol are either ``active'' or ``passive''. Active sockets initiate connections to passive sockets. By default, SCTP
+sockets are created active; to create a passive socket, the <a href="http://msdn.microsoft.com/en-us/library/ms739168%28VS.85%29.aspx">listen(msdn)</a>
+system call must be used after binding the socket with the <a href="http://msdn.microsoft.com/en-us/library/ms737550%28VS.85%29.aspx">bind(msdn)</a>
+or <a href="sctp_bindx.3.html">sctp_bindx(3)</a> system calls. Only passive sockets may use the <a href="http://msdn.microsoft.com/en-us/library/ms737526%28VS.85%29.aspx">accept(msdn)</a>
+call to accept incoming connections. Only active sockets may use the <a href="http://msdn.microsoft.com/en-us/library/ms737625%28VS.85%29.aspx">connect(msdn)</a>
+call to initiate connections.
+</p><p>
+The other abstraction SOCK_SEQPACKET provides a ``connectionless'' mode of operation in that the user may send to an address (using any of the valid send calls that carry a
+socket address) and an association will be setup implicitly by the underlying SCTP transport stack. This abstraction is the only one capable of sending data on the
+third leg of the four-way handshake. A user must still call <a href="http://msdn.microsoft.com/en-us/library/ms739168%28VS.85%29.aspx">listen(msdn)</a>
+to allow the socket to accept connections. Calling <a href="http://msdn.microsoft.com/en-us/library/ms739168%28VS.85%29.aspx">listen(msdn)</a>
+however does not restrict the user from still initiating implicit connections to other peers.
+</p><p>
+The SCTP protocol directly supports multi-homing. So when binding a socket with the ``wildcard'' address INADDR_ANY the SCTP stack will inform the peer about all of the local addresses
+that are deemed in scope of the peer. The peer will then possibly have multiple paths to reach the local host.
+</p><p>
+The SCTP transport protocol is also multi-streamed. Multi-streaming refers to the ability to send sub-ordered flows of messages.
+A user performs this by specifying a specific stream in one of the extended send calls such as the <a href="sctp_send.3.html">sctp_send(3)</a>
+function call. Sending messages on different streams will allow parallel delivery of data i.e., a message loss in stream 1 will not block the delivery
+of messages sent in stream 2.
+</p><p>
+The SCTP transport protocol also provides a unordered service as well. The unordered service allows a message to be sent and delivered
+with no regard to the ordering of any other message.
+</p>
+
+<h3>Extensions</h3>
+This implementation of SCTP also supports the following extensions:
+<dl>
+  <dt>sctp partial reliability</dt>
+  <dd>This extension allows one to have message be skipped and not delivered based on some user specified parameters.</dd>
+  <dt>sctp dynamic addressing</dt>
+  <dd>This extension allows addresses to be added and deleted dynammically from an existing association.</dd>
+  <dt>sctp authentication</dt>
+  <dd>This extension allows the user to authenticate specific peer chunks (including data) to validate that the peer
+who sent the message is in fact the peer who setup the association. A shared key option is also provided for
+so that two stacks can pre-share keys.</dd>
+  <dt>packet drop</dt>
+  <dd>Some routers support a special satellite protocol that will report losses due to corruption.
+This allows retransmissions without subsequent loss in bandwidth
+utilization.</dd>
+  <dt>stream reset</dt>
+  <dd>This extension allows a user on either side to reset the stream sequence numbers used by any or all streams.</dd>
+</dl>
+
+<p>SCTP supports a number of socket options which can be set with
+<a href="http://msdn.microsoft.com/en-us/library/ms740476%28VS.85%29.aspx">setsockopt(msdn)</a> and tested with
+<a href="http://msdn.microsoft.com/en-us/library/ms738544%28VS.85%29.aspx">getsockopt(msdn)</a> or <a href="sctp_opt_info.3.html">sctp_opt_info(3)</a>:
+</p>
+<dl>
+  <dt>SCTP_NODELAY</dt>
+  <dd>Under most circumstances, SCTP sends data when it is presented; when outstanding data has not
+yet been acknowledged, it gathers small amounts of output to be sent in a single packet once an acknowledgement is received.
+For some clients, such as window systems that send a stream of mouse events which receive no replies, this packetization may
+cause significant delays. The boolean option SCTP_NODELAY defeats this algorithm.</dd>
+  <dt>SCTP_RTOINFO</dt>
+  <dd>This option returns specific information about an associations ``Retransmission Time Out''. It can also be used to change the default values.</dd>
+  <dt>SCTP_ASSOCINFO</dt>
+  <dd>This option returns specific information about the requested association.</dd>
+  <dt>SCTP_INITMSG</dt>
+  <dd>This option allows you to get or set the default sending parameters when an association is implicitly setup.
+It allows you to change such things as the maxium number of streams allowed inbound and the number of streams requested of the peer.</dd>
+  <dt>SCTP_AUTOCLOSE </dt>
+  <dd>For the one-to-many model (SOCK_SEQPACKET associations are setup implicitly. This option allows the user to specify a default number of idle
+seconds to allow the association be maintained. After the idle timer (where no user message have been sent or have
+been received from the peer) the association will be gracefully closed.
+The default for this value is 0, or unlimited (i.e., no automatic close).</dd>
+  <dt>SCTP_SET_PEER_PRIMARY_ADDR</dt>
+  <dd>The dynamic address extension allows a peer to also request a particular address of its be made into the primary address.
+This option allows the caller to make such a request to a peer. Note that if the peer does not also support the dynamic address
+extension, this call will fail. Note the caller must provide a valid local address that the peer has
+been told about during association setup or dynamically.</dd>
+  <dt>SCTP_PRIMARY_ADDR</dt>
+  <dd>This option allows the setting of the primary address that the caller wishes to send to.
+The caller provides the address of a peer that is to be made primary.</dd>
+  <dt>SCTP_ADAPTATION_LAYER</dt>
+  <dd>The dynamic address extension also allows a user to pass a 32 bit opaque value upon association setup.
+This option allows a user to set or get this value.</dd>
+  <dt>SCTP_DISABLE_FRAGMENTS</dt>
+  <dd>By default SCTP will fragment user messages into multiple pieces that
+will fit on the network and then later, upon reception, reassemble the pieces into a single user message.
+If this option is enabled instead, any send that exceeds the path maximum transfer unit (P-MTU) will fail and the message will NOT be sent.</dd>
+  <dt>SCTP_PEER_ADDR_PARAMS</dt>
+  <dd>This option will allow a user to set or get specific peer address parameters.</dd>
+  <dt>SCTP_DEFAULT_SEND_PARAM</dt>
+  <dd>When a user does not use one of the extended send calls (e.g., <a href="sctp_sendmsg.3.html">sctp_sendmsg(3)</a>)
+a set of default values apply to each send. These values include things like the stream number to send
+to as well as the per-protocol id. This option lets a caller both get and set these values.
+If the user changes these default values, then these new values will be used as the default whenever no information is provided by the
+sender (i.e., the non-extended API is used).</dd>
+  <dt>SCTP_EVENTS</dt>
+  <dd>SCTP has non-data events that it can communicate to its application.
+By default these are all disabled since they arrive in the data path with a special flag MSG_NOTIFICATION
+set upon the received message. This option lets a caller both get what events are current being received
+as well as set different events that they may be interested in receiving.</dd>
+  <dt>SCTP_I_WANT_MAPPED_V4_ADDR</dt>
+  <dd>SCTP supports both IPV4 and IPV6. An association may span both IPV4 and IPV6 addresses since SCTP
+is multi-homed. By default, when opening an IPV6 socket, when data arrives on the socket from a peer's
+V4 address the V4 address will be presented with an address family of AF_INET. If this is undesireable, then this option
+can be enabled which will then convert all V4 addresses into mapped V6 representations.</dd>
+  <dt>SCTP_MAXSEG</dt>
+  <dd>By default SCTP chooses its message fragmentation point based upon the smallest P-MTU of the peer.
+This option lets the caller set it to a smaller value. Note that while the user can change this value, if the P-MTU
+is smaller than the value set by the user, then the P-MTU value will override any user setting.</dd>
+  <dt>SCTP_DELAYED_ACK_TIME </dt>
+  <dd>This option lets the user both set and get the delayed ack time (in milliseconds) that SCTP is using.
+The default is 200 milliseconds.</dd>
+  <dt>SCTP_PARTIAL_DELIVERY_POINT</dt>
+  <dd>SCTP at times may need to start delivery of a very large message before the entire message has arrived.
+By default SCTP waits until the incoming message is larger than one fourth of the receive buffer.
+This option allows the stacks value to be overridden with a smaller value.</dd>
+  <dt>SCTP_FRAGMENT_INTERLEAVE</dt>
+  <dd>SCTP at times will start partial delivery (as mentioned above).
+In the normal case successive reads will continue to return the rest of the message, blocking if needed, until all of
+that message is read. However this means other messages may have arrived and be ready
+for delivery and be blocked behind the message being partially delivered. If this option is enabled, when a partial delivery
+message has no more data to be received, then a subsequent read may return a different message that is ready for delivery.
+By default this option is off since the user must be using the extended API's to be able to tell the difference between
+messages (via the stream and stream sequence number).</dd>
+  <dt>SCTP_AUTH_CHUNK</dt>
+  <dd>By default only the dynamic addressing chunks are authenticated. This option lets a user request an
+additional chunk be authenticated as well. Note that successive calls to this option will work and continue
+to add more chunks that require authentication. Note that this option only effects future associations and
+not existing ones.</dd>
+  <dt>SCTP_AUTH_KEY</dt>
+  <dd>This option allows a user to specify a shared key that can be later used to authenticate a peer.</dd>
+  <dt>SCTP_HMAC_IDENT</dt>
+  <dd>This option will let you get or set the list of HMAC algorithms used to authenticate peers.
+Note that the HMAC values are in priority order where the first HMAC identifier is the most prefered
+and the last is the least prefered.</dd>
+  <dt>SCTP_AUTH_ACTIVE_KEY</dt>
+  <dd>This option allows you to make a key active for the generation of authentication information.
+Note that the peer must have the same key or else the data will be discarded.</dd>
+  <dt>SCTP_AUTH_DELETE_KEY</dt>
+  <dd>This option allows you to delete an old key.</dd>
+  <dt>SCTP_USE_EXT_RECVINFO</dt>
+  <dd>The sockets api document allows an extended send/receive information structure to be used.
+The extended structure includes additional fields related to the next message to be received (after the
+current receive completes) if such information is known. By default the system will not pass this information.
+This option allows the user to request this information.</dd>
+  <dt>SCTP_AUTO_ASCONF</dt>
+  <dd>By default when bound to all address and the system administrator has
+enables automatic dynamic addresses, the SCTP stack will automatically generate address changes into add and
+delete requests to any peers by setting this option to true. This option allows an endpoint to disable that behavior.</dd>
+  <dt>SCTP_MAXBURST</dt>
+  <dd>By default SCTP implements micro-burst control so that as the congestion window
+opens up no large burst of packets can be generated. The default burst limit is four.
+This option lets the user change this value.</dd>
+  <dt>SCTP_CONTEXT</dt>
+  <dd>Many sctp extended calls have a context field. The context field is a 32 bit opaque value that will be returned in
+send failures. This option lets the caller set the default context value to use when none is provided by the user.</dd>
+  <dt>SCTP_EXPLICIT_EOR</dt>
+  <dd>By default, a single send is a complete message. SCTP generates an implied record boundary.
+If this option is enabled, then all sends are part of the same message until the user indicates an end of record with the
+special flag SCTP_EOR passed in the sctp_sndrcvinfo flags field. This effectively makes all sends part of the same message
+until the user specifices differently. This means that a caller must NOT change the stream number until
+after the SCTP_EOR is passed to SCTP else an error will be returned.</dd>
+  <dt>SCTP_STATUS</dt>
+  <dd>This option is a read only option that returns various status information about the specified association.</dd>
+  <dt>SCTP_GET_PEER_ADDR_INFO</dt>
+  <dd>This read only option returns information about a peer address.</dd>
+  <dt>SCTP_PEER_AUTH_CHUNKS</dt>
+  <dd>This read only option returns a list of the chunks the peer requires to be authenticated.</dd>
+  <dt>SCTP_LOCAL_AUTH_CHUNKS</dt>
+  <dd>This read only option returns a list of the locally required chunks that must be authenticated.</dd>
+  <dt>SCTP_RESET_STREAMS</dt>
+  <dd>This socket option is used to cause a stream sequence number or all stream sequence numbers to be reset.
+Note that the peer SCTP endpoint must also support the stream reset extension as well.</dd>
+</dl>
+
+<h2>SEE ALSO</h2>
+<a href="http://msdn.microsoft.com/en-us/library/ms737526%28VS.85%29.aspx">accept(msdn)</a>,
+<a href="http://msdn.microsoft.com/en-us/library/ms737550%28VS.85%29.aspx">bind(msdn)</a>,
+<a href="http://msdn.microsoft.com/en-us/library/ms737625%28VS.85%29.aspx">connect(msdn)</a>,
+<a href="http://msdn.microsoft.com/en-us/library/ms739168%28VS.85%29.aspx">listen(msdn)</a>,
+<a href="sctp_bindx.3.html">sctp_bindx(3)</a>,
+<a href="sctp_connectx.3.html">sctp_connectx(3)</a>,
+<a href="sctp_opt_info.3.html">sctp_opt_info(3)</a>,
+<a href="sctp_recvmsg.3.html">sctp_recvmsg(3)</a>,
+<a href="sctp_sendmsg.3.html">sctp_sendmsg(3)</a><br>
+<hr>
+Time: 14:46:05 GMT, January 10, 2010<br><br>
+<em>Adapted for SctpDrv from the FreeBSD manual page <a href="http://www.freebsd.org/cgi/man.cgi?query=sctp&amp;manpath=FreeBSD+8.0-RELEASE">sctp(4)</a><br>
+<a href="http://www.freebsd.org/copyright/">Legal Notices</a> | © 1995-2010 The FreeBSD Project. All rights reserved.</em>
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<OBJECT type="text/site properties">
+	<param name="ImageType" value="Folder">
+</OBJECT>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Introduction">
+		<param name="Local" value="index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="SCTP stack overview">
+		<param name="Local" value="sctp.4.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="App development using SctpDrv">
+		<param name="Local" value="development.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Debugging SctpDrv">
+		<param name="Local" value="debugging.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Getting and building SctpDrv">
+		<param name="Local" value="building.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="SCTP API">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="sctp_peeloff">
+			<param name="Local" value="sctp_peeloff.2.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="sctp_sendmsgx">
+			<param name="Local" value="sctp_sendmsg.3.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="sctp_sendx">
+			<param name="Local" value="sctp_send.3.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="sctp_sendmsg">
+			<param name="Local" value="sctp_sendmsg.3.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="sctp_send">
+			<param name="Local" value="sctp_send.3.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="sctp_recvmsg">
+			<param name="Local" value="sctp_recvmsg.3.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="sctp_opt_info">
+			<param name="Local" value="sctp_opt_info.3.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="sctp_getpaddrs">
+			<param name="Local" value="sctp_getpaddrs.3.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="sctp_getladdrs">
+			<param name="Local" value="sctp_getpaddrs.3.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="sctp_getassocid">
+			<param name="Local" value="sctp_getassocid.3.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="sctp_getaddrlen">
+			<param name="Local" value="sctp_getaddrlen.3.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="sctp_freeladdrs">
+			<param name="Local" value="sctp_freepaddrs.3.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="sctp_freepaddrs">
+			<param name="Local" value="sctp_freepaddrs.3.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="sctp_connectx">
+			<param name="Local" value="sctp_connectx.3.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="sctp_bindx">
+			<param name="Local" value="sctp_bindx.3.html">
+			</OBJECT>
+	</UL>
+</UL>
+</BODY></HTML>

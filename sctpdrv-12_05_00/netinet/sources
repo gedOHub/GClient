@@ -1,0 +1,38 @@
+!include ..\sources.inc
+
+MAKEDIR=.
+TARGETNAME=netinet
+TARGETTYPE=LIBRARY
+
+TARGETLIBS=
+
+INCLUDES= \
+    ..; \
+    ..\inc; \
+    ..\algrthms; \
+    ..\subr; \
+    ..\net; \
+    ..\netinet; \
+    $(DDK_INC_PATH)
+
+SOURCES= \
+    in_proto.c \
+    in.c \
+    sctp_asconf.c \
+    sctp_auth.c \
+    sctp_windows_addr.c \
+    sctp_cc_functions.c \
+    sctp_ss_functions.c \
+    sctp_crc32.c \
+    sctp_indata.c \
+    sctp_input.c \
+    sctp_output.c \
+    sctp_pcb.c \
+    sctp_peeloff.c \
+    sctp_sha1.c \
+    sctp_sysctl.c \
+    sctp_timer.c \
+    sctp_usrreq.c \
+    sctputil.c
+
+RUN_WPP= sctputil.c -km -func:SCTP_CTR6(LEVEL,MSG,...)

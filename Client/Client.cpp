@@ -42,6 +42,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		ToServer = gcnew UDPToServerSocket(settings->getSetting("serverAddress"),
 			settings->getSetting("serverPort"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket, STOContainer, settings, tunnels);
 	}
+	else if (settings->getSetting("protocol") == "SCTP"){
+		ToServer = gcnew SCTPToServerSocket(settings->getSetting("serverAddress"),
+			settings->getSetting("serverPort"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket, STOContainer, settings, tunnels);
+	}
 	else {
 		printf("Gauta nezinoma protocol reiksme\n");
 		exit(999);
@@ -97,7 +101,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		tempWrite = rasomiSocket;
 		tempError = klaidingiSocket;
 		// Pasiemam dekriptorius kurie turi kazka nuskaitimui
-		if (select(Globals::maxD + 1, &tempRead, &tempWrite, &tempError, &time) == SOCKET_ERROR){
+		if (select(Globals::maxD + 1, &tempRead, nullptr, nullptr, nullptr) < 0){
 			// Select nepasiseke grazinti dekriptoriu
 			Console::WriteLine(WSAGetLastError());
 			switch(WSAGetLastError()){

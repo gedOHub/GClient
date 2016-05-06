@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr" lang="en"><head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+  <title>Man page of SCTP_OPT_INFO</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <meta content="Bruce Cran" name="author">
+  <meta content="The manual page for sctp_opt_info - get SCTP socket information" name="description">
+  <meta content="sctpdrv, sctp, sctp_opt_info, sctp api" name="keywords">
+</head>
+<body>
+<div id="wrap">
+<!-- Navigation menu -->
+<div id="nav">
+<h3>Navigation</h3>
+<ul>
+  <li><a href="http://www.bluestop.org/SctpDrv/">Home</a></li>
+</ul>
+
+<h4>Documentation</h4>
+<ul>
+  <li><a href="index.html">Introduction</a></li>
+  <li><a href="sctp.4.html">SCTP stack overview</a></li>
+  <li><a href="development.html">Development using SctpDrv</a></li>
+  <li><a href="building.html">Source code and building</a></li>
+  <li><a href="debugging.html">Debugging SctpDrv</a></li>
+</ul>
+
+<h4>SCTP API</h4>
+<ul>
+  <li><a href="sctp_bindx.3.html">sctp_bindx</a></li>
+  <li><a href="sctp_connectx.3.html">sctp_connectx</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freepaddrs</a></li>
+  <li><a href="sctp_freepaddrs.3.html">sctp_freeladdrs</a></li>
+  <li><a href="sctp_getaddrlen.3.html">sctp_getaddrlen</a></li>
+  <li><a href="sctp_getassocid.3.html">sctp_getassocid</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getpaddrs</a></li>
+  <li><a href="sctp_getpaddrs.3.html">sctp_getladdrs</a></li>
+  <li>sctp_opt_info</li>
+  <li><a href="sctp_peeloff.2.html">sctp_peeloff</a></li>
+  <li><a href="sctp_recvmsg.3.html">sctp_recvmsg</a></li>
+  <li><a href="sctp_send.3.html">sctp_send</a></li>
+  <li><a href="sctp_send.3.html">sctp_sendx</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsg</a></li>
+  <li><a href="sctp_sendmsg.3.html">sctp_sendmsgx</a></li>
+</ul>
+</div>
+
+
+<div id="main">
+
+<h1>SCTP_OPT_INFO</h1><hr>
+
+<h2>NAME</h2>
+
+<b>sctp_opt_info</b> - get SCTP socket information
+
+<h2>LIBRARY</h2>sctpsp.dll (sctpsp.lib)
+<h2>SYNOPSIS</h2><b>#include &lt;winsock2.h&gt;<br>
+#include &lt;ws2tcpip.h&gt;<br>
+#include &lt;ws2sctp.h&gt;</b><br>
+<br>
+<span class="param">int</span><br>
+<b>sctp_opt_info</b>(<span class="param">int s</span>, <span class="param">sctp_assoc_t asocid</span>, <span class="param">int opt</span>, <span class="param">void *arg</span>, <span class="param">socklen_t *size</span>);
+
+<h2>DESCRIPTION</h2>
+
+The <b>sctp_opt_info()</b> call provides a multi-os compatible method for getting specific <b>getsockopt()</b>
+data where an association identification needs to be passed into the operating system.
+
+<ul>
+  <li>SCTP_RTOINFO</li>
+  <li>SCTP_ASSOCINFO</li>
+  <li>SCTP_PRIMARY_ADDR</li>
+  <li>SCTP_SET_PEER_PRIMARY_ADDR</li>
+  <li>SCTP_STATUS</li>
+  <li>SCTP_GET_PEER_ADDR_INFO</li>
+  <li>SCTP_AUTH_ACTIVE_KEY</li>
+  <li>SCTP_PEER_AUTH_CHUNKS</li>
+  <li>SCTP_LOCAL_AUTH_CHUNKS</li>
+</ul>
+
+<h2>ERRORS</h2>
+
+The <b>sctp_opt_info()</b> function can return the following errors:
+
+<dl>
+  <dt>[WSAEINVAL]</dt>
+  <dd>The argument <span class="param">arg</span> value was invalid.</dd>
+  <dt>[WSAEOPNOTSUPP]</dt>
+  <dd>The argument <span class="param">opt</span> was not one of the above listed SCTP socket options.</dd>
+  <dt>[WSAEBADF]</dt>
+  <dd>The argument <span class="param">s</span> is not a valid descriptor.</dd>
+  <dt>[WSAENOTSOCK]</dt>
+  <dd>The argument <span class="param">s</span> is not a socket.</dd>
+</dl>
+
+<h2>SEE ALSO</h2>
+
+<a href="http://msdn.microsoft.com/en-us/library/ms738544%28VS.85%29.aspx">getsockopt(msdn)</a>,
+<a href="sctp.4.html">sctp(4)</a><br>
+
+<hr>
+Time: 11:22:30 GMT, January 31, 2010<br><br>
+<em>Adapted for SctpDrv from the FreeBSD manual page <a href="http://www.freebsd.org/cgi/man.cgi?query=sctp_opt_info&amp;manpath=FreeBSD+8.0-RELEASE">sctp_opt_info(3)</a><br>
+<a href="http://www.freebsd.org/copyright/">Legal Notices</a> | © 1995-2010 The FreeBSD Project. All rights reserved.</em>
+</div>
+</div>
+</body>
+</html>
