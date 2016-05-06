@@ -3,7 +3,6 @@ namespace GClientLib{
 		// Dirbanciu deskriptriu didziausai reimske
 		extern int maxD;
 		extern int CommandTag;
-		extern bool quit;
 	};
 
 /* KONSTANTOS */

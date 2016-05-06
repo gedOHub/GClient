@@ -7,6 +7,7 @@ CLI::CLI(ToServerSocket^ socket, SocketToObjectContainer^ STOContainer, Settings
 	this->socket = socket;
 	this->STOContainer = STOContainer;
 	this->settings = settings;
+
 }
 
 void CLI::Start(){
@@ -19,7 +20,7 @@ void CLI::Start(){
 
 		// Komanda quit ir exit
 		if(zodis == "quit" || zodis == "exit"){
-
+			this->quitApp = true;
 			break;
 		}
 
@@ -99,7 +100,6 @@ void CLI::Start(){
 		printf("Ivesta neatpazinta koamnda. Komandas galima suzinoti ivedus komanda help\n");
 
 	}	// While(zodis != "quit" || zodis != "exit")
-	Globals::quit = true;
 }
 
 string CLI::ClearCLI(){
@@ -107,4 +107,9 @@ string CLI::ClearCLI(){
 		cin.clear();
 		fflush(stdin);
 		return "";
+}
+
+bool CLI::getQuitStatus(){
+	// Isvalau ivedimo buferi
+	return this->quitApp;
 }

@@ -96,7 +96,7 @@ int GClientLib::ServerSocket::Accept(SocketToObjectContainer^ container){
 		printf("Nepavyko gauti kliento duomenu: %d\n", WSAGetLastError());
 	} else {
 		struct sockaddr_in *p = (struct sockaddr_in *) &peer;
-		char address[INET_ADDRSTRLEN];
+		//char address[INET_ADDRSTRLEN];
 		//inet_ntop(AF_INET, &(p->sin_addr), address, INET_ADDRSTRLEN);
 		// printf("Klientas %s prisijunge prie %d deskriptoriaus", address, (int)ntohs(p->sin_port));
 	}

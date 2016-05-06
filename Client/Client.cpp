@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+#include "CLI.h"
 #include "GClientLib.h"
 
 using namespace GClientLib;
@@ -30,7 +31,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	// Pridedu konsole prie rasomu
 	//FD_SET(0, &rasomiSocket);
 	FD_ZERO(&klaidingiSocket);
-	
+
 	//Sukuria socketa jungtis prie pagrindinio serverio
 	ToServerSocket^ ToServer = nullptr;
 	// Tirkinu kuri protokola naudoti
@@ -50,10 +51,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		printf("Gauta nezinoma protocol reiksme\n");
 		exit(999);
 	}
-		
-		
+
+
 	// Tikrinam ar pavyko uzmegsti rysi iki centrinio serverio
-	if(ToServer->GetSocket() == INVALID_SOCKET){
+	if (ToServer->GetSocket() == INVALID_SOCKET){
 		printf("Nepavyko sukurti objekto darbui su centriniu serveriu\n");
 		return 1;
 	}
@@ -61,7 +62,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	Globals::maxD = ToServer->GetSocket();
 	// Sukurta sujungima dedame i sarasus
 	STOContainer->Add(ToServer);
-	
+
 	// Pradedu CLI gija valdymui
 	CLI ^console = gcnew CLI(ToServer, STOContainer, settings);
 	Thread ^consoleThread = gcnew Thread(gcnew ThreadStart(console, &CLI::Start));
@@ -69,7 +70,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	// JSON API
 	JSONapi^ JSON_API = gcnew JSONapi(settings, ToServer, tunnels);
-	
+
 	// TODO: padaryti kad veiktu net ir tada kai nepavyksta uzkrauti JSON socketo
 	// WEB klientu socketas
 	JSONapiServer^ JSON;
@@ -89,53 +90,38 @@ int _tmain(int argc, _TCHAR* argv[])
 			// Sukurta sujungima dedame i sarasus
 			STOContainer->Add(JSON);
 		}
-	} catch (Exception^ e) {
+	}
+	catch (Exception^ e) {
 		Console::WriteLine("Nepavyko sukurti prievado grafinei sasajai");
 		Diagnostics::Debug::WriteLine(e);
 	}
 
 	fd_set tempRead, tempWrite, tempError;	// Laikinas dekriptoriu kintamasis
-	while(!Globals::quit){
+	while (!console->getQuitStatus()){
 		// Siam ciklui skaitomi dekriptoriai
 		tempRead = skaitomiSocket;
-		tempWrite = rasomiSocket;
-		tempError = klaidingiSocket;
 		// Pasiemam dekriptorius kurie turi kazka nuskaitimui
-		if (select(Globals::maxD + 1, &tempRead, nullptr, nullptr, nullptr) < 0){
+		if (select(Globals::maxD + 1, &tempRead, nullptr, nullptr, &time) < 0){
 			// Select nepasiseke grazinti dekriptoriu
 			Console::WriteLine(WSAGetLastError());
-			switch(WSAGetLastError()){
-				case WSAENOTSOCK:{
-					Console::WriteLine("Socket operation on nonsocket");
-				}
-				default:{
-					printf("Select klaida : %d\n", WSAGetLastError());
-					continue;
-				}
+			switch (WSAGetLastError()){
+			case WSAENOTSOCK:{
+				Console::WriteLine("Socket operation on nonsocket");
+			}
+			default:{
+				printf("Select klaida : %d\n", WSAGetLastError());
+				break;
+			}
 			}
 		}
 		// Begam per esamus sujungimus ir ieskom ar kas ka atsiunte
 		for (int i = 0; i <= Globals::maxD; i++){
-			
-			// Tikrinam ar i-asis yra dekriptorius kuriame ivyko klaida
-			/*
-			if (FD_ISSET(i, &tempError)) {
-				printf("Ivyko klaida %d dekriptoriuje\n", i);
-			}
-			*/
-			
-			/*
-			// Tikrinam ar i-asis yra dekriptorius kuriame ivyko klaida
-			if (FD_ISSET(i, &tempWrite)) {
-				printf("Ivyko rasimas %d dekriptoriuje", i);
-			}
-			*/
-
 			// Tikrinam ar i-asis yra deskriptorius is kurio reikia ka nors nuskaityti
 			if (FD_ISSET(i, &tempRead)) {
 				try{
 					STOContainer->FindBySocket(i)->Recive(STOContainer);
-				}catch(System::Exception^ e){
+				}
+				catch (System::Exception^ e){
 					//printf("Nepavyko rasti %d\n", i);
 					// Salinu socket is skaitomu saraso
 					FD_CLR(i, &skaitomiSocket);
@@ -145,12 +131,17 @@ int _tmain(int argc, _TCHAR* argv[])
 			} // if (FD_ISSET(i, &read_fds)) { pabaiga
 		} // for(int i = minD; i <= maxD; i++){ pabaiga
 	}
-
-	// Naikinu visus duomenis
-	delete settings;
-	delete STOContainer;
-	delete tunnels;
+	// Salinu objektus atbuline tvarka
+	delete JSON;
+	delete JSON_API;
+	// Stabdau konsoles gyjos darba
+	consoleThread->Abort();
+	delete consoleThread;
+	delete console;
 	delete ToServer;
+	delete tunnels;
+	delete STOContainer;
+	delete settings;
 
 	return 0;
 }
