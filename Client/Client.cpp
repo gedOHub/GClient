@@ -118,9 +118,11 @@ int _tmain(int argc, _TCHAR* argv[])
 		for (int i = 0; i <= Globals::maxD; i++){
 			
 			// Tikrinam ar i-asis yra dekriptorius kuriame ivyko klaida
+			/*
 			if (FD_ISSET(i, &tempError)) {
-				printf("Ivyko kalida %d dekriptoriuje", i);
+				printf("Ivyko klaida %d dekriptoriuje\n", i);
 			}
+			*/
 			
 			/*
 			// Tikrinam ar i-asis yra dekriptorius kuriame ivyko klaida
