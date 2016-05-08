@@ -174,7 +174,6 @@
     <ClInclude Include="ServerSocket.h" />
     <ClInclude Include="SettingsReader.h" />
     <ClInclude Include="SocketToObjectContainer.h" />
-    <ClInclude Include="SocketToSocketContainer.h" />
     <ClInclude Include="Structures.h" />
     <ClInclude Include="TagGenerator.h" />
     <ClInclude Include="targetver.h" />
@@ -197,7 +196,6 @@
     <ClCompile Include="ServerSocket.cpp" />
     <ClCompile Include="SettingsReader.cpp" />
     <ClCompile Include="SocketToObjectContainer.cpp" />
-    <ClCompile Include="SocketToSocketContainer.cpp" />
     <ClCompile Include="TagGenerator.cpp" />
     <ClCompile Include="TCPToServerSocket.cpp" />
     <ClCompile Include="ToServerSocket.cpp" />

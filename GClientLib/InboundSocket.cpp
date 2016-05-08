@@ -24,7 +24,16 @@ void GClientLib::InboundSocket::Recive(SocketToObjectContainer^ container){
 				break;
 			}
 			case SOCKET_ERROR:{
-				printf("[%s]Klaida: %d sujungime %d \n", this->name, WSAGetLastError(), this->Socket);
+				switch (WSAGetLastError()){
+				case 10054:{
+					printf("[%s] Sujungimas %d uzdare sjungima. %d \n", this->name, this->Socket, WSAGetLastError());
+					break;
+				}
+				default:{
+					printf("[%s] Klaida: %d sujungime %d \n", this->name, WSAGetLastError(), this->Socket);
+					break;
+				}
+				} // switch (WSAGetLastError()){
 				ToServerSocket^ toServer = (ToServerSocket^)container->FindByTag(Globals::CommandTag);
 				toServer->CommandCloseTunnel(this->TAG);
 				return;

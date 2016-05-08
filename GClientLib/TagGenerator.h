@@ -13,12 +13,6 @@ namespace GClientLib {
 	private:
 		// Nuroda i socketu-objektu saugykla
 		SocketToObjectContainer^ container;
-		// Metodas skirtas patikrinti ar tag'as yra naudojamas
-		bool isFree(int tag);
-	public:
-		TagGenerator(GClientLib::SocketToObjectContainer^ con);
-		int GetTag();
-		private:
 		// Esama skailiuko reiksme
 		int skaitliukas;
 		// Minimali reiksme
@@ -27,6 +21,11 @@ namespace GClientLib {
 		int MAX;
 
 		void Reset();
+		// Metodas skirtas patikrinti ar tag'as yra naudojamas
+		bool isFree(int tag);
+	public:
+		TagGenerator(GClientLib::SocketToObjectContainer^ con);
+		int GetTag();
 	};
 };
 

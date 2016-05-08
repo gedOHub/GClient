@@ -18,9 +18,9 @@ void GClientLib::JSONapiServer::Listen(){
 	// http://msdn.microsoft.com/en-us/library/windows/desktop/ms739168(v=vs.85).aspx
 	if (listen(this->Socket, SOMAXCONN) == SOCKET_ERROR){
 		// Jei ivyko klaida
-		printf("Nepavyko klausytis %s socket: %ld\n", this->PORT, WSAGetLastError());
+		//printf("Nepavyko klausytis %s socket: %ld\n", this->PORT, WSAGetLastError());
 		this->CloseSocket();
-}
+	}
 }
 
 void GClientLib::JSONapiServer::Bind(){
@@ -61,7 +61,7 @@ int GClientLib::JSONapiServer::Accept(SocketToObjectContainer^ container){
 	if (Globals::maxD < (int)newConnection)
 		Globals::maxD = newConnection;
 	// Ieskau ToServer jungtis
-	ToServerSocket^ server = (ToServerSocket^ )(container->FindByTag(0));
+	ToServerSocket^ server = (ToServerSocket^)(container->FindByTag(0));
 
 	// Naujo sujungimo objektas
 	JSONapiClient^ guest = gcnew JSONapiClient(newConnection, server->GenerateTag(), skaitomi, rasomi, klaidingi, this->json);
@@ -73,9 +73,9 @@ int GClientLib::JSONapiServer::Accept(SocketToObjectContainer^ container){
 	// Pridedam prie besiklausanciu saraso
 	FD_SET(newConnection, this->skaitomi);
 	// Pridedam prie rasanciu saraso
-	FD_SET(newConnection, this->rasomi);
+	//FD_SET(newConnection, this->rasomi);
 	// Pridedam prie klaidu saraso
-	FD_SET(newConnection, this->klaidingi);
+	//FD_SET(newConnection, this->klaidingi);
 
 	// Gaunam prisijungusiojo duomenis
 	// Pagal https://support.sas.com/documentation/onlinedoc/sasc/doc750/html/lr2/zeername.htm
@@ -88,10 +88,10 @@ int GClientLib::JSONapiServer::Accept(SocketToObjectContainer^ container){
 	}
 	else {
 		struct sockaddr_in *p = (struct sockaddr_in *) &peer;
-		printf("Klientas %s prisijunge prie %d deskriptoriaus\n", inet_ntoa(p->sin_addr), (int)ntohs(p->sin_port));
+		printf("Klientas %d prisijunge prie %d deskriptoriaus\n", newConnection, ntohs(p->sin_port));
 	}
 
-return newConnection;
+	return newConnection;
 }
 
 void GClientLib::JSONapiServer::Recive(SocketToObjectContainer^ container){
@@ -99,6 +99,6 @@ void GClientLib::JSONapiServer::Recive(SocketToObjectContainer^ container){
 		// Atejo nuajas sujungimas i bseiklausanti socketa
 		if (this->Accept(container) == SOCKET_ERROR) {
 			printf("Nepavyko priimti jungties\n");
-}
-}
+		}
+	}
 }

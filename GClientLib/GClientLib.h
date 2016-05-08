@@ -43,7 +43,7 @@
 #include "Globals.h"
 #include "SettingsReader.h"
 #include "SocketToObjectContainer.h"
-#include "SocketToSocketContainer.h"
+//#include "SocketToSocketContainer.h"
 #include "TunnelContainer.h"
 // Sujungimai
 //Bazinins

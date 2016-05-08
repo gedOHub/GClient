@@ -66,9 +66,6 @@
     <ClInclude Include="SocketToObjectContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SocketToSocketContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Structures.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -126,9 +123,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SocketToObjectContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SocketToSocketContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TagGenerator.cpp">

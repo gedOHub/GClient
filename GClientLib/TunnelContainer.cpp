@@ -7,6 +7,8 @@ GClientLib::TunnelContainer::TunnelContainer(void){
 }
 
 Tunnel^ GClientLib::TunnelContainer::Add(Tunnel^ tunelis){
+	//System::Console::WriteLine("Pridedu tuneli:");
+	//PrintTunnelData(tunelis);
 	// Pildau pora
 	cliext::pair<int, Tunnel^> pora( tunelis->tag, tunelis);
 	// Pridedu prie saraso
@@ -130,4 +132,15 @@ Tunnel^ GClientLib::TunnelContainer::GetTunnel()
 void GClientLib::TunnelContainer::SetIteratorToNext()
 {
 	i++;
+}
+
+void GClientLib::TunnelContainer::PrintTunnelData( Tunnel^ tunelis ){
+	System::Console::WriteLine("| {0} | {1} | {2} | {3} | {4} | {5} | {6} |",
+		tunelis->tag,
+		tunelis->clientid,
+		tunelis->dport,
+		tunelis->sport,
+		tunelis->serverSocket,
+		tunelis->clientSocket,
+		tunelis->status);
 }
