@@ -77,6 +77,7 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 	else if (rRecv < 0){ // Sujungime ivyko klaida
 		printf("Klaida sujungime %d\n", this->Socket);
 		wprintf(L"Klaidos pranesimas: %d\n", WSAGetLastError());
+		return;
 	}
 	else { // Gauti duomenis, persiusiu i serveri
 
@@ -99,48 +100,48 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 			switch (cmd->command){
 				// LIST_ACK komanda
 			case LIST_ACK:{
-				cout << "[" << this->name << "] Gavau LIST_ACK" << endl;
+				//cout << "[" << this->name << "] Gavau LIST_ACK" << endl;
 				this->CommandListAck(rRecv);
 				break;
 			}
 			case JSON_LIST_ACK:{
-				cout << "[" << this->name << "] Gavau JSON_LIST_ACK" << endl;
+				//cout << "[" << this->name << "] Gavau JSON_LIST_ACK" << endl;
 				this->CommandJsonListAck(rRecv, container);
 				break;
 			}
 			case CONNECT:{
-				cout << "[" << this->name << "] Gavau CONNECT" << endl;
+				//cout << "[" << this->name << "] Gavau CONNECT" << endl;
 				this->CommandConnect(container);
 				break;
 			}
 			case JSON_CONNECT: {
 				// Inicijuojamas sujungimas su nurodytu prievadu
-				cout << "[" << this->name << "] Gavau JSON_CONNECT" << endl;
+				//cout << "[" << this->name << "] Gavau JSON_CONNECT" << endl;
 				this->CommandJSONConnect(container);
 				break;
 			}
 			case INIT_CONNECT_ACK:{
-				cout << "[" << this->name << "] Gavau INIT_CONNECT_ACK" << endl;
+				//cout << "[" << this->name << "] Gavau INIT_CONNECT_ACK" << endl;
 				this->CommandInitConnectAck();
 				break;
 			}
 			case JSON_INIT_CONNECT_ACK:{
-				cout << "[" << this->name << "] Gavau JSON_INIT_CONNECT_ACK" << endl;
+				//cout << "[" << this->name << "] Gavau JSON_INIT_CONNECT_ACK" << endl;
 				this->CommandJsonInitConnectAck();
 				break;
 			}
 			case BEGIN_READ:{
-				cout << "[" << this->name << "] Gavau BEGIN_READ" << endl;
+				//cout << "[" << this->name << "] Gavau BEGIN_READ" << endl;
 				this->CommandBeginRead(container);
 				break;
 			}
 			case CLIENT_CONNECT_ACK:{
-				cout << "[" << this->name << "] Gavau CLIENT_CONNECT_ACK" << endl;
+				//cout << "[" << this->name << "] Gavau CLIENT_CONNECT_ACK" << endl;
 				this->CommandClientConnectAck(container);
 				break;
 			}
 			case CLOSE_TUNNEL:{
-				cout << "[" << this->name << "] Gavau CLOSE_TUNNEL" << endl;
+				//cout << "[" << this->name << "] Gavau CLOSE_TUNNEL" << endl;
 				// Suvartau duomenis
 				closeTunnelCommand* close = (struct closeTunnelCommand*) &this->buffer[sizeof header];
 				close->tag = ntohs(close->tag);
@@ -152,11 +153,16 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 		}
 				// Atejo duomenys, kuriuos reikia permesti i kita sokceta
 		default: {
-			// Persiunciu duomenis i  reikalinga socket
-			// Pildau buferi
-			int rSend = container->FindByTag(this->head->tag)->Send(&this->buffer[sizeof(header)], this->head->lenght);
-			//cout << "[" << this->name << "] " << this->head->lenght << " -> " << this->head->lenght << endl;
-			break;
+			gNetSocket^ socket = container->FindByTag(this->head->tag);
+			if ( socket != nullptr ){
+				// Persiunciu duomenis i  reikalinga socket
+				int rSend = socket->Send(&this->buffer[sizeof(header)], this->head->lenght);
+				//cout << "[" << this->name << "] " << this->head->lenght << " -> " << this->head->lenght << endl;
+				break;
+			}
+			else {
+				cout << "[" << this->name << "] Neradau socketo su TAG: " << this->head->tag << endl;
+			}
 		}
 		} // switch(this->head->tag)
 	} // if(rRecv == 0)

@@ -79,7 +79,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		JSON = gcnew JSONapiServer(settings->getSetting("JSONapi_address"), settings->getSetting("JSONapi_port"), &skaitomiSocket, &rasomiSocket, &klaidingiSocket, JSON_API);
 		// Tikrinam ar klausytis nurodytu adresu ir portu
 		if (JSON->GetSocket() == INVALID_SOCKET){
-			Console::WriteLine("Nepavyko atverti JSOn prievado");
+			Console::WriteLine("Nepavyko atverti grafines sasajos prievado");
 			//printf("Nepavyko klausytis %s:%s\n", settings->getSetting("JSONapi_address"), settings->getSetting("JSONapi_port"));
 		}
 		else {
@@ -110,6 +110,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			}
 			default:{
 				printf("Select klaida : %d\n", WSAGetLastError());
+				goto cleanup;
 				break;
 			}
 			}
@@ -131,6 +132,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			} // if (FD_ISSET(i, &read_fds)) { pabaiga
 		} // for(int i = minD; i <= maxD; i++){ pabaiga
 	}
+
+cleanup:
 	// Salinu objektus atbuline tvarka
 	delete JSON;
 	delete JSON_API;

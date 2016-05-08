@@ -34,6 +34,8 @@ namespace GClientLib {
 		cliext::list<cliext::pair<int, Tunnel^>> sarasas;
 		// Iteratorius begti per tuneli
 		cliext::list<cliext::pair<int, Tunnel^>>::iterator i;
+		// Metodas skirtas atsapsudinti tunelio inforamcija
+		void PrintTunnelData(Tunnel^ tunelis);
 	public:
 		// Konstruktorius
 		TunnelContainer();

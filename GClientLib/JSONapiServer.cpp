@@ -18,7 +18,7 @@ void GClientLib::JSONapiServer::Listen(){
 	// http://msdn.microsoft.com/en-us/library/windows/desktop/ms739168(v=vs.85).aspx
 	if (listen(this->Socket, SOMAXCONN) == SOCKET_ERROR){
 		// Jei ivyko klaida
-		printf("Nepavyko klausytis %s socket: %ld\n", this->PORT, WSAGetLastError());
+		//printf("Nepavyko klausytis %s socket: %ld\n", this->PORT, WSAGetLastError());
 		this->CloseSocket();
 	}
 }
