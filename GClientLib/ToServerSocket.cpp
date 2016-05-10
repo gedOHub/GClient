@@ -23,8 +23,16 @@ GClientLib::ToServerSocket::ToServerSocket(string ip, string port, fd_set* skait
 
 int GClientLib::ToServerSocket::Send(char* data, int lenght){
 	int rSend = 0;
+	printf("[%s][Send]Reikia issiusti %d\n", this->name, lenght);
 	while (rSend != lenght){
-		rSend = rSend + send(this->Socket, &data[rSend], lenght, 0);
+		if (this->Socket == SOCKET_ERROR){
+			wprintf(L"[%s][Send]Klaida siunciant duomenis i serveri. Klaidos kodas: %d\n", this->name, WSAGetLastError());
+			exit(WSAGetLastError());
+		}
+		else {
+			rSend = rSend + send(this->Socket, &data[rSend], lenght - rSend, 0);
+			printf("[%s][Send]Issiunciau %d\n", this->name, rSend);
+		}
 	}
 	return rSend;
 }
@@ -38,8 +46,8 @@ void GClientLib::ToServerSocket::Connect(){
 		// Tikrinam ar pavyko prijsungti
 		if (rConnect == SOCKET_ERROR) {
 			// Bandom tol, kol pavyks, delsiant viena minute
-			printf("Klaida jungiantis i %s:%s\n", this->IP->c_str(), this->PORT->c_str());
-			cout << "Klaida jungiantis i " << this->IP << ":" << this->PORT << " Kodas: " << WSAGetLastError() << endl;
+			printf("NEpavyko prisjungti prie %s:%s serverio \n", this->IP->c_str(), this->PORT->c_str());
+			exit(SOCKET_ERROR);
 		}
 		else break;
 	}
@@ -54,9 +62,9 @@ void GClientLib::ToServerSocket::Reconnect(){
 	WSADATA wsaData;
 	int wdaResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (wdaResult != 0) {
-		printf("WSAStartup failed: %d\n", wdaResult);
-		// Nepavykus sunaikiname kintamaji
-		return;
+	printf("WSAStartup failed: %d\n", wdaResult);
+	// Nepavykus sunaikiname kintamaji
+	return;
 	}
 	this->Connect();
 	*/
@@ -64,6 +72,11 @@ void GClientLib::ToServerSocket::Reconnect(){
 
 void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 	using namespace std;
+
+
+
+	int position = 0;
+
 	// Bandau gauti duoemis
 	// Nusiskaitau paketo antraste
 	int rRecv = this->Recive();
@@ -74,16 +87,40 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 		// Bandau jungti sprie serverio is naujo
 		this->ShutdownSocket();
 	}
-	else if (rRecv < 0){ // Sujungime ivyko klaida
-		printf("Klaida sujungime %d\n", this->Socket);
-		wprintf(L"Klaidos pranesimas: %d\n", WSAGetLastError());
+
+	if (rRecv == 1){
+		keepAliveLaikas = clock();
 		return;
+	}
+
+	else if (rRecv < 0){ // Sujungime ivyko klaida
+		//printf("Klaida sujungime %d\n", this->Socket);
+		//wprintf(L"Klaidos pranesimas: %d\n", WSAGetLastError());
+		switch (WSAGetLastError()){
+		case 10054:
+			/*Connection reset by peer.
+				An existing connection was forcibly closed by the remote host.
+				This normally results if the peer application on the remote host
+				is suddenly stopped, the host is rebooted, the host or remote
+				network interface is disabled, or the remote host uses a hard
+				close (see setsockopt for more information on the SO_LINGER option
+				on the remote socket). This error may also result if a connection was
+				broken due to keep-alive activity detecting a failure while one or
+				more operations are in progress. Operations that were in progress
+				fail with WSAENETRESET. Subsequent operations fail with WSAECONNRESET.*/
+			printf("Serveris uzdare sujungima. Klaidos kodas %d\n", WSAGetLastError());
+			break;
+		default:{
+			wprintf(L"Klaidos sujungime su serveriu. Klaidos kodas: %d\n", WSAGetLastError());
+			break;
+		}
+		}
+		exit(WSAGetLastError());
 	}
 	else { // Gauti duomenis, persiusiu i serveri
 
 		//printf("Gautas duomenu kiekis is serverio %d\n", rRecv);
-
-		this->head = (struct header*) &this->buffer[0];
+		this->head = (struct header*) &this->buffer[position];
 		// Atstatau zyme ir ilgi i tinkama pavidala
 		this->head->tag = ntohs(this->head->tag);
 		this->head->lenght = ntohl(this->head->lenght);
@@ -153,16 +190,53 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 		}
 				// Atejo duomenys, kuriuos reikia permesti i kita sokceta
 		default: {
+			position = position;
+			// Pirminis priskirimas
+			this->head = (struct header*) &this->buffer[position];
+
+			//cout << "[" << this->name << "] Paketo ilgis: " << this->head->lenght << " Gauta duomenu: " << rRecv << endl;
+
+			while (position < rRecv){
+				// Perstumiu per header kieki
+				position = position + sizeof(header);
+				// Ieskau socketo
+				gNetSocket^ socket = container->FindByTag(this->head->tag);
+				// TIkrinu ar pavyko rasti
+				if (socket != nullptr){
+					// Persiunciu duomenis i  reikalinga socket
+					int rSend = socket->Send(&this->buffer[position], this->head->lenght);
+					//cout << "[" << this->name << "] Issiunciau: " << rSend << endl;
+					// Perstumiu per issiutu duomenu kieki, tikiuosi kad tiek pat kiek ir reikejo
+					position = position + rSend;
+					//cout << "[" << this->name << "] Liko: " << rRecv - position << endl;
+
+					//cout << "[" << this->name << "] " << this->head->lenght << " -> " << this->head->lenght << endl;
+					// Paruosiu kitma praejimui
+					this->head = (struct header*) &this->buffer[position];
+					this->head->tag = ntohs(this->head->tag);
+					this->head->lenght = ntohl(this->head->lenght);
+				}
+				else {
+					cout << "[" << this->name << "] Neradau socketo su TAG: " << this->head->tag << endl;
+					exit(100);
+					break;
+				}
+			}
+			cout << endl;
+			/*
+			position = position + sizeof(header);
 			gNetSocket^ socket = container->FindByTag(this->head->tag);
-			if ( socket != nullptr ){
-				// Persiunciu duomenis i  reikalinga socket
-				int rSend = socket->Send(&this->buffer[sizeof(header)], this->head->lenght);
-				//cout << "[" << this->name << "] " << this->head->lenght << " -> " << this->head->lenght << endl;
-				break;
+			if (socket != nullptr){
+			// Persiunciu duomenis i  reikalinga socket
+			int rSend = socket->Send(&this->buffer[position], this->head->lenght);
+			position = position + this->head->lenght;
+			//cout << "[" << this->name << "] " << this->head->lenght << " -> " << this->head->lenght << endl;
+			break;
 			}
 			else {
-				cout << "[" << this->name << "] Neradau socketo su TAG: " << this->head->tag << endl;
+			cout << "[" << this->name << "] Neradau socketo su TAG: " << this->head->tag << endl;
 			}
+			*/
 		}
 		} // switch(this->head->tag)
 	} // if(rRecv == 0)
@@ -219,7 +293,7 @@ void GClientLib::ToServerSocket::CommandListAck(int rRecv){
 
 		// Spausidnu klientu duomenis
 		Client* client;
-		int position = sizeof (header) + sizeof (listAckCommand);
+		int position = sizeof(header) + sizeof(listAckCommand);
 		printf("-----------------------------------------------------------------------\n");
 		printf("| %10s | %16s | %16s | %16s |\n", "ID", "Sritis", "Kompiuteris", " Naudotojas ");
 		printf("-----------------------------------------------------------------------\n");

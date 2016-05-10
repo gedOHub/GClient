@@ -1,11 +1,11 @@
 d:\git\gclient\sctpdrv-12_05_00\sp\sctpsp\release\vc120.pdb
-d:\git\gclient\sctpdrv-12_05_00\sp\sctpsp\release\sctp_sys_calls.obj
 d:\git\gclient\sctpdrv-12_05_00\sp\sctpsp\release\sctpsp.obj
-d:\git\gclient\release\sctpsp.dll
-d:\git\gclient\release\sctpsp.pdb
+d:\git\gclient\sctpdrv-12_05_00\sp\sctpsp\release\sctp_sys_calls.obj
 d:\git\gclient\sctpdrv-12_05_00\sp\sctpsp\release\sctpsp.res
 d:\git\gclient\release\sctpsp.lib
 d:\git\gclient\release\sctpsp.exp
+d:\git\gclient\release\sctpsp.pdb
+d:\git\gclient\release\sctpsp.dll
 d:\git\gclient\sctpdrv-12_05_00\sp\sctpsp\release\sctpsp.tlog\cl.command.1.tlog
 d:\git\gclient\sctpdrv-12_05_00\sp\sctpsp\release\sctpsp.tlog\cl.read.1.tlog
 d:\git\gclient\sctpdrv-12_05_00\sp\sctpsp\release\sctpsp.tlog\cl.write.1.tlog

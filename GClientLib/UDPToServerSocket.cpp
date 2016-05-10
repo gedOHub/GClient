@@ -65,11 +65,26 @@ int GClientLib::UDPToServerSocket::Send( char* data, int lenght ){
 }
 
 void GClientLib::UDPToServerSocket::SendKeepAlive(){
+	// Kiek laiko nebuvo atsako, sekudnemis
+	time_t now;
+
 	while (this->live){
-		// Siunciu live paketa
-		this->Send(this->buffer, 1);
-		// Laukiu 1s
-		Thread::Sleep(1000);
+		// gaunu dabartini laika
+		time(&now);
+		// Tirkinu ar buvo gautas pranesiams pries maziau nei 10 s
+		if (((clock() - keepAliveLaikas) / CLOCKS_PER_SEC) < 3){
+			// Siunciu live paketa
+			this->Send(this->buffer, 1);
+			// Laukiu 1s
+			Thread::Sleep(1000);
+		}
+		else {
+			// Gauta seniau :(
+			System::Console::WriteLine("Prarastas rysis su serveriu");
+			this->~UDPToServerSocket();
+			this->StopAckThread();
+		}
+		
 	}
 	//System::Console::WriteLine("SendKeepAlive baigia darba");
 }

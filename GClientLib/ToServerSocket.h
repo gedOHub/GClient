@@ -3,6 +3,7 @@
 
 // Sisteminiai includai
 #include <iostream>
+#include <time.h>
 
 // Mano includai
 #include "gNetSocket.h"
@@ -23,7 +24,11 @@ namespace GClientLib {
 		SettingsReader^ settings;
 		// Objektas, saugantis tuneliu duomenis
 		TunnelContainer^ tunnels;
+		
 	protected:
+		//Kintamasis nurodantis kada atejo KEEP_ALIVE_PAKETAS. UDP
+		clock_t keepAliveLaikas;
+
 		// Metodas skirtas priimti duomenis i buferi
 		virtual int Recive();
 	public:

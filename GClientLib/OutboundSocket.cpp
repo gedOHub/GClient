@@ -35,27 +35,28 @@ void GClientLib::OutboundSocket::Recive(SocketToObjectContainer^ container){
 	if (this->read){
 		// Gaunu duomenis
 		const int rRecv = recv(this->Socket, &this->buffer[sizeof(header)], FiveMBtoCHAR - sizeof(header), 0);
+		ToServerSocket^ toServer = (ToServerSocket^)container->FindByTag(Globals::CommandTag);
+
+		
 		switch (rRecv){
 		case 0:{
 			printf("Klientas uzdare sujungima %d\n", this->Socket);
-			this->server->CommandCloseTunnel(this->TAG);
+			toServer->CommandCloseTunnel(this->TAG);
 			return;
-			break;
 		}
 		case SOCKET_ERROR:{
 			switch (WSAGetLastError()){
 			case 10054:{
 				printf("[%s] Sujungimas %d uzdare sjungima. %d \n", this->name, this->Socket, WSAGetLastError());
-				break;
+				toServer->CommandCloseTunnel(this->TAG);
+				return;
 			}
 			default:{
 				printf("[%s] Klaida: %d sujungime %d \n", this->name, WSAGetLastError(), this->Socket);
-				break;
+				toServer->CommandCloseTunnel(this->TAG);
+				return;
 			}
 			} // switch (WSAGetLastError()){
-			this->server->CommandCloseTunnel(this->TAG);
-			return;
-			break;
 		}
 		default:{
 			head = (struct header *) &this->buffer[0];
@@ -64,18 +65,14 @@ void GClientLib::OutboundSocket::Recive(SocketToObjectContainer^ container){
 			head->tag = htons(this->TAG);
 			head->lenght = htonl(rRecv);
 
+			printf("[%s][Recive] Gavau %d duomenu\n", this->name, rRecv);
+
 			// Siunciam serveriui duomenis
 			int rSend = container->FindByTag(0)->Send(&this->buffer[0], rRecv + sizeof(header));
-			string status;
-			if (rSend > rRecv)
-				status = "OK";
-			else
-				status = "ERROR";
-			//cout << "[" << this->name << "]" << status << " " << rRecv << " -> " << rSend <<  endl;
-			break;
-		}
+			printf("[%s][Recive] Issiunciau i serveri %d\n", this->name, rSend);
 		}
 		}
 	}
+}
 
 

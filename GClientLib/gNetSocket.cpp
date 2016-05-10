@@ -125,8 +125,8 @@ bool GClientLib::gNetSocket::CloseSocket(){
 	// Jungties uzdarimas
 	int rClose = closesocket(this->Socket);
 	if (rClose == SOCKET_ERROR){
-		printf("Nepavyko inicijuoti socket uzdarymo: %d\n", WSAGetLastError());
-		this->ShutdownSocket();
+		//printf("Nepavyko inicijuoti socket uzdarymo: %d\n", WSAGetLastError());
+		//this->ShutdownSocket();
 		WSACleanup();
 		return false;
 	}
@@ -144,7 +144,7 @@ void GClientLib::gNetSocket::ShutdownSocket(){
 	int rShutDown = shutdown(this->Socket, SD_SEND);
 	if (rShutDown == SOCKET_ERROR){
 		this->Socket = INVALID_SOCKET;
-		printf("Nepavyko inicijuoti socket uzdarymo: %d\n", WSAGetLastError());
+		//printf("Nepavyko inicijuoti socket uzdarymo: %d\n", WSAGetLastError());
 		WSACleanup();
 	}
 	this->Socket = INVALID_SOCKET;
@@ -182,10 +182,14 @@ SOCKET GClientLib::gNetSocket::GetSocket(){
 
 int GClientLib::gNetSocket::Send(char* data, int lenght){
 	if (this->write){
+		printf("[%s][Send] Reikia issiusti: %d\n", this->name, lenght);
 		int rSend = 0;
 		while (rSend != lenght){
 			rSend = rSend + send(this->Socket, &data[rSend], lenght - rSend, 0);
+			printf("[%s][Send] Siunciu: %d\n", this->name, rSend);
 		}
+		printf("[%s][Send] Issiunciau: %d\n", this->name, rSend);
+		printf("\n");
 		return rSend;
 	}
 	return 0;

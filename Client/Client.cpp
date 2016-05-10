@@ -20,7 +20,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	timeval time;
 	time.tv_sec = 0;
 	// 0.1s
-	time.tv_usec = 300000;
+	time.tv_usec = 100;
 
 	// --- Select funkcijos kintamieji ---
 	// Inicijuoju
@@ -97,7 +97,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	fd_set tempRead, tempWrite, tempError;	// Laikinas dekriptoriu kintamasis
-	while (!console->getQuitStatus()){
+	// Sukasi cikals tol kol neisjungiau arba netekau rysio su serveriu
+	while (!console->getQuitStatus() && ToServer->GetSocket() != INVALID_SOCKET){
 		// Siam ciklui skaitomi dekriptoriai
 		tempRead = skaitomiSocket;
 		// Pasiemam dekriptorius kurie turi kazka nuskaitimui
@@ -132,19 +133,22 @@ int _tmain(int argc, _TCHAR* argv[])
 			} // if (FD_ISSET(i, &read_fds)) { pabaiga
 		} // for(int i = minD; i <= maxD; i++){ pabaiga
 	}
+	goto cleanup;
 
 cleanup:
-	// Salinu objektus atbuline tvarka
-	delete JSON;
-	delete JSON_API;
 	// Stabdau konsoles gyjos darba
 	consoleThread->Abort();
 	delete consoleThread;
 	delete console;
+
+	// Salinu objektus atbuline tvarka
+	delete JSON;
+	delete JSON_API;
+
 	delete ToServer;
 	delete tunnels;
 	delete STOContainer;
 	delete settings;
 
-	return 0;
+	exit(0);
 }

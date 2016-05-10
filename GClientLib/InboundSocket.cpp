@@ -14,47 +14,38 @@ void GClientLib::InboundSocket::Recive(SocketToObjectContainer^ container){
 
 	if(this->read){
 		// Gaunu duomenis
-		const int rRecv = recv(this->Socket, &this->buffer[sizeof(header)], FiveMBtoCHAR - sizeof(header), 0);
+		int rRecv = recv(this->Socket, &this->buffer[sizeof(header)], FiveMBtoCHAR - sizeof(header), 0);
+		ToServerSocket^ toServer = (ToServerSocket^)container->FindByTag(Globals::CommandTag);
 		switch(rRecv){
 			case 0:{
 				printf("[%s]Klientas uzdare sujungima %d\n", this->name, this->Socket);
 				ToServerSocket^ toServer = (ToServerSocket^) container->FindByTag(Globals::CommandTag);
 				toServer->CommandCloseTunnel(this->TAG);
 				return;
-				break;
 			}
 			case SOCKET_ERROR:{
 				switch (WSAGetLastError()){
 				case 10054:{
-					printf("[%s] Sujungimas %d uzdare sjungima. %d \n", this->name, this->Socket, WSAGetLastError());
-					break;
+					printf("[%s] Socket %d uzdare sjungima. %d \n", this->name, this->Socket, WSAGetLastError());
+					toServer->CommandCloseTunnel(this->TAG);
+					return;
 				}
 				default:{
 					printf("[%s] Klaida: %d sujungime %d \n", this->name, WSAGetLastError(), this->Socket);
-					break;
+					toServer->CommandCloseTunnel(this->TAG);
+					return;
 				}
 				} // switch (WSAGetLastError()){
-				ToServerSocket^ toServer = (ToServerSocket^)container->FindByTag(Globals::CommandTag);
-				toServer->CommandCloseTunnel(this->TAG);
-				return;
-				break;
 			}
 			default:{
 				head = (struct header *) &this->buffer[0];
-
 				// Kuriu antraste
 				head->tag = htons(this->TAG);
 				head->lenght = htonl(rRecv);
-
 				// Siunciam serveriui duomenis
-				int rSend = container->FindByTag(Globals::CommandTag)->Send(&this->buffer[0], (rRecv + sizeof header));
-				string status;
-				if(rSend > rRecv)
-				status = "OK";
-				else
-				status = "ERROR";
-				//cout << "[" << this->name << "]" << status << " " << rRecv << " -> " << rSend <<  endl;
-				break;
+				printf("[%s][Recive] Gavau duomenu: %d\n", this->name, rRecv);
+				int rSend = toServer->Send(&this->buffer[0], (rRecv + sizeof header));
+				printf("[%s][Recive] Issiunciau i serveri: %d\n", this->name, rSend);
 			}
 		}
 	}
