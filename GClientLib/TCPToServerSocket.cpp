@@ -8,7 +8,15 @@ GClientLib::TCPToServerSocket::TCPToServerSocket(string ip, string port, fd_set*
 	this->maxPacketSize = TenMBofChar;
 }
 
-int GClientLib::TCPToServerSocket::Recive( int size){
+int GClientLib::TCPToServerSocket::Recive(int size){
 	// Gaunu headeri
-	return recv(this->Socket, &this->buffer[0], size, 0);
+	int returnValue = recv(this->Socket, &this->buffer[0], sizeof(header), MSG_WAITALL);
+	this->head = (struct header*)&this->buffer[0];
+	printf("[%s] Laukiu: %d\n", this->name, ntohl(this->head->lenght));
+	if (returnValue > 0) {
+		// Gaunu tiek duomenu kiek nurodyta headeryje
+		returnValue = returnValue + recv(this->Socket, &this->buffer[sizeof(header)], ntohl(this->head->lenght), MSG_WAITALL);
+	}
+	printf("[%s] Gauta is centrinio serverio: %d\n", this->name, returnValue);
+	return returnValue;
 }

@@ -24,15 +24,13 @@ GClientLib::ToServerSocket::ToServerSocket(string ip, string port, fd_set* skait
 int GClientLib::ToServerSocket::Send(char* data, int lenght){
 	int rSend = 0;
 	printf("[%s][Send]Reikia issiusti %d\n", this->name, lenght);
-	while (rSend != lenght && this->Socket != SOCKET_ERROR && this->Socket != INVALID_SOCKET){
-		if (this->Socket == SOCKET_ERROR){
-			wprintf(L"[%s][Send]Klaida siunciant duomenis i serveri. Klaidos kodas: %d\n", this->name, WSAGetLastError());
-			exit(WSAGetLastError());
-		}
-		else {
-			rSend = rSend + send(this->Socket, &data[rSend], lenght - rSend, 0);
-			printf("[%s][Send]Issiunciau %d\n", this->name, rSend);
-		}
+	if (this->Socket == SOCKET_ERROR){
+		wprintf(L"[%s][Send]Klaida siunciant duomenis i serveri. Klaidos kodas: %d\n", this->name, WSAGetLastError());
+		exit(WSAGetLastError());
+	}
+	else {
+		rSend = send(this->Socket, &data[0], lenght, 0);
+		printf("[%s][Send]Issiunciau %d\n", this->name, rSend);
 	}
 	return rSend;
 }
