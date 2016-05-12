@@ -15,6 +15,7 @@ void GClientLib::InboundSocket::Recive(SocketToObjectContainer^ container){
 
 	if(this->read){
 		// Gaunu duomenis
+		printf("[%s] Galiu priimti: %d\n", this->name, maxPacketSize);
 		int rRecv = recv(this->Socket, &this->buffer[sizeof(header)], this->maxPacketSize - sizeof(header), 0);
 		ToServerSocket^ toServer = (ToServerSocket^)container->FindByTag(Globals::CommandTag);
 		switch(rRecv){

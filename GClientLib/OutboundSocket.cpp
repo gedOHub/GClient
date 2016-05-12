@@ -34,6 +34,7 @@ void GClientLib::OutboundSocket::Connect(){
 void GClientLib::OutboundSocket::Recive(SocketToObjectContainer^ container){
 	using namespace std;
 	if (this->read){
+		printf("[%s] Galiu priimti: %d\n", this->name, maxPacketSize);
 		// Gaunu duomenis
 		const int rRecv = recv(this->Socket, &this->buffer[sizeof(header)], this->maxPacketSize - sizeof(header), 0);
 		ToServerSocket^ toServer = (ToServerSocket^)container->FindByTag(Globals::CommandTag);
