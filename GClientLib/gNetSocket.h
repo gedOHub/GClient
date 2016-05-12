@@ -47,6 +47,9 @@ namespace GClientLib {
 		// Salina socketa is skaitomu, rasomu ir kalidingu sokcetu saras
 		void RemuveFromLists();
 	protected:
+		// Kintamais snurodantis kokio maksimalaus dydzio gali buti priimamas paketas
+		int maxPacketSize;
+
 		// Gaunam galimus adresu varaintus
 		virtual void GetAddressInfo();
 	public:

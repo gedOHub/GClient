@@ -3,11 +3,12 @@
 
 using namespace GClientLib;
 
-GClientLib::OutboundSocket::OutboundSocket(string ip, string port, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket, ToServerSocket^ server) :gNetSocket(ip, port, tag, skaitomiSocket, rasomiSocket, klaidingiSocket){
+GClientLib::OutboundSocket::OutboundSocket(string ip, string port, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket, ToServerSocket^ server, int maxPacketSize) :gNetSocket(ip, port, tag, skaitomiSocket, rasomiSocket, klaidingiSocket){
 	this->server = server;
 
 	this->write = true;
 	this->name = "OutboundSocket";
+	this->maxPacketSize = maxPacketSize;
 	this->Connect();
 }
 
@@ -34,7 +35,7 @@ void GClientLib::OutboundSocket::Recive(SocketToObjectContainer^ container){
 	using namespace std;
 	if (this->read){
 		// Gaunu duomenis
-		const int rRecv = recv(this->Socket, &this->buffer[sizeof(header)], FiveMBtoCHAR - sizeof(header), 0);
+		const int rRecv = recv(this->Socket, &this->buffer[sizeof(header)], this->maxPacketSize - sizeof(header), 0);
 		ToServerSocket^ toServer = (ToServerSocket^)container->FindByTag(Globals::CommandTag);
 
 		

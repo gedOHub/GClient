@@ -2,11 +2,12 @@
 
 using namespace GClientLib;
 
-GClientLib::InboundSocket::InboundSocket(SOCKET socket, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket) : gNetSocket(socket, tag, skaitomiSocket, rasomiSocket, klaidingiSocket){
+GClientLib::InboundSocket::InboundSocket(SOCKET socket, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket, int maxPacketSize) : gNetSocket(socket, tag, skaitomiSocket, rasomiSocket, klaidingiSocket){
 	this->Socket = socket;
 	this->name = "InboundSocket";
 	//printf("[%s] SocketID: %d\n", this->name, this->Socket);
 	this->write = true;
+	this->maxPacketSize = maxPacketSize;
 }
 
 void GClientLib::InboundSocket::Recive(SocketToObjectContainer^ container){
@@ -14,7 +15,7 @@ void GClientLib::InboundSocket::Recive(SocketToObjectContainer^ container){
 
 	if(this->read){
 		// Gaunu duomenis
-		int rRecv = recv(this->Socket, &this->buffer[sizeof(header)], FiveMBtoCHAR - sizeof(header), 0);
+		int rRecv = recv(this->Socket, &this->buffer[sizeof(header)], this->maxPacketSize - sizeof(header), 0);
 		ToServerSocket^ toServer = (ToServerSocket^)container->FindByTag(Globals::CommandTag);
 		switch(rRecv){
 			case 0:{

@@ -16,7 +16,8 @@ namespace GClientLib {
 			fd_set* skaitomiSocket,
 			fd_set* rasomiSocket,
 			fd_set* klaidingiSocket,
-			ToServerSocket^ server
+			ToServerSocket^ server,
+			int maxPacketSize
 		);
 		virtual void Connect() override;
 		virtual void Recive(SocketToObjectContainer^ container) override;

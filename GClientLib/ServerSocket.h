@@ -26,7 +26,8 @@ namespace GClientLib {
 				fd_set* rasomiSocket,
 				fd_set* klaidingiSocket,
 				Tunnel^ tunnel,
-				ToServerSocket^ server
+				ToServerSocket^ server,
+				int maxPacketSize
 		);
 		virtual int Accept(SocketToObjectContainer^ container) override;
 		virtual void Listen() override;

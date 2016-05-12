@@ -2,9 +2,10 @@
 
 using namespace GClientLib;
 
-GClientLib::ServerSocket::ServerSocket(string ip, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket, Tunnel^ tunnel, ToServerSocket^ server) :gNetSocket(ip, "0", tag, skaitomiSocket, rasomiSocket, klaidingiSocket){
+GClientLib::ServerSocket::ServerSocket(string ip, int tag, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket, Tunnel^ tunnel, ToServerSocket^ server, int maxPacketSize) :gNetSocket(ip, "0", tag, skaitomiSocket, rasomiSocket, klaidingiSocket){
 	
 	this->name = "ServerSocket";
+	this->maxPacketSize = maxPacketSize;
 	
 	// Nustatau pradinius socke'o parametrus
 	this->read = true;
@@ -66,7 +67,7 @@ int GClientLib::ServerSocket::Accept(SocketToObjectContainer^ container){
 		Globals::maxD = newConnection;
 
 	// Naujo sujungimo objektas
-	InboundSocket^ guest = gcnew InboundSocket(newConnection, this->TAG, skaitomi, rasomi, klaidingi);
+	InboundSocket^ guest = gcnew InboundSocket(newConnection, this->TAG, skaitomi, rasomi, klaidingi, this->maxPacketSize);
 
 	// Nustatau prisijungusios programos socketa
 	this->tunnelInfo->clientSocket = guest->GetSocket();

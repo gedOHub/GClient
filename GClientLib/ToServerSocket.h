@@ -27,7 +27,7 @@ namespace GClientLib {
 		
 	protected:
 		//Kintamasis nurodantis kada atejo KEEP_ALIVE_PAKETAS. UDP
-		clock_t keepAliveLaikas;
+		DateTime keepAliveLaikas;
 
 		// Metodas skirtas priimti duomenis i buferi
 		virtual int Recive( int size );

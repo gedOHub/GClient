@@ -84,11 +84,6 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 		this->ShutdownSocket();
 	}
 
-	if (rRecv == 1){
-		keepAliveLaikas = clock();
-		return;
-	}
-
 	else if (rRecv < 0){ // Sujungime ivyko klaida
 		//printf("Klaida sujungime %d\n", this->Socket);
 		//wprintf(L"Klaidos pranesimas: %d\n", WSAGetLastError());
@@ -184,6 +179,10 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 				closeTunnelCommand* close = (struct closeTunnelCommand*) &this->buffer[sizeof header];
 				close->tag = ntohs(close->tag);
 				this->CloseTunnel(close->tag);
+				break;
+			}
+			case UDP_ALIVE:{
+				keepAliveLaikas = DateTime::Now;
 				break;
 			}
 			}// Baigiu switch(cmd->command){
@@ -333,7 +332,7 @@ void GClientLib::ToServerSocket::CommandInitConnect(int id, int port, SocketToOb
 	tunnel->tag = newTag;
 
 	// Inicijuoju listen socketa
-	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi, tunnel, this);
+	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi, tunnel, this, this->maxPacketSize);
 	// Nustatau serverSocket
 	tunnel->serverSocket = newSocket->GetSocket();
 	// Nustatau atverta preivada
@@ -392,7 +391,7 @@ void GClientLib::ToServerSocket::CommandJsonInitConnect(int id, int port, SOCKET
 	tunnel->tag = newTag;
 
 	// Inicijuoju listen socketa
-	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi, tunnel, this);
+	ServerSocket^ newSocket = gcnew ServerSocket(settings->getSetting("bindAddress"), newTag, this->skaitomi, this->rasomi, this->klaidingi, tunnel, this, this->maxPacketSize);
 	// Nustatau serverSocket
 	tunnel->serverSocket = newSocket->GetSocket();
 	// Nustatau atverta preivada
@@ -452,7 +451,7 @@ void GClientLib::ToServerSocket::CommandConnect(SocketToObjectContainer^ contain
 	// Kuriu sujungima
 	char portas[20];
 	_itoa_s(connect->destinatio_port, portas, 10);
-	OutboundSocket^ connectSocket = gcnew OutboundSocket(settings->getSetting("bindAddress"), portas, connect->tag, this->skaitomi, this->rasomi, this->klaidingi, this);
+	OutboundSocket^ connectSocket = gcnew OutboundSocket(settings->getSetting("bindAddress"), portas, connect->tag, this->skaitomi, this->rasomi, this->klaidingi, this, this->maxPacketSize);
 
 	if (Globals::maxD < (int)connectSocket->GetSocket())
 		Globals::maxD = connectSocket->GetSocket();
@@ -502,7 +501,7 @@ void GClientLib::ToServerSocket::CommandJSONConnect(SocketToObjectContainer^ con
 	// Kuriu sujungima
 	char portas[20];
 	_itoa_s(connect->destinatio_port, portas, 10);
-	OutboundSocket^ connectSocket = gcnew OutboundSocket(settings->getSetting("bindAddress"), portas, connect->tag, this->skaitomi, this->rasomi, this->klaidingi, this);
+	OutboundSocket^ connectSocket = gcnew OutboundSocket(settings->getSetting("bindAddress"), portas, connect->tag, this->skaitomi, this->rasomi, this->klaidingi, this, this->maxPacketSize);
 
 	if (Globals::maxD < (int)connectSocket->GetSocket())
 		Globals::maxD = connectSocket->GetSocket();

@@ -5,6 +5,7 @@ GClientLib::TCPToServerSocket::TCPToServerSocket(string ip, string port, fd_set*
 	fd_set* klaidingiSocket, SocketToObjectContainer^ STOC, SettingsReader^ settings, TunnelContainer^ tunnel) :
 	GClientLib::ToServerSocket(ip, port, skaitomiSocket, rasomiSocket, klaidingiSocket, STOC, settings, tunnel){
 	this->name = "TCPToServerSocket";
+	this->maxPacketSize = TenMBofChar;
 }
 
 int GClientLib::TCPToServerSocket::Recive( int size){
