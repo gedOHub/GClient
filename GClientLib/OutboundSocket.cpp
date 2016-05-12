@@ -66,7 +66,6 @@ void GClientLib::OutboundSocket::Recive(SocketToObjectContainer^ container){
 			head->lenght = htonl(rRecv);
 
 			printf("[%s][Recive] Gavau %d duomenu\n", this->name, rRecv);
-
 			// Siunciam serveriui duomenis
 			int rSend = container->FindByTag(0)->Send(&this->buffer[0], rRecv + sizeof(header));
 			printf("[%s][Recive] Issiunciau i serveri %d\n", this->name, rSend);

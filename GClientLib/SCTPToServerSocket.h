@@ -21,7 +21,7 @@ namespace GClientLib{
 		// Duomenu siuntimas
 		virtual int Send(char* data, int lenght) override;
 		// Metodas sksirtas priimti duomenis
-		virtual int Recive() override;
+		virtual int Recive( int size ) override;
 
 	protected:
 		void GetAddressInfo() override;

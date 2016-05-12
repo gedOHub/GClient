@@ -20,7 +20,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	timeval time;
 	time.tv_sec = 0;
 	// 0.1s
-	time.tv_usec = 100;
+	time.tv_usec = 200;
 
 	// --- Select funkcijos kintamieji ---
 	// Inicijuoju

@@ -24,7 +24,7 @@ namespace GClientLib {
 		// Perrasomas socketo kurimas
 		void virtual CreateSocket() override;
 		// Metodas sksirtas priimti duomenis
-		virtual int Recive() override;
+		virtual int Recive(int size) override;
 	private:
 		// Kintamasis skisrtas saugoti serverio adreso duomenis
 		struct sockaddr* serverAddress;
@@ -46,7 +46,6 @@ namespace GClientLib {
 		void StartAckThread();
 		// Metodas skirtas sustabdyti gyja ir baigti jos darba
 		void StopAckThread();
-		
 	};
 }
 

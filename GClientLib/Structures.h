@@ -25,9 +25,10 @@ namespace GClientLib {
 		JSON_LIST = 201,                // LIST komanda JSON aplikacijai
 		JSON_LIST_ACK = 211,            // LIST_ACK komanda JSON aplikacijai
 		JSON_INIT_CONNECT = 220,		// Administratoriaus iniciavimas tunelio
-		JSON_INIT_CONNECT_ACK = 221,	
+		JSON_INIT_CONNECT_ACK = 221,
 		JSON_CONNECT = 230,				// Komanda jungtis i nurodyta prievada
-		JSON_CONNECT_ACK = 231			// Atasakas i CONNECT komanda
+		JSON_CONNECT_ACK = 231,			// Atasakas i CONNECT komanda
+		UDP_ALIVE = 123
 };
 
 enum CONNECT_STATUS{
@@ -167,6 +168,9 @@ struct closeTunnelCommand : Command {
 	USHORT tag;	// Tunelio srauto zyme
 };
 
+struct UDPAck{
+	ULONG gauta;   // Nurodo kiek jau gauta
+};
 #pragma pack(pop) // nustatom i normalu isdestyma
 
 };

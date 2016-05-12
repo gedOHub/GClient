@@ -30,7 +30,7 @@ namespace GClientLib {
 		clock_t keepAliveLaikas;
 
 		// Metodas skirtas priimti duomenis i buferi
-		virtual int Recive();
+		virtual int Recive( int size );
 	public:
 		ToServerSocket(string ip, string port, fd_set* skaitomiSocket, fd_set* rasomiSocket, fd_set* klaidingiSocket,
 			SocketToObjectContainer^ STOC, SettingsReader^ settings, TunnelContainer^ tunnel);

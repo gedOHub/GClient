@@ -52,9 +52,9 @@ void GClientLib::SCTPToServerSocket::GetAddressInfo(){
 	this->addrResult = result;
 }
 
-int GClientLib::SCTPToServerSocket::Recive(){
+int GClientLib::SCTPToServerSocket::Recive( int size ){
 	sockaddr_in clientAddress;
 	int AddrSize = sizeof(clientAddress);
 
-	return recvfrom(this->Socket, &this->buffer[0], TenMBofChar, 0, (SOCKADDR *)& clientAddress, &AddrSize);
+	return recvfrom(this->Socket, &this->buffer[0], size, 0, (SOCKADDR *)& clientAddress, &AddrSize);
 }

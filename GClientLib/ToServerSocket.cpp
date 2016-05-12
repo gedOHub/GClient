@@ -24,7 +24,7 @@ GClientLib::ToServerSocket::ToServerSocket(string ip, string port, fd_set* skait
 int GClientLib::ToServerSocket::Send(char* data, int lenght){
 	int rSend = 0;
 	printf("[%s][Send]Reikia issiusti %d\n", this->name, lenght);
-	while (rSend != lenght){
+	while (rSend != lenght && this->Socket != SOCKET_ERROR && this->Socket != INVALID_SOCKET){
 		if (this->Socket == SOCKET_ERROR){
 			wprintf(L"[%s][Send]Klaida siunciant duomenis i serveri. Klaidos kodas: %d\n", this->name, WSAGetLastError());
 			exit(WSAGetLastError());
@@ -73,13 +73,9 @@ void GClientLib::ToServerSocket::Reconnect(){
 void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 	using namespace std;
 
-
-
-	int position = 0;
-
 	// Bandau gauti duoemis
 	// Nusiskaitau paketo antraste
-	int rRecv = this->Recive();
+	int rRecv = this->Recive(TenMBofChar);
 	//int rRecv = ;
 	if (rRecv == 0){ // Klientas uzdare sujungima
 		// Uzdarau sujungima
@@ -109,18 +105,21 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 				more operations are in progress. Operations that were in progress
 				fail with WSAENETRESET. Subsequent operations fail with WSAECONNRESET.*/
 			printf("Serveris uzdare sujungima. Klaidos kodas %d\n", WSAGetLastError());
+			exit(WSAGetLastError());
 			break;
+		case 10040:{
+			printf("Gaunamas paketas per didelis pateiktam buderiui. Klaida %d\n", WSAGetLastError());
+		}
 		default:{
 			wprintf(L"Klaidos sujungime su serveriu. Klaidos kodas: %d\n", WSAGetLastError());
 			break;
 		}
 		}
-		exit(WSAGetLastError());
+
 	}
 	else { // Gauti duomenis, persiusiu i serveri
-
 		//printf("Gautas duomenu kiekis is serverio %d\n", rRecv);
-		this->head = (struct header*) &this->buffer[position];
+		this->head = (struct header*) &this->buffer[0];
 		// Atstatau zyme ir ilgi i tinkama pavidala
 		this->head->tag = ntohs(this->head->tag);
 		this->head->lenght = ntohl(this->head->lenght);
@@ -128,8 +127,10 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 		switch (this->head->tag){
 			// Atejo komanda is serverio
 		case 0: {
+			// Gaunu likusia paketo dali
+			//this->Recive(this->head->lenght);
 			// Nustatinesiu kokia komanda atejo
-			Command* cmd = (struct Command*) &this->buffer[sizeof header];
+			Command* cmd = (struct Command*) &this->buffer[sizeof(header)];
 			// Verciu komanda i tikraji pavidala
 			cmd->command = ntohs(cmd->command);
 
@@ -190,53 +191,11 @@ void GClientLib::ToServerSocket::Recive(SocketToObjectContainer^ container){
 		}
 				// Atejo duomenys, kuriuos reikia permesti i kita sokceta
 		default: {
-			position = position;
-			// Pirminis priskirimas
-			this->head = (struct header*) &this->buffer[position];
-
-			//cout << "[" << this->name << "] Paketo ilgis: " << this->head->lenght << " Gauta duomenu: " << rRecv << endl;
-
-			while (position < rRecv){
-				// Perstumiu per header kieki
-				position = position + sizeof(header);
-				// Ieskau socketo
-				gNetSocket^ socket = container->FindByTag(this->head->tag);
-				// TIkrinu ar pavyko rasti
-				if (socket != nullptr){
-					// Persiunciu duomenis i  reikalinga socket
-					int rSend = socket->Send(&this->buffer[position], this->head->lenght);
-					//cout << "[" << this->name << "] Issiunciau: " << rSend << endl;
-					// Perstumiu per issiutu duomenu kieki, tikiuosi kad tiek pat kiek ir reikejo
-					position = position + rSend;
-					//cout << "[" << this->name << "] Liko: " << rRecv - position << endl;
-
-					//cout << "[" << this->name << "] " << this->head->lenght << " -> " << this->head->lenght << endl;
-					// Paruosiu kitma praejimui
-					this->head = (struct header*) &this->buffer[position];
-					this->head->tag = ntohs(this->head->tag);
-					this->head->lenght = ntohl(this->head->lenght);
-				}
-				else {
-					cout << "[" << this->name << "] Neradau socketo su TAG: " << this->head->tag << endl;
-					exit(100);
-					break;
-				}
-			}
-			cout << endl;
-			/*
-			position = position + sizeof(header);
+			printf("[ToServerSocket][Recive] Reikia issiusti %d\n", this->head->lenght);
 			gNetSocket^ socket = container->FindByTag(this->head->tag);
-			if (socket != nullptr){
-			// Persiunciu duomenis i  reikalinga socket
-			int rSend = socket->Send(&this->buffer[position], this->head->lenght);
-			position = position + this->head->lenght;
-			//cout << "[" << this->name << "] " << this->head->lenght << " -> " << this->head->lenght << endl;
+			int rSend = socket->Send(&this->buffer[sizeof(header)], this->head->lenght);
+			printf("[ToServerSocket][Recive] Issiusta %d\n", rSend);
 			break;
-			}
-			else {
-			cout << "[" << this->name << "] Neradau socketo su TAG: " << this->head->tag << endl;
-			}
-			*/
 		}
 		} // switch(this->head->tag)
 	} // if(rRecv == 0)
@@ -293,7 +252,7 @@ void GClientLib::ToServerSocket::CommandListAck(int rRecv){
 
 		// Spausidnu klientu duomenis
 		Client* client;
-		int position = sizeof(header) + sizeof(listAckCommand);
+		int position = sizeof header + sizeof(listAckCommand);
 		printf("-----------------------------------------------------------------------\n");
 		printf("| %10s | %16s | %16s | %16s |\n", "ID", "Sritis", "Kompiuteris", " Naudotojas ");
 		printf("-----------------------------------------------------------------------\n");
@@ -314,7 +273,7 @@ void GClientLib::ToServerSocket::CommandListAck(int rRecv){
 
 void GClientLib::ToServerSocket::CommandJsonListAck(int rRecv, SocketToObjectContainer^ container){
 	// Nuskaitau paketo tipa
-	jsonListAckCommand* list = (struct jsonListAckCommand*) &this->buffer[sizeof header];
+	jsonListAckCommand* list = (struct jsonListAckCommand*) &this->buffer[sizeof(header)];
 	// Suvartau socketID kintamaji
 	list->socketID = ntohl(list->socketID);
 	try {
@@ -582,7 +541,7 @@ void GClientLib::ToServerSocket::CommandJSONConnect(SocketToObjectContainer^ con
 }
 
 void GClientLib::ToServerSocket::CommandInitConnectAck(){
-	connectInitAckCommand* ack = (struct connectInitAckCommand*) &this->buffer[sizeof(header)];
+	connectInitAckCommand* ack = (struct connectInitAckCommand*) &this->buffer[sizeof header];
 	// Suvartau tinkama tvarka skacius
 	ack->status = ntohs(ack->status);
 	ack->client_id = ntohl(ack->client_id);
@@ -623,7 +582,7 @@ void GClientLib::ToServerSocket::CommandInitConnectAck(){
 void GClientLib::ToServerSocket::CommandJsonInitConnectAck(){
 	std::ostringstream responseStream;
 
-	jsonConnectInitAckCommand* ack = (struct jsonConnectInitAckCommand*) &this->buffer[sizeof(header)];
+	jsonConnectInitAckCommand* ack = (struct jsonConnectInitAckCommand*) &this->buffer[sizeof header];
 	// Suvartau tinkama tvarka skacius
 	ack->status = ntohs(ack->status);
 	ack->client_id = ntohl(ack->client_id);
@@ -684,7 +643,7 @@ void GClientLib::ToServerSocket::CommandBeginRead(SocketToObjectContainer^ conta
 }
 
 void GClientLib::ToServerSocket::CommandClientConnectAck(SocketToObjectContainer^ container){
-	beginReadAckCommand* ack = (struct beginReadAckCommand*) &this->buffer[sizeof(header)];
+	beginReadAckCommand* ack = (struct beginReadAckCommand*) &this->buffer[sizeof header];
 	// Nustatau tag i tinkama puse
 	ack->tag = ntohs(ack->tag);
 
@@ -810,7 +769,7 @@ void GClientLib::ToServerSocket::PrintTunnelList()
 	this->tunnels->Print();
 }
 
-int GClientLib::ToServerSocket::Recive(){
+int GClientLib::ToServerSocket::Recive(int size){
 	System::Console::WriteLine("Neigyvendintas metodas");
 	return -1;
 }
